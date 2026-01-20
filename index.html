@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUTOMIND DYNAMICS - Autonomous Vehicle Innovation</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="/Static/css/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons (for new section) -->
+    <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
 </head>
+
 <body>
-    <!-- Navigation -->
+    <!-- Full-page 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <span class="logo-text">AUTOMIND</span>
-                <span class="logo-accent">DYNAMICS</span>
+                <a href="index.html" class="logo-link">
+                    <img src="/Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                </a>
             </div>
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
+            <!-- Updated nav links -->
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#technology" class="nav-link">Technology</a></li>
-                <li><a href="#vehicles" class="nav-link">Vehicles</a></li>
-                <li><a href="#capabilities" class="nav-link">Capabilities</a></li>
-                <li><a href="#innovation" class="nav-link">Innovation</a></li>
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="Templates/about.html" class="nav-link">About Us</a></li>
+                <li><a href="Templates/products.html" class="nav-link">Products</a></li>
+                <li><a href="Templates/services.html" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="Templates/news.html" class="nav-link">News</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -33,28 +48,50 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div id="heroCanvas" class="hero-canvas"></div>
+        <!-- NEW: Full-screen video background -->
+        <div class="hero-video-container">
+            <video id="hero-video" muted loop playsinline autoplay preload="metadata">
+                <!-- 
+                  NOTE: I'm using your 'bgvd.mov' as a placeholder.
+                  You should replace this with your new, specific hero video!
+                -->
+                <source src="/Assets/videos/loop1.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay hero-overlay"></div>
+        </div>
+
         <div class="hero-content">
             <div class="hero-text">
-                <h1 class="hero-title"><span id="typing-main">Autonomy</span><br><span class="gradient-text" id="typing-text"></span></h1>
-                <p class="hero-subtitle">Revolutionary autonomous vehicle technology for all terrain and off-road environments</p>
+                <h1 class="hero-title">
+                    <span id="typing-main">Autonomy</span>
+                    <br>
+                    <span class="gradient-text" id="typing-text"></span>
+                </h1>
+                <p class="hero-subtitle">Revolutionary autonomous vehicle technology for all terrain and off-road
+                    environments</p>
                 <div class="hero-cta">
-                    <button class="cta-button primary">Explore Technology</button>
-                    <button class="cta-button secondary">Watch Demo</button>
+                    <button class="cta-button primary"
+                        onclick="document.getElementById('core-tech').scrollIntoView({ behavior: 'smooth' });">Explore
+                        Technology</button>
+                    <button class="cta-button secondary"
+                        onclick="document.getElementById('showcase').scrollIntoView({ behavior: 'smooth' });">Watch
+                        Demo</button>
                 </div>
             </div>
+            <!-- Stats -->
             <div class="hero-stats">
                 <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Patents</div>
+                    <div class="stat-number">99.8%</div>
+                    <div class="stat-label">AI Accuracy</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Operation</div>
+                    <div class="stat-number">50k+</div>
+                    <div class="stat-label">Miles Driven</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">360°</div>
-                    <div class="stat-label">Coverage</div>
+                    <div class="stat-number">0.02s</div>
+                    <div class="stat-label">Response Time</div>
                 </div>
             </div>
         </div>
@@ -74,255 +111,382 @@
             </div>
             <div class="vision-grid">
                 <div class="vision-card glass-card">
-                    <div class="vision-icon">🚀</div>
-                    <h3>Cutting-Edge Innovation</h3>
-                    <p>Advanced AI and machine learning algorithms that adapt to any terrain, weather, or environment in real-time.</p>
+                    <h3>GPS-Denied Autonomy </h3>
+                    <p>Operates reliably without GPS in jammed and spoofed environments.</p>
                 </div>
                 <div class="vision-card glass-card">
-                    <div class="vision-icon">🌍</div>
-                    <h3>Global Capability</h3>
-                    <p>Deploy autonomous vehicles anywhere on Earth—from deserts to mountains, urban centers to remote areas.</p>
+                    <h3>Military-Grade Systems</h3>
+                    <p>Designed for defense, homeland security, and high-risk industrial missions.</p>
                 </div>
                 <div class="vision-card glass-card">
-                    <div class="vision-icon">⚡</div>
-                    <h3>Extreme Performance</h3>
-                    <p>Engineered for maximum efficiency with next-generation autonomous systems and real-time decision making.</p>
+                    <h3>Mission-Critical Performance</h3>
+                    <p>Real-time perception, planning, and control under extreme conditions.</p>
                 </div>
                 <div class="vision-card glass-card">
-                    <div class="vision-icon">🛡️</div>
-                    <h3>Safety First</h3>
-                    <p>Redundant systems and advanced sensors ensure zero-failure operation in the most challenging conditions.</p>
+                    <h3>Fail-Operational Safety</h3>
+                    <p>Redundant, validated, and resilient by design.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Technology Section -->
-    <section id="technology" class="technology-section">
+    <!-- NEW: Core Technologies Section - Layered Architecture -->
+    <section id="core-tech" class="core-tech-section">
         <div class="section-container">
             <div class="section-header">
-                <span class="section-label">Advanced Technology</span>
-                <h2>AI-Powered Autonomy</h2>
+                <span class="section-label">System Architecture</span>
+                <h2>TraX Autonomy Core</h2>
+                <p class="section-subtitle">Our autonomous stack is built on a modular, layered architecture enabling
+                    safe and reliable operation in any environment.</p>
             </div>
-            <div class="tech-grid">
-                <div class="tech-card glass-card">
-                    <div class="tech-number">01</div>
-                    <h3>Sensor Fusion</h3>
-                    <p>Integrated LiDAR, radar, cameras, and ultrasonic sensors providing 360° environmental awareness with millisecond response times.</p>
-                    <ul class="tech-features">
-                        <li>Multi-spectrum detection</li>
-                        <li>Real-time data processing</li>
-                        <li>Redundant backup systems</li>
-                    </ul>
+
+            <!-- Architecture Diagram Container -->
+            <div class="architecture-diagram new-layout">
+
+                <!-- Row 1: Cloud and Tooling -->
+                <div class="arch-row">
+                    <div class="arch-block category-label" data-tooltip="Cloud-based development tools">
+                        <span class="block-label">Cloud and Tooling</span>
+                    </div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block tooling-block" data-tooltip="High-fidelity simulation platform">Hypersim
+                        </div>
+                        <div class="arch-block tooling-block" data-tooltip="Sensor calibration utilities">
+                            CalibrationTool</div>
+                        <div class="arch-block tooling-block" data-tooltip="HD mapping solutions">Mapping</div>
+                    </div>
                 </div>
-                <div class="tech-card glass-card">
-                    <div class="tech-number">02</div>
-                    <h3>AI Decision Engine</h3>
-                    <p>Machine learning models trained on millions of miles of autonomous driving data for intelligent decision-making in unpredictable environments.</p>
-                    <ul class="tech-features">
-                        <li>Neural network processing</li>
-                        <li>Predictive analytics</li>
-                        <li>Adaptive learning</li>
-                    </ul>
+
+                <!-- Row 2: Software Application -->
+                <div class="arch-row">
+                    <div class="arch-block category-label" data-tooltip="Application layer">
+                        <span class="block-label">Software Application</span>
+                    </div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block app-block" data-tooltip="Defence applications">Defence</div>
+                        <div class="arch-block app-block" data-tooltip="Logistics and delivery">Logistics</div>
+                        <div class="arch-block app-block" data-tooltip="Passenger transport">Passenger</div>
+                        <div class="arch-block app-block" data-tooltip="Mining operations">Mining</div>
+                        <div class="arch-block app-block" data-tooltip="Exploration missions">Exploration</div>
+                    </div>
                 </div>
-                <div class="tech-card glass-card">
-                    <div class="tech-number">03</div>
-                    <h3>Network Connectivity</h3>
-                    <p>5G-enabled communication for fleet coordination, remote monitoring, and real-time updates across all autonomous systems.</p>
-                    <ul class="tech-features">
-                        <li>Cloud integration</li>
-                        <li>Fleet management</li>
-                        <li>Low-latency communication</li>
-                    </ul>
+
+                <!-- Row 3: Software Core - Top Layer -->
+                <div class="arch-row">
+                    <div class="arch-block category-label invisible-block"></div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block core-block highlight-block" data-tooltip="Autonomous path planning">Path
+                            Planning</div>
+                        <div class="arch-block core-block highlight-block"
+                            data-tooltip="Simultaneous Localization and Mapping">SLAM</div>
+                        <div class="arch-block core-block highlight-block" data-tooltip="Vehicle localization">
+                            Localization</div>
+                        <div class="arch-block core-block highlight-block" data-tooltip="Navigation algorithms">
+                            Navigation</div>
+                    </div>
                 </div>
-                <div class="tech-card glass-card">
-                    <div class="tech-number">04</div>
-                    <h3>Battery Management</h3>
-                    <p>Next-generation power systems with intelligent energy distribution, supporting extended off-road missions and extreme conditions.</p>
-                    <ul class="tech-features">
-                        <li>Extended range</li>
-                        <li>Fast charging</li>
-                        <li>Thermal management</li>
-                    </ul>
+
+                <!-- Row 4: Software Core - Automind OS -->
+                <div class="arch-row">
+                    <div class="arch-block category-label" data-tooltip="Core software platform">
+                        <span class="block-label">Software Core</span>
+                    </div>
+                    <div class="arch-block wide-block os-block" data-tooltip="Automind operating system">
+                        <span class="block-label">Automind OS</span>
+                    </div>
                 </div>
+
+                <!-- Row 5: Software Core - Bottom Layer -->
+                <div class="arch-row">
+                    <div class="arch-block category-label invisible-block"></div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block core-block" data-tooltip="Real-time operating system">RTOS</div>
+                        <div class="arch-block core-block" data-tooltip="Safety systems">Safety</div>
+                        <div class="arch-block core-block" data-tooltip="Software interface layer">Software Interface
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 6: Hardware System -->
+                <div class="arch-row">
+                    <div class="arch-block category-label" data-tooltip="Hardware abstraction layer">
+                        <span class="block-label">Hardware System</span>
+                    </div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block hardware-block" data-tooltip="Complete sensor suite">Sensor Suite</div>
+                        <div class="arch-block hardware-block" data-tooltip="Reference hardware platform">Reference
+                            Hardware</div>
+                        <div class="arch-block hardware-block" data-tooltip="Hardware interface layer">Hardware
+                            Interface</div>
+                    </div>
+                </div>
+
+                <!-- Row 7: TRAx Controller and Vehicle -->
+                <div class="arch-row">
+                    <div class="arch-block category-label invisible-block"></div>
+                    <div class="arch-block-inline-group">
+                        <div class="arch-block controller-block"
+                            data-tooltip="Terrain-Ready Autonomy Extension controller">TRAx Controller</div>
+                        <div class="arch-block vehicle-block" data-tooltip="Certified autonomous vehicle platform">
+                            Drive-By-Wire Certified Vehicle</div>
+                    </div>
+                </div>
+
+                <!-- Row 8: Sensor Array -->
+                <div class="arch-row sensor-row">
+                    <div class="arch-block category-label invisible-block"></div>
+                    <div class="arch-block-inline-group sensor-group">
+                        <div class="arch-block sensor-block" data-tooltip="Multi-camera array">Camera</div>
+                        <div class="arch-block sensor-block" data-tooltip="Global Navigation Satellite System">GNSS
+                        </div>
+                        <div class="arch-block sensor-block" data-tooltip="Inertial Measurement Unit">IMU</div>
+                        <div class="arch-block sensor-block" data-tooltip="Light Detection and Ranging">LiDAR</div>
+                        <div class="arch-block sensor-block" data-tooltip="Radio Detection and Ranging">RADAR</div>
+                        <div class="arch-block sensor-block" data-tooltip="Ultrasonic sensors">Ultrasonic</div>
+                        <div class="arch-block sensor-block" data-tooltip="Infrared sensors">IR</div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
-<!-- Video Section -->
-<section id="showcase" class="video-section">
-    <div class="section-container">
-      <div class="section-header">
-        <span class="section-label">See It In Action</span>
-        <h2>Autonomy Unleashed</h2>
-      </div>
-      <div class="video-box glass-card">
-        <video id="showcase-video" muted loop playsinline>
-          <source src="bgvd.mov" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </div>
-  </section>
-    <!-- Vehicles Section -->
-    <section id="vehicles" class="vehicles-section">
+
+    <!-- Video Showcase Section (Redesigned) -->
+    <section id="showcase" class="video-wall-section">
+        <div class="video-bg-container">
+            <!-- Main Video (Original) -->
+            <video id="showcase-video-player" muted loop playsinline autoplay class="video-bg-element active"
+                data-key="terrain">
+                <source src="/Assets/videos/loop2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <!-- DUMMY VIDEO 1: Urban -->
+            <video muted loop playsinline class="video-bg-element" data-key="urban">
+                <source src="/Assets/videos/copernicus_p2p.mp4" type="video/mp4">
+                <!-- TODO: Replace with your "urban.mp4" source -->
+            </video>
+
+            <div class="video-overlay"></div>
+        </div>
+
+        <div class="section-container video-wall-content">
+            <div class="section-header">
+                <span class="section-label">See It In Action</span>
+                <h2>Autonomy Unleashed</h2>
+                <p class="video-wall-subtitle">Our systems navigate the world's most challenging environments. See the
+                    proof.</p>
+            </div>
+
+            <div class="video-controls-container">
+                <div class="video-select-buttons">
+                    <button class="video-select-btn active" data-video-key="terrain">
+                        <span class="btn-title">Off-Road</span>
+                        <span class="btn-desc">Forests, deserts, and rock.</span>
+                    </button>
+                    <button class="video-select-btn" data-video-key="urban">
+                        <span class="btn-title">On Road</span>
+                        <span class="btn-desc">Complex city environments.</span>
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Mission-Ready Section -->
+    <section id="mission-ready" class="mission-ready-section">
         <div class="section-container">
             <div class="section-header">
-                <span class="section-label">Our Fleet</span>
-                <h2>Autonomous Vehicle Lineup</h2>
+                <span class="section-label">Mission-Ready</span>
+                <h2>Engineered for the Extreme</h2>
+                <p class="section-subtitle">Our vehicles and software are not lab projects. They are hardened, reliable
+                    systems built for real-world deployment.</p>
             </div>
-            <div class="vehicles-grid">
-                <div class="vehicle-card glass-card">
-                    <img class="vehicle-img" src="R1b.png" alt="SCOUT X1" />
-                    <div class="vehicle-info">
-                        <h3>SCOUT X1</h3>
-                        <p class="vehicle-tagline">Compact Off-Road Explorer</p>
-                        <div class="vehicle-specs">
-                            <div class="spec"><span class="spec-label">Range</span><span class="spec-value">450 km</span></div>
-                            <div class="spec"><span class="spec-label">Max Speed</span><span class="spec-value">120 km/h</span></div>
-                            <div class="spec"><span class="spec-label">Payload</span><span class="spec-value">800 kg</span></div>
-                        </div>
-                        <div class="vehicle-desc">
-                          <p>Ultra-agile reconnaissance unit built for tight trails and rapid deployment.</p>
-                          <ul>
-                            <li>360° LiDAR &amp; stereo vision</li>
-                            <li>Hot-swap battery in 90 s</li>
-                          </ul>
-                        </div>
-                    </div>
+            <div class="feature-grid">
+                <div class="feature-item glass-card">
+                    <i data-lucide="mountain"></i>
+                    <h3>All-Terrain</h3>
+                    <p>Navigates rocks, sand, mud, and slopes up to 45°.</p>
                 </div>
-                <div class="vehicle-card glass-card featured">
-                    <img class="vehicle-img" src="" alt="PATHFINDER PRO" />
-                    <div class="vehicle-info">
-                        <h3>PATHFINDER PRO</h3>
-                        <p class="vehicle-tagline">Premium All-Terrain Platform</p>
-                        <div class="vehicle-specs">
-                            <div class="spec"><span class="spec-label">Range</span><span class="spec-value">600 km</span></div>
-                            <div class="spec"><span class="spec-label">Max Speed</span><span class="spec-value">140 km/h</span></div>
-                            <div class="spec"><span class="spec-label">Payload</span><span class="spec-value">1.5 ton</span></div>
-                        </div>
-                        <div class="vehicle-desc">
-                          <p>Flagship platform balancing long range, high payload and highway speeds.</p>
-                          <ul>
-                            <li>Redundant drive-by-wire suite</li>
-                            <li>Modular cargo rails &amp; PTO</li>
-                          </ul>
-                        </div>
-                    </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="cloud-snow"></i>
+                    <h3>All-Weather</h3>
+                    <p>Operates in rain, snow, fog, and extreme temperatures.</p>
                 </div>
-                <div class="vehicle-card glass-card">
-                    <img class="vehicle-img" src="" alt="TITAN HEAVY" />
-                    <div class="vehicle-info">
-                        <h3>TITAN HEAVY</h3>
-                        <p class="vehicle-tagline">Industrial Grade Hauler</p>
-                        <div class="vehicle-specs">
-                            <div class="spec"><span class="spec-label">Range</span><span class="spec-value">800 km</span></div>
-                            <div class="spec"><span class="spec-label">Max Speed</span><span class="spec-value">100 km/h</span></div>
-                            <div class="spec"><span class="spec-label">Payload</span><span class="spec-value">3 ton</span></div>
-                        </div>
-                        <div class="vehicle-desc">
-                          <p>Heavy-duty workhorse engineered for mining, construction and logistics.</p>
-                          <ul>
-                            <li>Dual-motor 4×4 with diff-lock</li>
-                            <li>5-ton tow rating &amp; 3 m³ bed</li>
-                          </ul>
-                        </div>
-                    </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="zap-off"></i>
+                    <h3>GPS-Denied</h3>
+                    <p>Maintains full autonomy with sensor-based localization.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="shield-check"></i>
+                    <h3>Fail-Safe</h3>
+                    <p>Redundant compute, power, and sensor systems.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="bot"></i>
+                    <h3>Fully Autonomous</h3>
+                    <p>Executes complex missions from start to finish.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="blend"></i>
+                    <h3>Platform Agnostic</h3>
+                    <p>Our software stack can be deployed on any vehicle.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="blend"></i>
+                    <h3>Multi-Sensor Perception</h3>
+                    <p>Robust situational awareness using AI-driven fusion of camera, LiDAR, radar, and onboard sensors
+                        for operation in degraded visibility.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="blend"></i>
+                    <h3>Mission-Adaptive Intelligence</h3>
+                    <p>Dynamically adapts planning and control strategies in real time based on terrain, mission
+                        objectives, and environmental uncertainty.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Capabilities Section -->
-    <section id="capabilities" class="capabilities-section">
+    <!-- Product Spotlight Section (was Vehicles) - RESTRUCTURED -->
+    <section id="product-spotlight" class="vehicles-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Featured Products</span>
+
+                <p class="section-subtitle">A brief look at our core hardware. Explore our full product line.</p>
+                <div class="header-cta">
+                    <a href="products.html" class="cta-button primary">Explore All Products</a>
+                </div>
+            </div>
+
+            <!-- RESTRUCTURED: Changed from vehicles-grid to showcase-stack -->
+            <div class="showcase-stack">
+
+                <!-- TRAx Controller Showcase -->
+                <div class="showcase-layout reverse">
+                    <!-- Left Column (Media + Specs) -->
+                    <div class="showcase-left-column">
+                        <div class="showcase-media glass-card">
+                            <div class="showcase-media-overlay">TRAx</div>
+                            <div id="vehicle3DCanvas2" class="vehicle-3d-canvas">
+                                <img id="trax-placeholder" class="model-placeholder" src="/Assets/Images/TRAXB.png"
+                                    alt="TRAx Controller Preview">
+                            </div>
+                        </div>
+                        <div class="showcase-specs glass-card">
+                            <div class="spec-item">
+                                <span class="spec-label">Type</span>
+                                <span class="spec-value">Controller</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Feature</span>
+                                <span class="spec-value">Teleoperation</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Compatible</span>
+                                <span class="spec-value">Sensor-Agnostic</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Use</span>
+                                <span class="spec-value">Retrofit Kit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column (Content) -->
+                    <div class="showcase-content glass-card">
+                        <h3>TRAx Controller</h3>
+                        <p class="vehicle-tagline">Terrain-Ready Autonomy Extension</p>
+                        <p>Easily transforms conventional vehicles into autonomous or remotely controlled systems,
+                            enabling teleoperation and seamless integration of various sensors for advanced perception
+                            and control.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Spotlight Section (was Capabilities) - RESTRUCTURED -->
+    <section id="service-spotlight" class="capabilities-section">
         <div class="section-container">
             <div class="section-header">
                 <span class="section-label">Core Capabilities</span>
                 <h2>Engineered for Excellence</h2>
+                <p class="section-subtitle">Our software stacks are the brains behind the brawn. See our full service
+                    offerings.</p>
+                <div class="header-cta">
+                    <a href="services.html" class="cta-button primary">Explore All Services</a>
+                </div>
             </div>
-            <div class="capabilities-showcase">
-                <div class="capability-row">
-                    <div class="capability-text">
+
+            <!-- RESTRUCTURED: Changed from capabilities-showcase to showcase-stack -->
+            <div class="showcase-stack">
+
+                <!-- All-Terrain Navigation Showcase -->
+                <div class="showcase-layout">
+                    <!-- Left Column (Media + Specs) -->
+                    <div class="showcase-left-column">
+                        <div class="showcase-media glass-card">
+                            <div class="showcase-media-overlay">All-Terrain</div>
+                            <img src="/Assets/Images/vehicle_image.png" alt="All-Terrain Vehicle"
+                                class="showcase-image">
+                        </div>
+                        <div class="showcase-specs glass-card">
+                            <div class="spec-item"><span class="spec-value">Learning-Based Terrain Classification</span>
+                            </div>
+                            <div class="spec-item"><span class="spec-value">Adaptive Model-Predictive Control</span>
+                            </div>
+                            <div class="spec-item"><span class="spec-value">Slip & Stability-Aware Navigation</span>
+                            </div>
+                            <div class="spec-item"><span class="spec-value">Real-Time Perception-to-Control Loop</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column (Content) -->
+                    <div class="showcase-content glass-card">
                         <h3>All-Terrain Navigation</h3>
-                        <p>Advanced terrain analysis and dynamic suspension control enables autonomous navigation through sand, rocks, water crossings, and extreme slopes up to 45°.</p>
-                        <ul class="capability-list">
-                            <li>Sand dune navigation</li>
-                            <li>Rock climbing algorithms</li>
-                            <li>Water ford capability</li>
-                            <li>Mountain terrain mapping</li>
-                        </ul>
+                        <p>AutoMind Dynamics’ all-terrain navigation stack combines AI-based perception, terrain
+                            intelligence, and adaptive vehicle control to enable reliable autonomous operation in highly
+                            unstructured and GPS-denied environments. The system continuously reasons about terrain
+                            geometry, surface properties, and vehicle dynamics to generate safe, executable motion
+                            commands in real time.</p>
                     </div>
-                    <div class="capability-visual glass-card">
-                        <img src="vh.jpeg" alt="Allte" style="width:100%;height:300px;max-width:600px;display:block;margin:auto;">
+                </div>
 
+                <!-- Weather Resilience Showcase -->
+                <div class="showcase-layout reverse">
+                    <!-- Left Column (Media + Specs) -->
+                    <div class="showcase-left-column">
+                        <div class="showcase-media glass-card">
+                            <div class="showcase-media-overlay">TraX Controller</div>
+                            <img src="/Assets/Images/TRAXB.png" alt="Weather Resilient Vehicle" class="showcase-image">
+                        </div>
+                        <div class="showcase-specs glass-card">
+                            <div class="spec-item"><span class="spec-value">–40 °C to +60 °C operating range</span>
+                            </div>
+                            <div class="spec-item"><span class="spec-value">vehicle-hardened power</span></div>
+                            <div class="spec-item"><span class="spec-value">CAN/CAN-FD, and Ethernet interfaces</span>
+                            </div>
+                            <div class="spec-item"><span class="spec-value">reliable control under extreme weather and
+                                    vibration conditions</span></div>
+                        </div>
+                    </div>
+                    <!-- Right Column (Content) -->
+                    <div class="showcase-content glass-card">
+                        <h3>TraX Controller</h3>
+                        <p>Built using automotive-grade (AEC-Q qualified) components, TraX Controller is designed for
+                            continuous vehicle operation in harsh environments.</p>
                     </div>
                 </div>
-                <div class="capability-row reverse">
-                    <div class="capability-text">
-                        <h3>Weather Resilience</h3>
-                        <p>Multi-sensor systems adapted to operate in extreme weather—from desert sandstorms to Arctic conditions, rain, snow, and dust storms.</p>
-                        <ul class="capability-list">
-                            <li>-40°C to +60°C operation</li>
-                            <li>Dust and sandstorm resistant</li>
-                            <li>Heavy rain capability</li>
-                            <li>Snow and ice traction</li>
-                        </ul>
-                    </div>
-                    <div class="capability-visual glass-card">
-                        <img src="WR.jpeg" alt="Allte" style="width:100%;height:300px;max-width:600px;display:block;margin:auto;">
-                    </div>
-                </div>
-                <div class="capability-row">
-                    <div class="capability-text">
-                        <h3>Autonomous Intelligence</h3>
-                        <p>Real-time AI decision making with millisecond response times. Self-learning systems that improve performance with every mission completed.</p>
-                        <ul class="capability-list">
-                            <li>Self-learning AI</li>
-                            <li>Real-time adaptation</li>
-                            <li>Obstacle avoidance</li>
-                            <li>Route optimization</li>
-                        </ul>
-                    </div>
-                    <div class="capability-visual glass-card">
-                        <img src="ai.jpeg" alt="Allte" style="width:100%;height:400px;max-width:600px;display:block;margin:auto;">
-                    </div>
-                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Innovation Section -->
-    <section id="innovation" class="innovation-section">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-label">Latest Updates</span>
-                <h2>Innovation Pipeline</h2>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item glass-card">
-                    <div class="timeline-marker">Q4 2024</div>
-                    <h3>V2 Sensor Suite Launch</h3>
-                    <p>Revolutionary dual-spectrum LiDAR system with 10x better resolution and weather resilience. Available for all new models.</p>
-                </div>
-                <div class="timeline-item glass-card">
-                    <div class="timeline-marker">Q1 2025</div>
-                    <h3>Swarm Intelligence Update</h3>
-                    <p>Enable fleet coordination with 50+ vehicles operating as a unified autonomous network for maximum efficiency.</p>
-                </div>
-                <div class="timeline-item glass-card">
-                    <div class="timeline-marker">Q2 2025</div>
-                    <h3>AI Predictive Maintenance</h3>
-                    <p>Advanced algorithms predict component failures before they occur, reducing downtime by 90% and extending vehicle lifespan.</p>
-                </div>
-                <div class="timeline-item glass-card">
-                    <div class="timeline-marker">Q3 2025</div>
-                    <h3>Energy Breakthrough</h3>
-                    <p>Next-gen battery technology offering 1000 km range and 5-minute fast charging capability for extended operations.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Performance Metrics -->
+    <!-- Metrics Section -->
     <section class="metrics-section">
         <div class="section-container">
             <div class="metrics-grid">
@@ -339,52 +503,22 @@
                     <div class="metric-label">Detection Range</div>
                 </div>
                 <div class="metric-card glass-card">
-                    <div class="metric-value">10M+</div>
-                    <div class="metric-label">Miles Tested</div>
+                    <div class="metric-value">100+</div>
+                    <div class="metric-label">Hours Tested</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="services-section">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-label">Solutions</span>
-                <h2>Enterprise Services</h2>
-            </div>
-            <div class="services-grid">
-                <div class="service-card glass-card">
-                    <div class="service-icon">📊</div>
-                    <h3>Fleet Management</h3>
-                    <p>Real-time monitoring, analytics, and optimization of your entire autonomous vehicle fleet with predictive maintenance.</p>
-                </div>
-                <div class="service-card glass-card">
-                    <div class="service-icon">🔧</div>
-                    <h3>Technical Support</h3>
-                    <p>24/7 support team with remote diagnostics, software updates, and emergency response protocols.</p>
-                </div>
-                <div class="service-card glass-card">
-                    <div class="service-icon">📡</div>
-                    <h3>Integration Services</h3>
-                    <p>Seamless integration with your existing infrastructure, APIs, and enterprise systems.</p>
-                </div>
-                <div class="service-card glass-card">
-                    <div class="service-icon">🎓</div>
-                    <h3>Training & Certification</h3>
-                    <p>Comprehensive training programs for operators, engineers, and fleet managers.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Call to Action Section -->
+    <!-- CTA Section -->
     <section class="cta-section">
         <div class="cta-content glass-card">
-            <h2>Ready for Autonomous Revolution?</h2>
+            <h2>Ready for the Autonomous Revolution?</h2>
             <p>Join leading enterprises worldwide that trust AUTOMIND DYNAMICS for autonomous vehicle solutions.</p>
             <div class="cta-buttons">
-                <button class="cta-button primary">Request Demo</button>
+                <button class="cta-button primary"
+                    onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });">Request
+                    Demo</button>
                 <button class="cta-button secondary">Download Brochure</button>
             </div>
         </div>
@@ -399,12 +533,16 @@
             </div>
             <div class="contact-grid">
                 <div class="contact-card glass-card">
-                    <h3>📍 Headquarters</h3>
-                    <p>123 Innovation Drive<br>Silicon Valley, CA 94025<br>United States</p>
+                    <h3>📍 Office</h3>
+                    <p>I-HUB FOR ROBOTICS AND AUTONOMOUS SYSTEMS
+                        <br>INNOVATION FOUNDATION
+                        <br>177, HMT Colony, HMT Staff Quaters, HMT Estate, Jalahalli
+                        <br>Bangalore
+                    </p>
                 </div>
                 <div class="contact-card glass-card">
                     <h3>📞 Contact Info</h3>
-                    <p>Phone: +1 (555) 123-4567<br>Email: info@automind.com<br>Support: support@automind.com</p>
+                    <p>Phone: +91 79962 75705<br>Email: info@automindynamics.com<br>Support: saadiyean@artpark.in</p>
                 </div>
                 <div class="contact-card glass-card">
                     <h3>🕐 Business Hours</h3>
@@ -419,15 +557,16 @@
         <div class="footer-container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>AUTOMIND DYNAMICS</h4>
+                    <h4>AUTOMIND DYNAMICS Pvt Ltd</h4>
                     <p>Pioneering autonomous vehicle technology for all-terrain environments worldwide.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#technology">Technology</a></li>
-                        <li><a href="#vehicles">Vehicles</a></li>
-                        <li><a href="#capabilities">Capabilities</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="#core-tech">Technology</a></li>
+                        <li><a href="#showcase">Showcase</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -448,15 +587,20 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AUTOMIND DYNAMICS. All rights reserved. Autonomy Anywhere. Anytime.</p>
+                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="/Static/js/script.js"></script>
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
+
 </html>
