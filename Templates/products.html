@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - AUTOMIND DYNAMICS</title>
+    <link rel="stylesheet" href="/Static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons (for new section) -->
+    <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+    <!-- Full-page 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="../index.html" class="logo-link">
+                    <img src="/Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Updated nav links for this page -->
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="products.html" class="nav-link active">Products</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <h1 class="page-hero-title">Our Products</h1>
+            <p class="page-hero-subtitle">Hardware and software engineered for the next generation of autonomy.</p>
+        </div>
+    </section>
+
+    <!-- Refactored Product Section with Nested Tabs -->
+    <section id="product-deep-dive" class="ugv-details-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Product Deep Dive</span>
+                <h2>Explore Our Product Stacks</h2>
+            </div>
+
+            <!-- Main Tab Navigation (Level 1) -->
+            <div class="tabs-container" id="main-product-tabs">
+                <div class="tab-nav">
+                    <button class="tab-link active" data-tab="product-tab-ugv">Autonomous UGVs</button>
+                    <button class="tab-link" data-tab="product-tab-sensor">Sensor Suite</button>
+                    <button class="tab-link" data-tab="product-tab-trax">TRAx Controller</button>
+                    <button class="tab-link" data-tab="product-tab-sim">HyperSim</button>
+                </div>
+
+                <!-- Main Tab Content Wrapper (Level 1) -->
+                <div class="tab-content-wrapper">
+
+                    <!-- 1. UGV Tab Content -->
+                    <div id="product-tab-ugv" class="tab-content active">
+                        <div class="section-header"
+                            style="margin-bottom: 2rem; text-align: left; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">
+                            <h3 class="tab-section-title">Autonomous Ground Vehicles</h3>
+                            <p class="tab-section-subtitle">Robust, all-terrain unmanned ground vehicles built for any
+                                mission.</p>
+                        </div>
+
+                        <!-- Nested Tab Navigation (Level 2) -->
+                        <div class="tabs-container" id="ugv-sub-tabs">
+                            <div class="sub-tab-nav">
+                                <button class="tab-link active" data-tab="ugv-sub-r1">R1 Mini</button>
+                                <button class="tab-link" data-tab="ugv-sub-nomad">Nomad Explorer</button>
+                                <button class="tab-link" data-tab="ugv-sub-grizzly">Grizzly UGV</button>
+                            </div>
+
+                            <!-- Nested Tab Content Wrapper (Level 2) -->
+                            <div class="tab-content-wrapper">
+                                <!-- R1 Mini Content - RESTRUCTURED -->
+                                <div id="ugv-sub-r1" class="tab-content active">
+                                    <div class="showcase-layout">
+                                        <div class="showcase-left-column">
+                                            <div class="showcase-media glass-card">
+                                                <div class="showcase-media-overlay">R1 Mini</div>
+                                                <img src="/Assets/Images/R1b.png" alt="R1 Mini" class="showcase-image"
+                                                    style="object-fit: contain; padding: 1rem; background: #111;">
+                                            </div>
+                                            <div class="showcase-specs glass-card">
+                                                <div class="spec-item"><span class="spec-label">Payload</span><span
+                                                        class="spec-value">5 kg</span></div>
+                                                <div class="spec-item"><span class="spec-label">Speed</span><span
+                                                        class="spec-value">4.9 km/h</span></div>
+                                                <div class="spec-item"><span class="spec-label">Runtime (Performance)
+                                                    </span><span class="spec-value">6 hours</span></div>
+                                                <div class="spec-item"><span class="spec-label">Dimensions</span><span
+                                                        class="spec-value">390 x 348 x 190 mm</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-content glass-card">
+                                            <h3>R1 Mini</h3>
+                                            <p class="vehicle-tagline">Compact All-Terrain UGV</p>
+                                            <p>
+                                                <li>Autonomous mobile robot-ready for Research and academia</li>
+                                                <li>Rapid deployment with minimal setup and configuration</li>
+                                                <li>Built-in autonomy stack covering perception, planning, navigation,
+                                                    control, and obstacle avoidance</li>
+                                                <li>Engineered for both research and real-world experimentation, powered
+                                                    by open-source ROS2 frameworks</li>
+                                                <li>Modular payload support, enabling easy integration of custom sensors
+                                                    and research hardware</li>
+                                            </p>
+                                            <div class="product-download-buttons">
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Spec Sheet
+                                                </a>
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Brochure
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Nomad Explorer Content - COMMENTED OUT (No video available yet) -->
+                                <div id="ugv-sub-nomad" class="tab-content">
+                                    <div class="showcase-layout">
+                                        <div class="showcase-left-column">
+                                            <div class="showcase-media glass-card">
+                                                <div class="showcase-media-overlay">Nomad</div>
+                                                <img src="/Assets/Images/nomad.jpeg"
+                                                    alt="Nomad Explorer" class="showcase-image">
+                                            </div>
+                                            <div class="showcase-specs glass-card">
+                                                <div class="spec-item"><span class="spec-label">Payload</span><span
+                                                        class="spec-value">75 kg</span></div>
+                                                <div class="spec-item"><span class="spec-label">Speed</span><span
+                                                        class="spec-value">30 km/h</span></div>
+                                                <div class="spec-item"><span class="spec-label">Runtime</span><span
+                                                        class="spec-value">8-12 hours</span></div>
+                                                <div class="spec-item"><span class="spec-label">Drivetrain</span><span
+                                                        class="spec-value">6x6</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-content glass-card">
+                                            <h3>Nomad Explorer</h3>
+                                            <p class="vehicle-tagline">Medium-Duty Exploration Platform</p>
+                                            <p>The Nomad Explorer is a versatile, medium-sized UGV built for long-range
+                                                missions and heavy sensor payloads. It features hybrid-electric power
+                                                for extended operational range and advanced suspension for high-speed,
+                                                all-terrain mobility.</p>
+                                            <div class="product-download-buttons">
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Spec Sheet
+                                                </a>
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Brochure
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <!-- Grizzly UGV Content - COMING SOON -->
+                                <div id="ugv-sub-grizzly" class="tab-content">
+                                    <!-- Coming Soon Placeholder -->
+                                    <div class="coming-soon-container"
+                                        style="display: flex; align-items: center; justify-content: center; min-height: 400px; text-align: center;">
+                                        <div class="glass-card" style="padding: 4rem; max-width: 600px;">
+                                            <h3 style="font-size: 2rem; margin-bottom: 1rem;">Grizzly UGV</h3>
+                                            <p class="vehicle-tagline"
+                                                style="color: var(--accent-primary); margin-bottom: 1.5rem;">Coming Soon
+                                            </p>
+                                            <p style="color: var(--text-secondary);">The Grizzly UGV is currently in
+                                                development. Stay tuned for our most powerful autonomous ground vehicle.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- ORIGINAL GRIZZLY CONTENT - UNCOMMENT WHEN READY
+                                    <div class="showcase-layout">
+                                        <div class="showcase-left-column">
+                                            <div class="showcase-media glass-card">
+                                                <div class="showcase-media-overlay">Grizzly</div>
+                                                <img src="https://placehold.co/600x400/1a1a1a/ffffff?text=Grizzly+UGV"
+                                                    alt="Grizzly UGV" class="showcase-image">
+                                            </div>
+                                            <div class="showcase-specs glass-card">
+                                                <div class="spec-item"><span class="spec-label">Payload</span><span
+                                                        class="spec-value">500 kg</span></div>
+                                                <div class="spec-item"><span class="spec-label">Towing</span><span
+                                                        class="spec-value">1000 kg</span></div>
+                                                <div class="spec-item"><span class="spec-label">Speed</span><span
+                                                        class="spec-value">20 km/h</span></div>
+                                                <div class="spec-item"><span class="spec-label">Feature</span><span
+                                                        class="spec-value">Amphibious</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-content glass-card">
+                                            <h3>Grizzly UGV</h3>
+                                            <p class="vehicle-tagline">Heavy-Payload Workhorse</p>
+                                            <p>The Grizzly is our largest and most powerful UGV, capable of carrying
+                                                over 500 kg of equipment. It serves as a robust platform for logistics,
+                                                agriculture, and defense applications, with fully autonomous navigation
+                                                and mission-planning capabilities.</p>
+                                            <div class="product-download-buttons">
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Spec Sheet
+                                                </a>
+                                                <a href="#" class="download-btn" download>
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2">
+                                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                        <polyline points="7 10 12 15 17 10" />
+                                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                                    </svg>
+                                                    Brochure
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    END GRIZZLY CONTENT -->
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End UGV Tab Content -->
+
+                    <!-- 2. Sensor Suite Tab Content - RESTRUCTURED -->
+                    <div id="product-tab-sensor" class="tab-content">
+                        <div class="showcase-layout">
+                            <div class="showcase-left-column">
+                                <div class="showcase-media glass-card">
+                                    <div class="showcase-media-overlay">Sensor Suite</div>
+                                    <img src="/Assets/Images/sensor_suit.png" alt="Sensor Suite" class="showcase-image">
+                                </div>
+                                <div class="showcase-specs glass-card">
+                                    <div class="spec-item"><span class="spec-value">360° LiDAR</span></div>
+                                    <div class="spec-item"><span class="spec-value">Long-Range Radar</span></div>
+                                    <div class="spec-item"><span class="spec-value">Thermal & Visual</span></div>
+                                    <div class="spec-item"><span class="spec-value">Sensor Fusion</span></div>
+                                </div>
+                            </div>
+                            <div class="showcase-content glass-card">
+                                <h3>Sensor Suite</h3>
+                                <p class="vehicle-tagline">360° Perception System</p>
+                                <p>AutoMind Dynamics’ hand-held sensor suite is a rugged, multi-modal perception system
+                                    designed for rapid 3D mapping and reconstruction in GPS-denied and unstructured
+                                    environments. The system enables high-accuracy spatial data capture for terrain
+                                    modeling, site surveying, and mission planning, feeding directly into autonomy and
+                                    simulation workflows.</p>
+                                <!--  <div class="product-download-buttons">
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Spec Sheet
+                                    </a>
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Brochure
+                                    </a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. TRAx Controller Tab Content - RESTRUCTURED -->
+                    <div id="product-tab-trax" class="tab-content">
+                        <div class="showcase-layout">
+                            <div class="showcase-left-column">
+                                <div class="showcase-media glass-card">
+                                    <div class="showcase-media-overlay">TRAx</div>
+                                    <img src="/Assets/Images/TRAXB.png" alt="TRAx Controller" class="showcase-image"
+                                        style="object-fit: contain; padding: 1rem; background: #111;">
+                                </div>
+                                <div class="showcase-specs glass-card">
+                                    <div class="spec-item"><span class="spec-label">Compute</span><span
+                                            class="spec-value">NVIDIA Orin</span></div>
+                                    <div class="spec-item"><span class="spec-label">Control</span><span
+                                            class="spec-value">Drive-by-Wire</span></div>
+                                    <div class="spec-item"><span class="spec-label">Power</span><span
+                                            class="spec-value">Redundant</span></div>
+                                    <div class="spec-item"><span class="spec-label">Agnostic</span><span
+                                            class="spec-value">Platform</span></div>
+                                </div>
+                            </div>
+                            <div class="showcase-content glass-card">
+                                <h3>TRAx Controller</h3>
+                                <p class="vehicle-tagline">Terrain-Ready Autonomy Extension</p>
+                                <p>The TRAx Controller is a vehicle-agnostic autonomy kit. It provides the central
+                                    compute, networking, and power distribution required to run our advanced software,
+                                    plus the drive-by-wire actuation to control any vehicle. This allows for rapid
+                                    retrofitting of existing fleets.</p>
+                                <div class="product-download-buttons">
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Spec Sheet
+                                    </a>
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Brochure
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. HyperSim Tab Content - RESTRUCTURED -->
+                    <div id="product-tab-sim" class="tab-content">
+                        <div class="showcase-layout">
+                            <div class="showcase-left-column">
+                                <div class="showcase-media glass-card">
+                                    <div class="showcase-media-overlay">HyperSim</div>
+                                    <img src="/Assets/Images/hypersim.jpeg" alt="HyperSim" class="showcase-image">
+                                </div>
+                                <div class="showcase-specs glass-card">
+                                    <div class="spec-item"><span class="spec-value">Physics-Based</span></div>
+                                    <div class="spec-item"><span class="spec-value">World Generation</span></div>
+                                    <div class="spec-item"><span class="spec-value">Sensor Simulation</span></div>
+                                    <div class="spec-item"><span class="spec-value">Hardware-in-Loop</span></div>
+                                </div>
+                            </div>
+                            <div class="showcase-content glass-card">
+                                <h3>HyperSim</h3>
+                                <p class="vehicle-tagline">Physics-Based Simulation</p>
+                                <p>HyperSim is our high-fidelity, physics-based simulation environment. We use it to
+                                    train, test, and validate our AI in millions of virtual scenarios, from routine
+                                    driving to high-risk edge cases, ensuring safety and reliability before a single
+                                    wheel touches the ground.</p>
+                                <!--  <div class="product-download-buttons">
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Spec Sheet
+                                    </a>
+                                    <a href="#" class="download-btn" download>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Brochure
+                                    </a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full-Width Video Showcase Section -->
+    <section id="video-showcase" class="fullwidth-video-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Watch In Action</span>
+                <h2 class="video-section-title">See Our Technology Live</h2>
+                <p class="section-subtitle">Witness autonomous capabilities in real-world scenarios</p>
+            </div>
+
+            <!-- UGV Videos -->
+            <div class="product-video-group active" data-product="product-tab-ugv">
+                <div class="video-showcase-stack">
+                    <!-- Video 1 -->
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/R1_1st.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-left"></div>
+                            <div class="video-corner-accent bottom-right"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                                <div class="tech-crosshair"></div>
+                            </div>
+                            <div class="video-content-overlay">
+                                <div class="video-number">01</div>
+                                <span class="video-label">R1 Mini</span>
+                                <h3 class="video-title">Autonomous Ground Vehicle</h3>
+                                <p class="video-description">
+                                    Ready for Research and Academia</p>
+                            </div>
+                            <div class="video-side-info">
+                                <span>AUTONOMOUS</span>
+                                <span>•</span>
+                                <span>REAL-TIME</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Video 2 -->
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped reverse">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/R1_2nd.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-right"></div>
+                            <div class="video-corner-accent bottom-left"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                            </div>
+                            <div class="video-content-overlay align-right">
+                                <div class="video-number">02</div>
+                                <span class="video-label">Research ready</span>
+                                <h3 class="video-title">ROS Compatible</h3>
+                                <p class="video-description">Fully Open source navigation stack,including Perception ,
+                                    Planning obstacle avoidance.</p>
+                            </div>
+                            <div class="video-side-info left">
+                                <span>GPS-DENIED</span>
+                                <span>•</span>
+                                <span>ALL-WEATHER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensor Suite Videos -->
+            <div class="product-video-group" data-product="product-tab-sensor">
+                <div class="video-showcase-stack">
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/sensor_1st.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-left"></div>
+                            <div class="video-corner-accent bottom-right"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                                <div class="tech-crosshair"></div>
+                            </div>
+                            <div class="video-content-overlay">
+                                <div class="video-number">01</div>
+                                <span class="video-label">Sensor Suite</span>
+                                <h3 class="video-title">360° LiDAR Perception</h3>
+                                <p class="video-description">Real-time 3D environment mapping with centimeter-level
+                                    precision</p>
+                            </div>
+                            <div class="video-side-info">
+                                <span>360° SCAN</span>
+                                <span>•</span>
+                                <span>3D MAPPING</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped reverse">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/sensor_2nd.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-right"></div>
+                            <div class="video-corner-accent bottom-left"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                            </div>
+                            <div class="video-content-overlay align-right">
+                                <div class="video-number">02</div>
+                                <span class="video-label">Multi-Sensor</span>
+                                <h3 class="video-title">Sensor Fusion AI</h3>
+                                <p class="video-description">Combining LiDAR, radar, and camera data for robust
+                                    perception</p>
+                            </div>
+                            <div class="video-side-info left">
+                                <span>FUSION</span>
+                                <span>•</span>
+                                <span>AI-POWERED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRAx Controller Videos -->
+            <div class="product-video-group" data-product="product-tab-trax">
+                <div class="video-showcase-stack">
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/Trax1.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-left"></div>
+                            <div class="video-corner-accent bottom-right"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                                <div class="tech-crosshair"></div>
+                            </div>
+                            <div class="video-content-overlay">
+                                <div class="video-number">01</div>
+                                <span class="video-label">TRAx</span>
+                                <h3 class="video-title">Vehicle Retrofit</h3>
+                                <p class="video-description">Transform any vehicle into an autonomous platform with our
+                                    universal controller</p>
+                            </div>
+                            <div class="video-side-info">
+                                <span>UNIVERSAL</span>
+                                <span>•</span>
+                                <span>PLUG & PLAY</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped reverse">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/Trax2.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-right"></div>
+                            <div class="video-corner-accent bottom-left"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                            </div>
+                            <div class="video-content-overlay align-right">
+                                <div class="video-number">02</div>
+                                <span class="video-label">Drive-by-Wire</span>
+                                <h3 class="video-title">Precision Control</h3>
+                                <p class="video-description">Sub-millisecond actuation for steering, throttle, and
+                                    braking</p>
+                            </div>
+                            <div class="video-side-info left">
+                                <span>REDUNDANT</span>
+                                <span>•</span>
+                                <span>FAIL-SAFE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HyperSim Videos -->
+            <div class="product-video-group" data-product="product-tab-sim">
+                <div class="video-showcase-stack">
+                    <div class="fullwidth-video-wrapper" data-scroll-reveal>
+                        <div class="video-container clipped">
+                            <video class="fullwidth-video" muted loop playsinline autoplay>
+                                <source src="/Assets/videos/hypersim.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-gradient-overlay"></div>
+                            <div class="video-corner-accent top-left"></div>
+                            <div class="video-corner-accent bottom-right"></div>
+                            <div class="video-tech-overlay">
+                                <div class="tech-line horizontal"></div>
+                                <div class="tech-line vertical"></div>
+                                <div class="tech-crosshair"></div>
+                            </div>
+                            <div class="video-content-overlay">
+                                <div class="video-number">01</div>
+                                <span class="video-label">HyperSim</span>
+                                <h3 class="video-title">Virtual Worlds</h3>
+                                <p class="video-description">Physics-accurate simulation for training AI in millions of
+                                    scenarios</p>
+                            </div>
+                            <div class="video-side-info">
+                                <span>PHOTOREALISTIC</span>
+                                <span>•</span>
+                                <span>PHYSICS-BASED</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>AUTOMIND DYNAMICS Pvt Ltd</h4>
+                    <p>Pioneering autonomous vehicle technology for all-terrain environments worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="index.html#core-tech">Technology</a></li>
+                        <li><a href="index.html#showcase">Showcase</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Twitter</a>
+                        <a href="#">LinkedIn</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="/Static/js/script.js"></script>
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
