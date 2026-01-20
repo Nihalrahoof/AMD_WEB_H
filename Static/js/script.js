@@ -413,12 +413,12 @@ function init3DModelLoading() { // Renamed from setupLazy3DLoading
 
     if (canvas1) {
         // Start loading R1 immediately
-        initVehicle3DViewer('vehicle3DCanvas1', '/Assets/objects/NR1.obj', 'vehicle3D_scout');
+        initVehicle3DViewer('vehicle3DCanvas1', 'Assets/objects/NR1.obj', 'vehicle3D_scout');
     }
 
     if (canvas2) {
         // Start loading TRAx immediately
-        initVehicle3DViewer('vehicle3DCanvas2', '/Assets/objects/NTRAX.obj', 'vehicle3D_pathfinder');
+        initVehicle3DViewer('vehicle3DCanvas2', 'Assets/objects/NTRAX.obj', 'vehicle3D_pathfinder');
     }
 }
 

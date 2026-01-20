@@ -7,7 +7,7 @@
 /* Canva Sans Bold - for navbar logo */
 @font-face {
     font-family: 'Canva Sans';
-    src: url('/Static/fonts/canva-sans-bold.otf') format('opentype');
+    src: url('../fonts/canva-sans-bold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
