@@ -209,15 +209,32 @@ function initVehicle3DViewer(canvasId, modelPath, sceneKey) {
     renderer.setClearColor(0x000000, 0);
     renderer.shadowMap.enabled = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 2.0; /* Increased exposure for brighter render */
     canvas.appendChild(renderer.domElement);
     renderer.domElement.style.opacity = '0';
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    /* Enhanced lighting for aluminium visibility */
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); /* Brighter ambient */
     scene.add(ambientLight);
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.8); /* Brighter main light */
     mainLight.position.set(5, 10, 7);
     scene.add(mainLight);
+
+    /* Add fill light from opposite side */
+    const fillLight = new THREE.DirectionalLight(0xaaccff, 1.0); /* Slight blue tint for metallic look */
+    fillLight.position.set(-5, 5, -5);
+    scene.add(fillLight);
+
+    /* Add rim light for edge definition */
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    rimLight.position.set(0, -5, 10);
+    scene.add(rimLight);
+
+    /* Add top light */
+    const topLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    topLight.position.set(0, 15, 0);
+    scene.add(topLight);
 
     const loader = new THREE.OBJLoader();
     loader.load(
@@ -226,9 +243,10 @@ function initVehicle3DViewer(canvasId, modelPath, sceneKey) {
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
                     child.material = new THREE.MeshStandardMaterial({
-                        color: 0x333333,
-                        metalness: 0.8,
-                        roughness: 0.4,
+                        color: 0xDBDBDB, /* Brighter Silver/Aluminium */
+                        metalness: 1.0,  /* Full metallic */
+                        roughness: 0.1,  /* Very smooth for sharp highlights */
+                        emissive: 0x222222, /* Subtle glow to prevent total blackness */
                     });
                     child.castShadow = true;
                     child.receiveShadow = true;
