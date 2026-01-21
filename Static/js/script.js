@@ -253,7 +253,7 @@ function initVehicle3DViewer(canvasId, modelPath, sceneKey) {
             });
 
             if (sceneKey === 'vehicle3D_pathfinder') {
-                object.rotation.x = Math.PI / 2;
+                object.rotation.x = Math.PI * 2;
                 object.rotation.y = Math.PI;
             }
 
