@@ -379,7 +379,7 @@ function initTypingAnimation() {
     if (!mainEl || !subEl) return;
 
     const mainText = "Intelligence";
-    const phrases = ["in Motion.", "Everywhere.", "Unstoppable."];
+    const phrases = ["in Motion.", "Everywhere."];
     let mainIndex = 0, subIndex = 0, phraseIndex = 0, isDeleting = false;
     const typeSpeed = 90, delSpeed = 45, pause = 2000;
 
@@ -846,8 +846,42 @@ document.addEventListener('DOMContentLoaded', () => {
     initVideoShowcase(); // For homepage video wall
     initFullWidthVideoShowcase(); // For full-width video showcase on products page
 
+    // Init security deterrents
+    initSecurityDeterrents();
+
     // Init Lucide Icons if available
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
 });
+
+/**
+ * Deterrents for site inspection (Right-click, F12, Ctrl+Shift+I)
+ * Provides a basic layer of protection against casual asset copying.
+ */
+function initSecurityDeterrents() {
+    // Disable Right-Click
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    }, false);
+
+    // Disable common DevTools shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Disable F12
+        if (e.key === 'F12') {
+            e.preventDefault();
+        }
+        // Disable Ctrl+Shift+I / Cmd+Option+I
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+            e.preventDefault();
+        }
+        // Disable Ctrl+Shift+J / Cmd+Option+J
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+            e.preventDefault();
+        }
+        // Disable Ctrl+U / Cmd+U (View Source)
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+            e.preventDefault();
+        }
+    }, false);
+}
