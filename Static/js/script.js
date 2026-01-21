@@ -883,5 +883,16 @@ function initSecurityDeterrents() {
         if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
             e.preventDefault();
         }
+        // Attempt to catch Cmd+Shift+3 or Cmd+Shift+4 (Mac)
+        if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === '5')) {
+            alert('Screenshot capture is discouraged. Please contact AutoMind Dynamics for official media assets.');
+        }
     }, false);
+
+    // Attempt to deter PrintScreen
+    window.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen' || e.key === 'Snapshot') {
+            alert('Screenshot capture is discouraged.');
+        }
+    });
 }
