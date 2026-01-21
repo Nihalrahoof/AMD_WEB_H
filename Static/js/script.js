@@ -243,10 +243,9 @@ function initVehicle3DViewer(canvasId, modelPath, sceneKey) {
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
                     child.material = new THREE.MeshStandardMaterial({
-                        color: 0xDBDBDB, /* Brighter Silver/Aluminium */
-                        metalness: 1.0,  /* Full metallic */
-                        roughness: 0.1,  /* Very smooth for sharp highlights */
-                        emissive: 0x222222, /* Subtle glow to prevent total blackness */
+                        color: 0x111111, /* Metallic Black */
+                        metalness: 0.9,
+                        roughness: 0.3,
                     });
                     child.castShadow = true;
                     child.receiveShadow = true;
