@@ -626,7 +626,10 @@ function initTabs() {
 
     // Video title mapping
     const videoTitleMap = {
-        'product-tab-ugv': 'Autonomous UGV In Action',
+        'product-tab-ugv': 'GEFIER R1 In Action',
+        'ugv-sub-r1': 'GEFIER R1 In Action',
+        'ugv-sub-nomad': 'Nomad Explorer In Action',
+        'ugv-sub-grizzly': 'Grizzly UGV In Action',
         'product-tab-sensor': 'Sensor Suite In Action',
         'product-tab-trax': 'TRAx Controller In Action',
         'product-tab-sim': 'HyperSim In Action'
@@ -666,7 +669,9 @@ function initTabs() {
                     });
 
                     // Show the matching video group
-                    const activeVideoGroup = document.querySelector(`.product-video-group[data-product="${tabId}"]`);
+                    let queryTabId = tabId;
+                    if (tabId === 'ugv-sub-r1') queryTabId = 'product-tab-ugv';
+                    const activeVideoGroup = document.querySelector(`.product-video-group[data-product="${queryTabId}"]`);
                     if (activeVideoGroup) {
                         activeVideoGroup.classList.add('active');
                         // Trigger scroll check to animate visible videos
