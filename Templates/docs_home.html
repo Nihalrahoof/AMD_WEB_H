@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Portal - Automind Dynamics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --dark-bg: #000000;
+            --darker-bg: #050505;
+            --accent: #ffffff;
+            --glass-bg: rgba(10, 10, 10, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            
+            --font-body: 'Outfit', sans-serif;
+            --font-heading: 'Syne', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 0%, #111113 0%, var(--dark-bg) 70%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .header {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .header p {
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-container {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 2rem 6rem 2rem;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .system-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 260px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.05);
+        }
+
+        .system-icon {
+            background: rgba(255, 255, 255, 0.05);
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .system-name {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .system-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .system-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+        }
+
+        .system-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .system-card:hover .system-link i {
+            transform: translateX(5px);
+        }
+
+        .navbar {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .admin-link {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border: 1px solid var(--glass-border);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .admin-link:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo-text">AUTOMIND DYNAMICS</a>
+            <a href="/admin/" class="admin-link">Console Access</a>
+        </div>
+    </nav>
+
+    <div class="header">
+        <h1>Technical Documentation</h1>
+        <p>Neurological framework, hardware blueprints, and control sequences for Automind Dynamics robotic rovers</p>
+    </div>
+
+    <div class="main-container">
+        {% if not rovers %}
+        <div style="text-align: center; padding: 5rem 0; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+            <i data-lucide="info" style="width: 48px; height: 48px; stroke-width: 1.5; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+            <p style="color: var(--text-secondary);">No systems registered in the technical database yet.</p>
+        </div>
+        {% else %}
+        <div class="systems-grid">
+            {% for r in rovers %}
+            {% if request.host.startswith('docs.') %}
+                {% set rover_url = '/' + r.slug %}
+            {% else %}
+                {% set rover_url = '/docs/' + r.slug %}
+            {% endif %}
+            <a href="{{ rover_url }}" class="system-card">
+                <div>
+                    <div class="system-icon">
+                        <i data-lucide="bot" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <h2 class="system-name">{{ r.name }}</h2>
+                    <p class="system-desc">{{ r.description or 'Technical hardware manuals and operational stack guides.' }}</p>
+                </div>
+                <div class="system-link">
+                    Explore Technical Docs <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

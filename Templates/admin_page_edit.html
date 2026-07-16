@@ -1,0 +1,355 @@
+{% extends "templates/admin_base.html" %}
+
+{% block title %}{% if page %}Edit {{ page.title }}{% else %}New Page{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .editor-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 1rem;
+        min-height: 500px;
+    }
+
+    @media (max-width: 992px) {
+        .editor-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .editor-pane, .preview-pane {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preview-pane {
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1.5rem;
+        overflow-y: auto;
+        max-height: 600px;
+    }
+
+    .markdown-body {
+        font-family: var(--font-body);
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+        font-family: var(--font-heading);
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+    }
+
+    .markdown-body h1 { font-size: 1.6rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem; }
+    .markdown-body h2 { font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.3rem;}
+    .markdown-body h3 { font-size: 1.1rem; }
+
+    .markdown-body p {
+        margin-bottom: 1rem;
+        color: #e2e2e9;
+    }
+
+    .markdown-body pre {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--glass-border);
+        border-radius: 6px;
+        padding: 1rem;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+    }
+
+    .markdown-body code {
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: #fca5a5;
+    }
+
+    .markdown-body pre code {
+        color: var(--text-primary);
+        background: transparent;
+        padding: 0;
+    }
+
+    .markdown-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        border: 1px solid var(--glass-border);
+        margin: 1.5rem 0;
+    }
+
+    .markdown-body ul, .markdown-body ol {
+        margin-bottom: 1rem;
+        padding-left: 2rem;
+    }
+
+    .markdown-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+
+    .markdown-body table th, .markdown-body table td {
+        border: 1px solid var(--glass-border);
+        padding: 0.5rem 1rem;
+    }
+
+    .markdown-body table th {
+        background: rgba(255,255,255,0.05);
+    }
+
+    /* Meta grid */
+    .meta-grid {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .meta-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Uploader bar */
+    .uploader-bar {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px dashed var(--glass-border);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .uploader-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .copy-toast {
+        background: #10b981;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: none;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+    <span>/</span>
+    <a href="{{ url_for('admin_rover_view', rover_id=rover.id) }}">{{ rover.name }} Docs</a>
+    <span>/</span>
+    <a style="color: var(--text-primary);">{% if page %}Edit ({{ page.title }}){% else %}New Page{% endif %}</a>
+</div>
+
+<div class="glass-panel">
+    <div class="panel-header">
+        <div class="panel-title">
+            <i data-lucide="file-text"></i> {% if page %}Edit Documentation Page{% else %}Create Documentation Page{% endif %}
+        </div>
+        <a href="{{ url_for('admin_rover_view', rover_id=rover.id) }}" class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+
+    <form action="{% if page %}{{ url_for('admin_page_edit', page_id=page.id) }}{% else %}{{ url_for('admin_page_new', rover_id=rover.id) }}{% endif %}" method="POST">
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:600; text-transform:uppercase; color:var(--text-secondary); margin-bottom:0.5rem;">Page Title</label>
+            <input type="text" id="title" name="title" class="form-control" style="font-size: 1.2rem; font-weight: 600;" placeholder="e.g. LiDAR Setup Guide" value="{{ page.title if page else '' }}" required>
+        </div>
+
+        <div class="meta-grid">
+            <div class="form-group">
+                <label for="slug">URL Slug</label>
+                <input type="text" id="slug" name="slug" class="form-control" placeholder="e.g. lidar-setup" value="{{ page.slug if page else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="parent_id">Parent Page (Category)</label>
+                <select id="parent_id" name="parent_id" class="form-control" style="background-color: #0c0c0e;">
+                    <option value="">-- None (Top Level) --</option>
+                    {% for p in parent_pages %}
+                    <option value="{{ p.id }}" {% if page and page.parent_id == p.id %}selected{% endif %}>{{ p.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order">Sort Order</label>
+                <input type="number" id="order" name="order" class="form-control" placeholder="0" value="{{ page.order if page else 0 }}">
+            </div>
+        </div>
+
+        <!-- Image Uploader Tool -->
+        <div class="uploader-bar">
+            <div class="uploader-info">
+                <span style="font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                    <i data-lucide="image" style="width: 16px; height: 16px; color: var(--text-secondary);"></i> Upload Docs Images
+                </span>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.15rem;">
+                    Upload images to include in documentation (saves directly to system database)
+                </span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="file" id="image-upload-input" accept="image/*" style="display: none;" onchange="uploadImage()">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('image-upload-input').click()">
+                    Select & Upload Image
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic code generator popup for image -->
+        <div id="image-code-container" class="uploader-bar" style="display: none; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.3);">
+            <div class="uploader-info">
+                <span style="font-size: 0.85rem; font-weight: 600; color: #34d399;">✓ Image uploaded successfully!</span>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.15rem;">
+                    Copy this tag and paste it anywhere in the markdown editor below:
+                </span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="image-md-code" class="form-control" style="font-family: monospace; font-size: 0.8rem; padding: 0.4rem 0.8rem; width: 280px;" readonly>
+                <button type="button" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem;" onclick="copyImageMarkdown()">
+                    Copy Tag
+                </button>
+            </div>
+        </div>
+
+        <div class="editor-layout">
+            <div class="editor-pane">
+                <label style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    Markdown Content
+                </label>
+                <textarea id="markdown-editor" name="content" class="form-control" style="flex: 1; font-family: monospace; font-size: 0.95rem; min-height: 400px; padding: 1rem; line-height: 1.5;" placeholder="# Introduction&#10;&#10;Write documentation details here using Markdown syntax. Code blocks, links, headers and lists are supported.">{{ page.content if page else '' }}</textarea>
+            </div>
+            <div class="preview-pane">
+                <label style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">
+                    Live HTML Render Preview
+                </label>
+                <div id="live-preview" class="markdown-body" style="padding-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+            <a href="{{ url_for('admin_rover_view', rover_id=rover.id) }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <i data-lucide="save"></i> Publish Page
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="copy-toast" class="copy-toast">Markdown tag copied to clipboard!</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Marked JS for Client-side live preview -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const editor = document.getElementById('markdown-editor');
+    const preview = document.getElementById('live-preview');
+    const titleInput = document.getElementById('title');
+    const slugInput = document.getElementById('slug');
+
+    // Auto slug generation from title (only when creating new pages)
+    {% if not page %}
+    titleInput.addEventListener('input', () => {
+        const text = titleInput.value;
+        slugInput.value = text.toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/[^-a-z0-9]/g, '');
+    });
+    {% endif %}
+
+    // Live preview update
+    function updatePreview() {
+        const text = editor.value;
+        preview.innerHTML = marked.parse(text);
+    }
+
+    editor.addEventListener('input', updatePreview);
+    updatePreview(); // Initial preview
+
+    // AJAX Image Uploading
+    function uploadImage() {
+        const fileInput = document.getElementById('image-upload-input');
+        if (!fileInput.files || fileInput.files.length === 0) return;
+
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+
+        // Show uploading state
+        const originalBtn = document.querySelector('.uploader-bar button');
+        originalBtn.textContent = 'Uploading...';
+        originalBtn.disabled = true;
+
+        fetch('{{ url_for("admin_upload_image") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            originalBtn.textContent = 'Select & Upload Image';
+            originalBtn.disabled = false;
+
+            if (data.success) {
+                const codeInput = document.getElementById('image-md-code');
+                const cleanName = data.filename.split('.')[0].replace(/[^a-zA-Z0-9]/g, '-');
+                codeInput.value = `![${cleanName}](${data.url})`;
+                
+                document.getElementById('image-code-container').style.display = 'flex';
+                fileInput.value = ''; // Reset input
+            } else {
+                alert('Upload failed: ' + data.message);
+            }
+        })
+        .catch(error => {
+            originalBtn.textContent = 'Select & Upload Image';
+            originalBtn.disabled = false;
+            alert('An error occurred during file upload.');
+            console.error(error);
+        });
+    }
+
+    function copyImageMarkdown() {
+        const copyText = document.getElementById('image-md-code');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+
+        const toast = document.getElementById('copy-toast');
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 2500);
+    }
+</script>
+{% endblock %}

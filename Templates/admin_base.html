@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Console{% endblock %} - Automind Dynamics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --dark-bg: #000000;
+            --darker-bg: #050505;
+            --accent: #ffffff;
+            --accent-glow: rgba(255, 255, 255, 0.15);
+            --danger: #ef4444;
+            --glass-bg: rgba(10, 10, 10, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #ffffff;
+            --text-secondary: #8a8a93;
+            --text-muted: #4e4e52;
+            
+            --font-body: 'Outfit', sans-serif;
+            --font-heading: 'Syne', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 0%, #151518 0%, var(--dark-bg) 60%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .brand h1 {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .brand-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+        }
+
+        .nav-link.logout {
+            color: var(--danger);
+            opacity: 0.8;
+        }
+
+        .nav-link.logout:hover {
+            opacity: 1;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        /* Glassmorphic Panel UI */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 1rem;
+        }
+
+        .panel-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.25rem;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000000;
+        }
+
+        .btn-primary:hover {
+            background: #e2e2e9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border-color: var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        /* Tables & Lists */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .admin-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        /* Modal Dialogs (Pure CSS trigger or JS supported) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('admin_dashboard') }}" class="brand">
+                <h1>Automind Dynamics</h1>
+                <span class="brand-badge">Tech Console</span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if request.path == '/admin/' %}active{% endif %}">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
+                </a>
+                <a href="{{ url_for('home') }}" class="nav-link" target="_blank">
+                    <i data-lucide="external-link"></i> Main Website
+                </a>
+                <a href="{{ url_for('admin_logout') }}" class="nav-link logout">
+                    <i data-lucide="log-out"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Initialize all icons on page load
+        lucide.createIcons();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

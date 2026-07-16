@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ current_page.title if current_page else 'Docs' }} - {{ rover.name }} Documentation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Prism.js Code Highlighting (Dark Theme) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* ============================================
+            Theme Variables (Light & Dark Support)
+           ============================================ */
+        :root {
+            /* Light Mode Default (Clearpath Style) */
+            --bg-main: #ffffff;
+            --bg-sidebar: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --border-muted: #f1f5f9;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-nav-hover: #1e293b;
+            
+            --accent: #2563eb;
+            --accent-light: rgba(37, 99, 235, 0.08);
+            
+            /* Alerts (Admonitions) Colors */
+            --color-note: #0284c7;
+            --bg-note: rgba(2, 132, 199, 0.04);
+            --color-warning: #ea580c;
+            --bg-warning: rgba(234, 88, 12, 0.04);
+            --color-danger: #dc2626;
+            --bg-danger: rgba(220, 38, 38, 0.04);
+            --color-tip: #16a34a;
+            --bg-tip: rgba(22, 163, 74, 0.04);
+
+            --sidebar-width: 290px;
+            --toc-width: 240px;
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-title: 'Outfit', sans-serif;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-theme {
+            /* Dark Mode Theme (Automind Space Style) */
+            --bg-main: #0a0a0c;
+            --bg-sidebar: #050507;
+            --bg-card: #0d0d11;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-muted: rgba(255, 255, 255, 0.04);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --text-nav-hover: #f1f5f9;
+            
+            --accent: #ffffff;
+            --accent-light: rgba(255, 255, 255, 0.1);
+            
+            --bg-note: rgba(56, 189, 248, 0.05);
+            --bg-warning: rgba(251, 146, 60, 0.05);
+            --bg-danger: rgba(248, 113, 113, 0.05);
+            --bg-tip: rgba(74, 222, 128, 0.05);
+            
+            --color-note: #38bdf8;
+            --color-warning: #fb923c;
+            --color-danger: #f87171;
+            --color-tip: #4ade80;
+        }
+
+        /* ============================================
+            Base Resets
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============================================
+            Navbar Layout
+           ============================================ */
+        .navbar {
+            height: 64px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            transition: var(--transition);
+        }
+
+        .navbar-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .rover-pill {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            color: var(--text-primary);
+            background: var(--border-muted);
+            border-color: var(--text-muted);
+        }
+
+        .theme-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle-btn:hover {
+            color: var(--text-primary);
+            background: var(--border-muted);
+        }
+
+        /* ============================================
+            Page Grid Wrapper
+           ============================================ */
+        .wrapper {
+            display: flex;
+            padding-top: 64px;
+            height: 100vh;
+        }
+
+        /* ============================================
+            Left Sidebar (Navigation)
+           ============================================ */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            position: fixed;
+            top: 64px; bottom: 0; left: 0;
+            padding: 1.5rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            z-index: 90;
+            transition: var(--transition);
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-field {
+            width: 100%;
+            padding: 0.55rem 1rem 0.55rem 2.25rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .search-field:focus {
+            outline: none;
+            border-color: var(--text-secondary);
+        }
+
+        .search-results-dropdown {
+            position: absolute;
+            top: calc(100% + 0.4rem);
+            left: 0; width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            z-index: 105;
+        }
+
+        .search-result-row {
+            padding: 0.65rem 0.85rem;
+            border-bottom: 1px solid var(--border-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-result-row:hover {
+            background: var(--bg-sidebar);
+        }
+
+        .search-result-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .search-result-text {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Navigation Links Tree */
+        .nav-tree-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .nav-node {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.65rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .nav-item-row:hover {
+            color: var(--text-primary);
+            background: var(--border-muted);
+        }
+
+        .nav-item-row.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-item-row.active:hover {
+            background: var(--accent-light);
+        }
+
+        .nav-item-text {
+            flex: 1;
+        }
+
+        .nav-node-children {
+            margin-left: 0.75rem;
+            padding-left: 0.5rem;
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            margin-top: 0.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-node-children .nav-item-row {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.5rem;
+        }
+
+        /* ============================================
+            Center Content Column
+           ============================================ */
+        .content-column {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            margin-right: var(--toc-width);
+            overflow-y: auto;
+            padding: 2.5rem 3.5rem;
+            display: flex;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .article-wrapper {
+            max-width: 820px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Breadcrumbs (Matches Husky manual style) */
+        .breadcrumbs-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+
+        .breadcrumbs-bar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumbs-bar a:hover {
+            color: var(--text-primary);
+        }
+
+        .breadcrumbs-bar i {
+            width: 10px;
+            height: 10px;
+            stroke-width: 2.5;
+        }
+
+        /* ============================================
+            Markdown Styled Content Area
+           ============================================ */
+        .markdown-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .markdown-body h1, 
+        .markdown-body h2, 
+        .markdown-body h3, 
+        .markdown-body h4 {
+            font-family: var(--font-title);
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
+
+        .markdown-body h1 {
+            font-size: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+            margin-top: 0;
+            text-transform: none; /* Keep natural capitalization for manual titles */
+        }
+
+        .markdown-body h2 {
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        .markdown-body h3 {
+            font-size: 1.15rem;
+        }
+
+        .markdown-body p {
+            margin-bottom: 1.2rem;
+        }
+
+        .markdown-body ul, 
+        .markdown-body ol {
+            margin-bottom: 1.2rem;
+            padding-left: 1.5rem;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Markdown Blockquotes */
+        .markdown-body blockquote {
+            border-left: 4px solid var(--border);
+            background: var(--bg-sidebar);
+            padding: 0.75rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .markdown-body blockquote p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* Advanced admonition alert blocks (DANGER, WARNING, NOTE) */
+        .admonition {
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            border-radius: 4px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .admonition-title {
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admonition-title::before {
+            font-family: "lucide";
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        /* NOTE Callout */
+        .admonition.note, .admonition.info {
+            border-color: var(--color-note);
+            background-color: var(--bg-note);
+        }
+        .admonition.note .admonition-title, .admonition.info .admonition-title {
+            color: var(--color-note);
+        }
+
+        /* WARNING Callout */
+        .admonition.warning {
+            border-color: var(--color-warning);
+            background-color: var(--bg-warning);
+        }
+        .admonition.warning .admonition-title {
+            color: var(--color-warning);
+        }
+
+        /* DANGER Callout */
+        .admonition.danger, .admonition.caution {
+            border-color: var(--color-danger);
+            background-color: var(--bg-danger);
+        }
+        .admonition.danger .admonition-title, .admonition.caution .admonition-title {
+            color: var(--color-danger);
+        }
+
+        /* TIP Callout */
+        .admonition.tip, .admonition.hint {
+            border-color: var(--color-tip);
+            background-color: var(--bg-tip);
+        }
+        .admonition.tip .admonition-title, .admonition.hint .admonition-title {
+            color: var(--color-tip);
+        }
+
+        /* Dynamic image styling (fixes "no images coming" layout problems) */
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin: 1.5rem auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background: var(--bg-sidebar);
+        }
+
+        /* Beautiful responsive tables */
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+            display: block;
+            overflow-x: auto;
+        }
+
+        .markdown-body table th, 
+        .markdown-body table td {
+            border: 1px solid var(--border);
+            padding: 0.6rem 0.85rem;
+            text-align: left;
+        }
+
+        .markdown-body table th {
+            background: var(--bg-sidebar);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .markdown-body table tr:nth-child(even) td {
+            background: var(--border-muted);
+        }
+
+        /* Inline code tag styling */
+        .markdown-body :not(pre) > code {
+            font-family: SFMono-Regular, Consolas, Monaco, monospace;
+            background: var(--code-bg);
+            color: var(--code-color);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            transition: var(--transition);
+        }
+
+        /* Preformatted blocks */
+        .markdown-body pre {
+            margin: 1.5rem 0;
+            border-radius: 6px;
+            border: 1px solid var(--border) !important;
+            background: #0d1117 !important; /* Force code background dark for readability */
+            padding: 1.25rem 1rem !important;
+        }
+
+        .markdown-body pre code {
+            font-family: SFMono-Regular, Consolas, Monaco, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #c9d1d9; /* White-ish code characters */
+        }
+
+        /* Copy Button in Code Block */
+        .code-block-container {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .code-block-container pre {
+            margin: 0;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8b949e;
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .copy-code-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============================================
+            Bottom Paging Nav Controls
+           ============================================ */
+        .paging-nav {
+            margin-top: 3.5rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .paging-btn {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .paging-btn:hover {
+            border-color: var(--text-muted);
+            background: var(--bg-sidebar);
+        }
+
+        .paging-btn.prev {
+            align-items: flex-start;
+        }
+
+        .paging-btn.next {
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .paging-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .paging-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+            Right Sidebar (Table of Contents - TOC)
+           ============================================ */
+        .right-sidebar {
+            width: var(--toc-width);
+            border-left: 1px solid var(--border);
+            background: var(--bg-main);
+            overflow-y: auto;
+            position: fixed;
+            top: 64px; bottom: 0; right: 0;
+            padding: 2rem 1.25rem;
+            z-index: 80;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .toc-title {
+            font-family: var(--font-title);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toc-item {
+            font-size: 0.75rem;
+            line-height: 1.35;
+        }
+
+        .toc-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+        }
+
+        .toc-item a:hover {
+            color: var(--text-primary);
+        }
+
+        .toc-item a.active {
+            color: var(--accent);
+            font-weight: 700;
+            border-left: 2px solid var(--accent);
+            padding-left: 0.4rem;
+            margin-left: -0.4rem;
+        }
+
+        .toc-h3 {
+            padding-left: 0.75rem;
+        }
+
+        /* ============================================
+            Hamburger Menu Trigger
+           ============================================ */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+        }
+
+        .menu-toggle:hover {
+            background: var(--border-muted);
+        }
+
+        /* ============================================
+            Responsive Breakpoints
+           ============================================ */
+        @media (max-width: 1200px) {
+            .right-sidebar {
+                display: none; /* Hide TOC on medium screens */
+            }
+
+            .content-column {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                top: 64px;
+                bottom: 0;
+                width: 280px;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content-column {
+                margin-left: 0;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Header Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-content">
+            <div class="brand-section">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <a href="/" class="logo">Automind Dynamics</a>
+                <div class="rover-pill">
+                    <i data-lucide="bot" style="width: 12px; height: 12px;"></i>
+                    {{ rover.name }}
+                </div>
+            </div>
+            <div class="nav-links">
+                {% if is_subdomain %}
+                <a href="/" class="nav-btn"><i data-lucide="grid" style="width: 13px; height: 13px;"></i> Systems</a>
+                {% else %}
+                <a href="/docs/" class="nav-btn"><i data-lucide="grid" style="width: 13px; height: 13px;"></i> Systems</a>
+                {% endif %}
+                <a href="/admin/" class="nav-btn"><i data-lucide="terminal" style="width: 13px; height: 13px;"></i> Console</a>
+                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+                    <i data-lucide="sun" id="theme-icon" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Page Layout Wrapper -->
+    <div class="wrapper">
+        <!-- Left Navigation Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Autocomplete Search manuals -->
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+                    <input type="text" id="searchInput" class="search-field" placeholder="Search manuals..." oninput="handleSearch()">
+                </div>
+                <div id="searchResults" class="search-results-dropdown"></div>
+            </div>
+
+            <!-- Page Tree Links -->
+            <nav class="nav-tree-container">
+                {% macro render_sidebar_node(node) %}
+                    {% if is_subdomain %}
+                        {% set page_url = '/' + rover.slug + '/' + node.page.slug %}
+                    {% else %}
+                        {% set page_url = '/docs/' + rover.slug + '/' + node.page.slug %}
+                    {% endif %}
+                    
+                    <div class="nav-node">
+                        <a href="{{ page_url }}" class="nav-item-row {% if current_page and current_page.id == node.page.id %}active{% endif %}">
+                            <span class="nav-item-text">{{ node.page.title }}</span>
+                            {% if node.children %}
+                            <i data-lucide="chevron-right" style="width: 11px; height: 11px; opacity: 0.6; stroke-width: 2.5;"></i>
+                            {% endif %}
+                        </a>
+                        {% if node.children %}
+                        <div class="nav-node-children">
+                            {% for child in node.children %}
+                                {{ render_sidebar_node(child) }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endmacro %}
+
+                {% for node in nav_tree %}
+                    {{ render_sidebar_node(node) }}
+                {% endfor %}
+            </nav>
+        </aside>
+
+        <!-- Center Column Content Viewport -->
+        <main class="content-column">
+            <div class="article-wrapper">
+                <!-- Breadcrumbs bar (Outdoor > Husky > Husky A300...) -->
+                <div class="breadcrumbs-bar">
+                    <a href="/docs/">Robots</a>
+                    <i data-lucide="chevron-right"></i>
+                    <a href="{% if is_subdomain %}/{{ rover.slug }}{% else %}/docs/{{ rover.slug }}{% endif %}">{{ rover.name }}</a>
+                    {% if current_page %}
+                    <i data-lucide="chevron-right"></i>
+                    <span style="color: var(--text-primary);">{{ current_page.title }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Markdown Content Body -->
+                <article class="markdown-body">
+                    {{ content_html | safe }}
+                </article>
+
+                <!-- Paging Navigation Button Controls -->
+                {% if prev_page or next_page %}
+                <div class="paging-nav">
+                    {% if prev_page %}
+                        {% if is_subdomain %}
+                            {% set prev_url = '/' + rover.slug + '/' + prev_page.slug %}
+                        {% else %}
+                            {% set prev_url = '/docs/' + rover.slug + '/' + prev_page.slug %}
+                        {% endif %}
+                        <a href="{{ prev_url }}" class="paging-btn prev">
+                            <span class="paging-label">Previous Section</span>
+                            <span class="paging-title">{{ prev_page.title }}</span>
+                        </a>
+                    {% else %}
+                        <div style="flex: 1;"></div>
+                    {% endif %}
+
+                    {% if next_page %}
+                        {% if is_subdomain %}
+                            {% set next_url = '/' + rover.slug + '/' + next_page.slug %}
+                        {% else %}
+                            {% set next_url = '/docs/' + rover.slug + '/' + next_page.slug %}
+                        {% endif %}
+                        <a href="{{ next_url }}" class="paging-btn next">
+                            <span class="paging-label">Next Section</span>
+                            <span class="paging-title">{{ next_page.title }}</span>
+                        </a>
+                    {% else %}
+                        <div style="flex: 1;"></div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </main>
+
+        <!-- Right Sidebar (Table of Contents of the current page) -->
+        <aside class="right-sidebar" id="right-sidebar">
+            <h4 class="toc-title">On this page</h4>
+            <ul class="toc-list" id="page-toc-list"></ul>
+        </aside>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // 1. Theme Configuration (Light Mode Default)
+        const themeIcon = document.getElementById('theme-icon');
+        
+        function initTheme() {
+            const savedTheme = localStorage.getItem('docs-theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            if (document.body.classList.contains('dark-theme')) {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('docs-theme', 'light');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('docs-theme', 'dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        initTheme();
+
+        // 2. Mobile Sidebar Slide-In Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggleBtn = document.getElementById('menuToggle');
+            sidebar.classList.toggle('active');
+            
+            const icon = menuToggleBtn.querySelector('i');
+            if (sidebar.classList.contains('active')) {
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        // 3. Live AJAX manuals search
+        let searchTimer;
+        function handleSearch() {
+            clearTimeout(searchTimer);
+            const val = document.getElementById('searchInput').value.trim();
+            const dropdown = document.getElementById('searchResults');
+            
+            if (val.length < 2) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            searchTimer = setTimeout(() => {
+                let searchUrl = '';
+                {% if is_subdomain %}
+                    searchUrl = `/{{ rover.slug }}/search?q=${encodeURIComponent(val)}`;
+                {% else %}
+                    searchUrl = `/docs/{{ rover.slug }}/search?q=${encodeURIComponent(val)}`;
+                {% endif %}
+
+                fetch(searchUrl)
+                .then(res => res.json())
+                .then(data => {
+                    dropdown.innerHTML = '';
+                    if (data.length === 0) {
+                        dropdown.innerHTML = '<div style="padding: 0.75rem; color: var(--text-muted); font-size: 0.75rem; text-align: center;">No pages matched</div>';
+                    } else {
+                        data.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'search-result-row';
+                            div.onclick = () => window.location.href = item.link;
+                            div.innerHTML = `
+                                <div class="search-result-title">${item.title}</div>
+                                <div class="search-result-text">${item.snippet}</div>
+                            `;
+                            dropdown.appendChild(div);
+                        });
+                    }
+                    dropdown.style.display = 'block';
+                })
+                .catch(err => console.error(err));
+            }, 250);
+        }
+
+        window.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('searchResults');
+            const field = document.getElementById('searchInput');
+            if (e.target !== dropdown && e.target !== field) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // 4. Client-side Table of Contents Generator with Scroll-Spy
+        document.addEventListener('DOMContentLoaded', () => {
+            const article = document.querySelector('.markdown-body');
+            const tocList = document.getElementById('page-toc-list');
+            if (!article || !tocList) return;
+
+            const headings = article.querySelectorAll('h2, h3');
+            if (headings.length === 0) {
+                const rightSidebar = document.getElementById('right-sidebar');
+                if (rightSidebar) rightSidebar.style.display = 'none';
+                document.querySelector('.content-column').style.marginRight = '0';
+                return;
+            }
+
+            headings.forEach((heading, idx) => {
+                if (!heading.id) {
+                    heading.id = heading.textContent.toLowerCase()
+                        .trim()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/[\s_]+/g, '-')
+                        .replace(/[^-a-z0-9]/g, '') + '-' + idx;
+                }
+
+                const li = document.createElement('li');
+                li.className = `toc-item toc-${heading.tagName.toLowerCase()}`;
+                const a = document.createElement('a');
+                a.href = `#${heading.id}`;
+                a.textContent = heading.textContent;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+
+            // Scroll-Spy Highlighting
+            const tocLinks = tocList.querySelectorAll('a');
+            const options = {
+                root: null,
+                rootMargin: '0px 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        tocLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${activeId}`) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            }, options);
+
+            headings.forEach(heading => observer.observe(heading));
+        });
+
+        // 5. Code Block Copy Button Injection
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.markdown-body pre').forEach(pre => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-container';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const btn = document.createElement('button');
+                btn.className = 'copy-code-btn';
+                btn.innerHTML = '<i data-lucide="copy" style="width: 13px; height: 13px;"></i>';
+                btn.title = 'Copy code';
+                wrapper.appendChild(btn);
+
+                btn.addEventListener('click', () => {
+                    const code = pre.querySelector('code');
+                    if (!code) return;
+                    
+                    navigator.clipboard.writeText(code.innerText).then(() => {
+                        btn.innerHTML = '<i data-lucide="check" style="width: 13px; height: 13px; color: #10b981;"></i>';
+                        setTimeout(() => {
+                            btn.innerHTML = '<i data-lucide="copy" style="width: 13px; height: 13px;"></i>';
+                            lucide.createIcons();
+                        }, 2000);
+                        lucide.createIcons();
+                    });
+                });
+            });
+            lucide.createIcons();
+        });
+    </script>
+
+    <!-- Prism Code Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
