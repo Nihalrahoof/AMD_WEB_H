@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R1 Autonomy Platform - Software Suites</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Brand Colors */
+            --primary: #0f172a; 
+            --accent: #3b82f6; 
+            --gradient-cover: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            
+            /* R1 Tier Colors */
+            --core-color: #2e7d32;
+            --nav-color: #1565c0;
+            --auto-color: #6a1b9a;
+            
+            /* Utilities */
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --border-radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        h1, h2, h3, h4, h5, .price-val, th {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- A4 PRINT CONFIGURATION --- */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        .page-container {
+            width: 210mm;
+            height: 297mm; /* Strictly forced height for A4 */
+            background: white;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent overflow from breaking pages */
+            page-break-after: always; /* Ensure next container is a new page */
+        }
+
+        /* --- HEADER & LOGO --- */
+        header {
+            background: var(--gradient-cover);
+            color: white;
+            padding: 25px 40px; /* Reduced padding to save vertical space */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            width: 90px; /* Reduced slightly */
+            height: 90px;
+            background: white;
+            border-radius: 10px; /* Square with soft corners */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .logo-container img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        header h1 {
+            font-size: 2.2rem; /* Scaled down slightly */
+            margin-bottom: 0.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* --- CONTENT AREA --- */
+        .content-area {
+            padding: 20px 40px; /* Tighter padding for perfect fit */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 0.6rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* --- HORIZONTAL TIERS LAYOUT --- */
+        .tiers-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Tighter gap to ensure all 3 fit on A4 */
+        }
+
+        .tier-card {
+            display: flex;
+            flex-direction: row;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+            page-break-inside: avoid;
+        }
+
+        /* Left Side: Sidebar styling */
+        .card-sidebar {
+            width: 220px; /* Slightly narrower */
+            flex-shrink: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .card-sidebar h2 {
+            font-size: 1.4rem;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-sidebar .subtitle {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .price-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .price-sub {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            margin-top: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .highlight-box {
+            margin-top: 15px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Dynamic Colors */
+        .tier-card.core .card-sidebar { background: var(--core-color); }
+        .tier-card.nav .card-sidebar { background: var(--nav-color); }
+        .tier-card.auto .card-sidebar { background: linear-gradient(135deg, var(--auto-color), #4a148c); }
+
+        /* Right Side: Features Layout */
+        .card-content {
+            padding: 15px 20px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px; /* Tighter grid */
+            list-style: none;
+            width: 100%;
+        }
+
+        .features-grid li {
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.8rem; /* Adjusted for perfect fit */
+            color: var(--text-dark);
+            line-height: 1.35;
+        }
+
+        .features-grid li::before {
+            content: '✓';
+            font-weight: bold;
+            margin-right: 6px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .tier-card.core .features-grid li::before { color: var(--core-color); }
+        .tier-card.nav .features-grid li::before { color: var(--nav-color); }
+        .tier-card.auto .features-grid li::before { color: var(--auto-color); }
+
+        .features-grid li strong {
+            color: #1e293b;
+            margin-right: 4px;
+            display: inline-block;
+        }
+
+        /* --- TABLE --- */
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--gray-100);
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        th:first-child, td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        /* --- BADGES --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.6rem;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-left: 5px;
+            text-transform: uppercase;
+            transform: translateY(-1px);
+        }
+        .badge-new { background-color: #f59e0b; color: white; }
+        .badge-pro { background-color: var(--nav-color); color: white; }
+
+        /* --- CONTACT BLOCK --- */
+        .contact-block {
+            background: #f8fafc; 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin-top: auto; /* Pushes to bottom of content area */
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            page-break-inside: avoid;
+        }
+
+        .contact-block h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.3rem; }
+        .contact-block p { margin-bottom: 15px; color: var(--text-light); font-size: 0.9rem; }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 15px;
+        }
+
+        .contact-item { font-size: 0.85rem; line-height: 1.4; }
+        .contact-item strong { display: block; color: var(--primary); margin-bottom: 3px; font-family: 'Montserrat', sans-serif;}
+        .contact-url { color: var(--accent); font-weight: 600; }
+
+        /* --- FOOTER STRIP --- */
+        .footer-strip {
+            margin-top: auto; /* Always forces to the absolute bottom of flex container */
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 12px 40px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+        }
+
+        /* Print Override */
+        @media print {
+            body { background: white; margin: 0; padding: 0; }
+            .page-container { 
+                margin: 0 !important; 
+                box-shadow: none; 
+                border: none; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: TIERS OVERVIEW -->
+    <div class="page-container">
+        
+        <header>
+            <!-- SQUARE LOGO PLACEHOLDER -->
+            <div class="logo-container">
+                <img src="Assets/Images/logo_orange.png" alt="Logo">
+            </div>
+            <h1>R1 Autonomy Platform</h1>
+            <p>Transforming Hardware into Research Outcomes</p>
+        </header>
+
+        <div class="content-area">
+            <h2 class="section-title">Select Your Intelligence Level</h2>
+
+            <div class="tiers-layout">
+                
+                <!-- Tier 1: Core -->
+                <div class="tier-card core">
+                    <div class="card-sidebar">
+                        <h2>R1 CORE</h2>
+                        <div class="subtitle">The Foundation</div>
+                        <div>
+                            <div class="price-val">INCLUDED</div>
+                            <div class="price-sub">Free with Hardware</div>
+                        </div>
+                        <div class="highlight-box">Best for: Undergrad Labs</div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="features-grid">
+                            <li><span><strong>ROS 2 Pre-Installed:</strong> Ubuntu 22.04 + Humble/Jazzy optimized environment.</span></li>
+                            <li><span><strong>Zero-Config Drivers:</strong> LiDAR, Camera, IMU & Motors synced out-of-the-box.</span></li>
+                            <li><span><strong>Basic Teleoperation:</strong> Keyboard & Joystick control ready.</span></li>
+                            <li><span><strong>2D Mapping:</strong> Standard Gmapping/Cartographer setup.</span></li>
+                            <li><span><strong>Safety Layer:</strong> Velocity smoothers & emergency stop hooks.</span></li>
+                            <li><span><strong>Open SDK:</strong> Full access for custom Python/C++ development.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tier 2: NavX -->
+                <div class="tier-card nav">
+                    <div class="card-sidebar">
+                        <h2>R1 NAV X</h2>
+                        <div class="subtitle">Research Navigation</div>
+                        <div>
+                            <div class="price-val">₹75,000</div>
+                            <div class="price-sub">Per Robot License</div>
+                        </div>
+                        <div class="highlight-box">Best for: Masters Thesis</div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="features-grid">
+                            <li><span><strong>Autonomous P2P:</strong> Professionally tuned Nav2 stack for smooth path planning.</span></li>
+                            <li><span><strong>Dynamic Avoidance:</strong> Re-routes around moving people in real-time.</span></li>
+                            <li><span><strong>Research Dashboard:</strong> Web UI to log path accuracy & recovery metrics. <span class="badge badge-new">New</span></span></li>
+                            <li><span><strong>Global Path Planning:</strong> Optimized A* and Dijkstra implementations.</span></li>
+                            <li><span><strong>Multi-Map Support:</strong> Save/Load maps for different floors/rooms.</span></li>
+                            <li><span><strong>Visual SLAM:</strong> 3D Mapping using RealSense Depth Camera.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tier 3: AutonomyX -->
+                <div class="tier-card auto">
+                    <div class="card-sidebar">
+                        <h2>AUTONOMY X</h2>
+                        <div class="subtitle">Full-Stack Perception</div>
+                        <div>
+                            <div class="price-val">₹1,95,000</div>
+                            <div class="price-sub">Premium Lab License</div>
+                        </div>
+                        <div class="highlight-box">Best for: PhD Research</div>
+                    </div>
+                    <div class="card-content">
+                        <ul class="features-grid">
+                            <li><span><strong>Advanced Perception:</strong> LiDAR + Camera Fusion, Semantic Mapping.</span></li>
+                            <li><span><strong>3D Mapping:</strong> Octomap / Voxel-based generation.</span></li>
+                            <li><span><strong>GPS-Denied Nav:</strong> Visual & LiDAR Odometry, Loop closure optimization.</span></li>
+                            <li><span><strong>Swarm Intelligence:</strong> Leader-follower, Shared maps & Distributed tasks. <span class="badge badge-pro">Exclusive</span></span></li>
+                            <li><span><strong>Manipulator Package:</strong> MoveIt, Visual Servoing & Pick-and-place. <span class="badge badge-new">Add-on</span></span></li>
+                            <li><span><strong>Priority Support:</strong> 10 Hours of dedicated engineering assistance.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer Strip Page 1 -->
+        <div class="footer-strip">
+            <span>AutoMind Dynamics Pvt Ltd</span>
+            <span>Page 1</span>
+        </div>
+    </div>
+
+    <!-- PAGE 2: COMPARISON & CONTACT -->
+    <div class="page-container">
+        
+        <div class="content-area" style="padding-top: 40px;">
+            <h2 class="section-title">Feature Comparison</h2>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th style="color: var(--core-color);">R1 CORE</th>
+                            <th style="color: var(--nav-color);">R1 NAV X</th>
+                            <th style="color: var(--auto-color);">AUTONOMY X</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Price</td>
+                            <td><strong>Free</strong></td>
+                            <td><strong>₹75,000</strong></td>
+                            <td><strong>₹1,95,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td>ROS 2 Environment</td>
+                            <td>Pre-Installed</td>
+                            <td>Optimized</td>
+                            <td>Advanced Fusion</td>
+                        </tr>
+                        <tr>
+                            <td>Navigation Type</td>
+                            <td>Teleoperation</td>
+                            <td>Autonomous (P2P)</td>
+                            <td>GPS-Denied / Visual</td>
+                        </tr>
+                        <tr>
+                            <td>SLAM Capability</td>
+                            <td>2D Lidar</td>
+                            <td>2D + Visual 3D</td>
+                            <td>3D Voxel / Octomap</td>
+                        </tr>
+                        <tr>
+                            <td>Obstacle Avoidance</td>
+                            <td>Static Only</td>
+                            <td>Dynamic (People)</td>
+                            <td>Semantic AI</td>
+                        </tr>
+                        <tr>
+                            <td>Data Logging</td>
+                            <td>Manual Bag Files</td>
+                            <td><strong>Auto-CSV Dashboard</strong></td>
+                            <td>Full Blackbox</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-Robot Swarm</td>
+                            <td>❌</td>
+                            <td>❌</td>
+                            <td><strong>✅ Fleet Manager</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Support Level</td>
+                            <td>Community Forum</td>
+                            <td>Standard Email</td>
+                            <td><strong>Priority Engineer</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CONTACT DETAILS BLOCK -->
+            <div class="contact-block">
+                <h3>Ready to Upgrade Your Research?</h3>
+                <p>Contact us to request a formal quote or schedule a software demonstration.</p>
+                
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <strong>Registered Office:</strong>
+                        10th floor, RMZ Latitude <br>
+                        Commercial Building, Bellary Rd <br>
+                         Vinayakanagar, Bengaluru,
+                        Karnataka 56002
+                    </div>
+                    <div class="contact-item">
+                        <strong>Contact Us</strong>
+                        Email: <a href="mailto:contact@automind.com" class="contact-url" style="text-decoration:none;">contact@automind.com</a><br>
+                        Phone: +91 70062 75705<br>
+                        Web: <span class="contact-url">www.automindynamics.com</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Strip Page 2 -->
+        <div class="footer-strip">
+            <span>AutoMind Dynamics Pvt Ltd</span>
+            <span>Page 2</span>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMind Dynamics | Mission Control v4.5</title>
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --bg-panel: #0f0f0f;
+            --border: #222;
+            --accent: #ff1f1f;
+            --accent-dim: rgba(255, 31, 31, 0.1);
+            --text-main: #ededed;
+            --text-muted: #666;
+            --font-tech: 'Courier New', Courier, monospace;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 50px 1fr 30px; 
+            overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            background: var(--bg-panel);
+            z-index: 10;
+        }
+
+        .brand img { height: 20px; width: auto; filter: brightness(1.2); }
+
+        .top-stats {
+            display: flex;
+            gap: 40px;
+            font-family: var(--font-tech);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-group b { color: var(--accent); }
+        #uptime { cursor: pointer; min-width: 70px; display: inline-block; }
+
+        /* --- MAIN LAYOUT --- */
+        .main-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 280px; /* Sidebar, 2 Big Center, 3 Small Right */
+            gap: 12px;
+            padding: 15px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* --- SIDEBAR --- */
+        .telemetry-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+        }
+
+        /* --- CENTER (2 BIG) --- */
+        .big-video-stack {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            height: 100%;
+        }
+
+        /* --- RIGHT (3 SMALL) --- */
+        .small-video-stack {
+            display: grid;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 12px;
+            height: 100%;
+        }
+
+        /* --- BOX STYLING --- */
+        .box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .box-header {
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.03);
+            flex-shrink: 0; /* Header never shrinks */
+        }
+
+        /* This container remains static regardless of content */
+        .video-wrapper {
+            position: relative;
+            flex-grow: 1; /* Fills remaining space in the box */
+            background: #000;
+            cursor: crosshair;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Fills while maintaining aspect ratio, no resizing */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .data-list {
+            padding: 15px;
+            font-family: var(--font-tech);
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;}
+        .label { color: var(--text-muted); }
+        .val { color: var(--accent); }
+
+        .bar-container { height: 3px; background: #222; width: 100%; overflow: hidden; margin-top: 4px; }
+        .bar-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; }
+
+        .upload-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            z-index: 5;
+            transition: opacity 0.3s;
+            pointer-events: none; /* User clicks the wrapper, not this */
+        }
+        .upload-overlay p { font-size: 8px; color: #666; margin-top: 5px; font-family: var(--font-tech); text-align: center;}
+
+        footer {
+            border-top: 1px solid var(--border);
+            background: var(--bg-panel);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-family: var(--font-tech);
+            font-size: 10px;
+            color: #444;
+        }
+
+        .live-tag { color: var(--accent); animation: pulse 1.5s infinite; font-weight: bold; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <img src="Assets/Images/logo_horizontal.png" alt="AutoMind Dynamics" style="width: 250px; height: auto;"> 
+        </div>
+        <div class="top-stats">
+            <div class="stat-group">SIGNAL: <b>RF LINK</b></div>
+            <div class="stat-group">BUFFER: <b>14ms</b></div>
+            <div class="stat-group">UPTIME: <b id="uptime" onclick="syncVideos()">00:00:00</b></div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- LEFT: TELEMETRY -->
+        <div class="telemetry-sidebar">
+            <div class="box">
+                <div class="box-header">HARDWARE STATUS</div>
+                <div class="data-list">
+                    <div class="data-item">
+                        <div class="data-row"><span class="label">TEMP</span> <span class="val" id="temp-orin">--°C</span></div>
+                        <div class="bar-container"><div class="bar-fill" id="bar-orin" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-row"><span class="label">MCU LOAD</span> <span class="val" id="load-stm">--%</span></div>
+                        <div class="bar-container"><div class="bar-fill" id="bar-stm" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="data-row" style="margin-top:5px;"><span class="label">LATENCY</span> <span class="val" id="latency">14ms</span></div>
+                    <div class="data-row"><span class="label">PKT_LOSS</span> <span class="val" style="color:#fff">0.01%</span></div>
+                </div>
+            </div>
+
+            <div class="box" style="flex: 1;">
+                <div class="box-header">ACTUATOR FEEDBACK</div>
+                <div class="data-list">
+                    <div class="data-row">
+                        <span class="label">CONTROL_MODE</span> 
+                        <span class="val" style="background:var(--accent); color:black; padding: 0 5px; font-weight: bold;">AUTONOMOUS</span>
+                    </div>
+                    <div class="data-item" style="margin-top:10px;">
+                        <div class="data-row"><span class="label">SPEED</span> <span class="val" id="throttle-txt">0</span></div>
+                        <div class="bar-container"><div class="bar-fill" id="throttle-bar" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="data-row" style="margin-top:15px; color: #333; font-size: 9px;">
+                        <span>READY_FOR_COMMAND_INPUT...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER: 2 BIG VIDEOS (STATIC GRID) -->
+        <div class="big-video-stack">
+            <div class="box">
+                <div class="box-header">MULTI SENSOR FUSION</div>
+                <div class="video-wrapper" onclick="triggerUpload(this)">
+                    <div class="upload-overlay"><p>SELECT PRIMARY STREAM</p></div>
+                    <video muted loop playsinline></video>
+                    <input type="file" accept="video/*" style="display:none;" onchange="loadVideo(this)">
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header">LIDAR SEGMENTATION</div>
+                <div class="video-wrapper" onclick="triggerUpload(this)">
+                    <div class="upload-overlay"><p>SELECT DEPTH STREAM</p></div>
+                    <video muted loop playsinline></video>
+                    <input type="file" accept="video/*" style="display:none;" onchange="loadVideo(this)">
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: 3 SMALL VIDEOS (STATIC GRID) -->
+        <div class="small-video-stack">
+            <div class="box">
+                <div class="box-header">TRAVERSABILITY</div>
+                <div class="video-wrapper" onclick="triggerUpload(this)">
+                    <div class="upload-overlay"><p>SELECT RGB</p></div>
+                    <video muted loop playsinline></video>
+                    <input type="file" accept="video/*" style="display:none;" onchange="loadVideo(this)">
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header">CAMERA FEED</div>
+                <div class="video-wrapper" onclick="triggerUpload(this)">
+                    <div class="upload-overlay"><p>SELECT TOP</p></div>
+                    <video muted loop playsinline></video>
+                    <input type="file" accept="video/*" style="display:none;" onchange="loadVideo(this)">
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header">LIDAR FEED</div>
+                <div class="video-wrapper" onclick="triggerUpload(this)">
+                    <div class="upload-overlay"><p>SELECT REAR</p></div>
+                    <video muted loop playsinline></video>
+                    <input type="file" accept="video/*" style="display:none;" onchange="loadVideo(this)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>CPNS BOT 1</div>
+        <div>AUTOMIND DASHBOARD</div>
+        <div>LOCAL_TIME: <span id="clock">--:--:--</span></div>
+    </footer>
+
+    <script>
+        function triggerUpload(el) { el.querySelector('input').click(); }
+        
+        function loadVideo(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const container = input.parentElement;
+            const vid = container.querySelector('video');
+            const overlay = container.querySelector('.upload-overlay');
+            
+            vid.src = URL.createObjectURL(file);
+            vid.play();
+            
+            if(overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 300);
+            }
+        }
+
+        function syncVideos() {
+            document.querySelectorAll('video').forEach(v => { if(v.src) v.currentTime = 0; });
+        }
+
+        let totalSeconds = 320;
+        setInterval(() => {
+            totalSeconds++;
+            const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+            const s = (totalSeconds % 60).toString().padStart(2, '0');
+            const uptimeEl = document.getElementById('uptime');
+            if(uptimeEl) uptimeEl.innerText = `${h}:${m}:${s}`;
+            
+            const clockEl = document.getElementById('clock');
+            if(clockEl) clockEl.innerText = new Date().toLocaleTimeString();
+
+            // Hardware simulation
+            let t = (42 + Math.random()*5).toFixed(1);
+            let l = (12 + Math.random()*20).toFixed(0);
+            
+            const tempVal = document.getElementById('temp-orin');
+            const tempBar = document.getElementById('bar-orin');
+            if(tempVal) tempVal.innerText = t + "°C";
+            if(tempBar) tempBar.style.width = t + "%";
+
+            const loadVal = document.getElementById('load-stm');
+            const loadBar = document.getElementById('bar-stm');
+            if(loadVal) loadVal.innerText = l + "%";
+            if(loadBar) loadBar.style.width = l + "%";
+            
+            // Generates a float between 0.4 and 0.5
+let th = (0.4 + Math.random() * 0.1).toFixed(2); 
+
+const thrVal = document.getElementById('throttle-txt');
+const thrBar = document.getElementById('throttle-bar');
+
+if(thrVal) thrVal.innerText = th + " m/s";
+
+if(thrBar) {
+    // Mapping 0.4-0.5 m/s to 80-100% width for visual representation
+    let widthPercent = (th * 200).toFixed(0); 
+    thrBar.style.width = widthPercent + "%";
+}
+
+            const latVal = document.getElementById('latency');
+            if(latVal) latVal.innerText = Math.floor(10 + Math.random()*10) + "ms";
+        }, 1000);
+    </script>
+</body>
+</html>
