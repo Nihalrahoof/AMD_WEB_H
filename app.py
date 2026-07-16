@@ -129,9 +129,9 @@ def sensor_fusion_ui():
 def software_stack():
     return render_template('software_stack.html')
 
-@app.route('/Templates/<path:filename>')
+@app.route('/templates/<path:filename>')
 def serve_templates(filename):
-    template_path = f'Templates/{filename}'
+    template_path = f'templates/{filename}'
     if not os.path.exists(template_path):
         abort(404)
     return render_template(template_path)
