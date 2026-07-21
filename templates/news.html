@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News & Dispatches - Automind Dynamics</title>
-    <link rel="stylesheet" href="../Static/css/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="Static/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -26,8 +30,8 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="../index.html" class="logo-link">
-                <img src="../Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+            <a href="/" class="logo-link">
+                <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
             </a>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -35,12 +39,12 @@
                 <span></span>
             </div>
             <ul class="nav-menu" id="navMenu">
-                <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="products.html" class="nav-link">Products</a></li>
-                <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="news.html" class="nav-link active">News</a></li>
-                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
-                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
             </ul>
         </div>
     </nav>
@@ -63,7 +67,7 @@
                     We are currently curating the latest intelligence and updates. Check back soon for press releases,
                     field reports, and technology showcases.
                 </p>
-                <a href="../index.html" class="cta-button primary">Return Home</a>
+                <a href="/" class="cta-button primary">Return Home</a>
             </div>
         </div>
     </section>
@@ -79,10 +83,10 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="index.html#technology">Technology</a></li>
-                        <li><a href="products.html">Products</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="news.html">News</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -109,7 +113,7 @@
     </footer>
 
     <!-- Main Script -->
-    <script src="../Static/js/script.js"></script>
+    <script src="Static/js/script.js"></script>
     <script>
         // Init Lucide Icons
         lucide.createIcons();

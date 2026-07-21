@@ -6,14 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUTOMIND DYNAMICS - Autonomous Vehicle Innovation</title>
     <meta name="description" content="We engineer the neural infrastructure for the machines of tomorrow. At Automind Dynamics, we don't just build robots; we build the intelligence that guides them.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
+
+    <!-- Schema.org JSON-LD Structured Data for Google Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://automindynamics.com/#website",
+          "url": "https://automindynamics.com/",
+          "name": "AUTOMIND DYNAMICS",
+          "description": "Autonomous Vehicle Innovation & Neural Infrastructure",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Automind Dynamics Pvt Ltd",
+            "logo": "https://automindynamics.com/Assets/Images/logo_orange.png"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://automindynamics.com/#organization",
+          "name": "Automind Dynamics Pvt Ltd",
+          "url": "https://automindynamics.com/",
+          "logo": "https://automindynamics.com/Assets/Images/logo_orange.png",
+          "description": "Pioneering autonomous vehicle technology for all-terrain environments worldwide."
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Products",
+          "url": "https://automindynamics.com/products"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Services",
+          "url": "https://automindynamics.com/services"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "News",
+          "url": "https://automindynamics.com/news"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "About Us",
+          "url": "https://automindynamics.com/about"
+        }
+      ]
+    }
+    </script>
+
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="Static/css/styles.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Icons (for new section) -->
     <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
 </head>
@@ -26,7 +80,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="index.html" class="logo-link">
+                <a href="/" class="logo-link">
                     <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
                 </a>
             </div>
@@ -37,12 +91,12 @@
             </div>
             <!-- Updated nav links -->
             <ul class="nav-menu" id="navMenu">
-                <li><a href="index.html" class="nav-link active">Home</a></li>
-                <li><a href="Templates/products.html" class="nav-link">Products</a></li>
-                <li><a href="Templates/services.html" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="Templates/news.html" class="nav-link">News</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="Templates/about.html" class="nav-link">About Us</a></li>
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
             </ul>
         </div>
     </nav>
@@ -345,7 +399,7 @@
 
                 <p class="section-subtitle">A brief look at our core hardware. Explore our full product line.</p>
                 <div class="header-cta">
-                    <a href="Templates/products.html" class="cta-button primary">Explore All Products</a>
+                    <a href="/products" class="cta-button primary">Explore All Products</a>
                 </div>
             </div>
 
@@ -387,11 +441,6 @@
                         <h3>TRAx Controller</h3>
                         <p class="vehicle-tagline">Terrain-Ready Autonomy Extension</p>
                         <p>Easily transforms conventional vehicles into autonomous or remotely controlled systems,
-                            enabling teleoperation and seamless integration of various sensors for advanced perception
-                            and control.</p>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
@@ -405,7 +454,7 @@
                 <p class="section-subtitle">Our software stacks are the brains behind the brawn. See our full service
                     offerings.</p>
                 <div class="header-cta">
-                    <a href="Templates/services.html" class="cta-button primary">Explore All Services</a>
+                    <a href="/services" class="cta-button primary">Explore All Services</a>
                 </div>
             </div>
 
@@ -472,7 +521,88 @@
         </div>
     </section>
 
+    <!-- Supported By / Partners Section -->
+    <section id="partners" class="partners-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Supported By</span>
+                <h2>Our Partners & Backers</h2>
+                <p class="section-subtitle">Pioneering autonomous innovation alongside leading research centers, incubators, and industry leaders.</p>
+            </div>
 
+            <div class="partners-grid">
+                <!-- PARTNER ITEM 1: Replace partner-logo-placeholder with <img src="/Assets/Images/partner1.png" alt="Partner Name" class="partner-logo-img"> -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="building-2"></i>
+                            <span>I-HUB Robotics</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>I-HUB Robotics</h4>
+                        <p class="partner-tag">R&D & Innovation Foundation</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 2 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="shield-check"></i>
+                            <span>Defense Tech Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Defense Technology</h4>
+                        <p class="partner-tag">Tactical Mobility</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 3 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="cpu"></i>
+                            <span>Hardware Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Compute Systems</h4>
+                        <p class="partner-tag">Autonomy Infrastructure</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 4 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="award"></i>
+                            <span>Incubator / Accelerator</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Innovation Hub</h4>
+                        <p class="partner-tag">Ecosystem Support</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 5 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="globe"></i>
+                            <span>Industry Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Global Mobility</h4>
+                        <p class="partner-tag">Strategic Deployment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- CTA Section -->
     <section class="cta-section">
@@ -533,10 +663,10 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="products.html">Products</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="#core-tech">Technology</a></li>
-                        <li><a href="#showcase">Showcase</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">

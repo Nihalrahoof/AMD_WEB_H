@@ -67,6 +67,84 @@
     {% endif %}
 </div>
 
+<!-- Quote Requests Panel -->
+<div class="glass-panel" style="margin-top: 2rem;">
+    <div class="panel-header">
+        <div class="panel-title">
+            <i data-lucide="file-text"></i> Product Quote Requests ({% if quotes %}{{ quotes|length }}{% else %}0{% endif %})
+        </div>
+    </div>
+
+    {% if not quotes %}
+    <div style="text-align: center; padding: 3rem 0; color: var(--text-secondary);">
+        <i data-lucide="inbox" style="width: 48px; height: 48px; stroke-width: 1; margin-bottom: 1rem; color: var(--text-muted);"></i>
+        <p>No product quote requests submitted yet.</p>
+    </div>
+    {% else %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Product</th>
+                <th>Company / Industry</th>
+                <th>Qty / Timeframe</th>
+                <th>Status</th>
+                <th>Submitted On</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for q in quotes %}
+            <tr>
+                <td>
+                    <div style="font-weight: 600; font-size: 0.95rem; color: #fff;">{{ q.full_name }}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ q.email }}</div>
+                    {% if q.phone %}<div style="font-size: 0.8rem; color: var(--text-muted);">{{ q.phone }}</div>{% endif %}
+                </td>
+                <td>
+                    <span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">
+                        {{ q.product }}
+                    </span>
+                </td>
+                <td>
+                    <div style="font-weight: 500; font-size: 0.9rem;">{{ q.company or 'Individual' }}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ q.use_case or 'N/A' }}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem;">Qty: <strong>{{ q.quantity }}</strong></div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">{{ q.timeframe or 'Flexible' }}</div>
+                </td>
+                <td>
+                    <form action="{{ url_for('admin_quote_status', quote_id=q.id) }}" method="POST" style="display:inline;">
+                        <select name="status" onchange="this.form.submit()" style="background: #111; color: {% if q.status == 'Pending' %}#f59e0b{% elif q.status == 'Contacted' %}#3b82f6{% else %}#10b981{% endif %}; border: 1px solid rgba(255,255,255,0.2); padding: 0.3rem 0.5rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
+                            <option value="Pending" {% if q.status == 'Pending' %}selected{% endif %}>🟡 Pending</option>
+                            <option value="Contacted" {% if q.status == 'Contacted' %}selected{% endif %}>🔵 Contacted</option>
+                            <option value="Completed" {% if q.status == 'Completed' %}selected{% endif %}>🟢 Completed</option>
+                        </select>
+                    </form>
+                </td>
+                <td style="color: var(--text-secondary); font-size: 0.85rem;">
+                    {{ q.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </td>
+                <td class="actions-cell">
+                    {% if q.requirements %}
+                    <button class="btn btn-secondary btn-sm" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="alert('Full Requirements for {{ q.full_name|e }}:\n\n{{ q.requirements|e }}')">
+                        <i data-lucide="eye"></i> Details
+                    </button>
+                    {% endif %}
+                    <form action="{{ url_for('admin_quote_delete', quote_id=q.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this quote request?');">
+                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">
+                            <i data-lucide="trash-2"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
 <!-- Add Rover Modal -->
 <div id="new-rover-modal" class="modal">
     <div class="modal-content">

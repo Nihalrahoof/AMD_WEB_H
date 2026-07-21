@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - AUTOMIND DYNAMICS</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="Static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons (for new section) -->
+    <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+    <!-- Full-page 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-link">
+                    <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!-- Updated nav links for this page -->
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <h1 class="page-hero-title">Our Services</h1>
+            <p class="page-hero-subtitle">World-class autonomous software stacks and mapping solutions.</p>
+        </div>
+    </section>
+
+    <!-- Refactored Services Section with Nested Tabs -->
+    <section id="service-deep-dive" class="ugv-details-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Service Deep Dive</span>
+                <h2>Explore Our Software Solutions</h2>
+            </div>
+
+            <!-- Main Tab Navigation (Level 1) -->
+            <div class="tabs-container" id="main-service-tabs">
+                <div class="tab-nav">
+                    <button class="tab-link active" data-tab="service-tab-nav">Navigation Stack</button>
+                    <button class="tab-link" data-tab="service-tab-map">Mapping Stack</button>
+                </div>
+
+                <!-- Main Tab Content Wrapper (Level 1) -->
+                <div class="tab-content-wrapper">
+
+                    <!-- 1. Navigation Stack Content -->
+                    <div id="service-tab-nav" class="tab-content active">
+                        <div class="section-header"
+                            style="margin-bottom: 2rem; text-align: left; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">
+                            <h3 class="tab-section-title">Navigation Stack</h3>
+                            <p class="tab-section-subtitle">Our complete AI-powered navigation software, adaptable to
+                                any environment.</p>
+                        </div>
+
+                        <!-- Nested Tab Navigation (Level 2) -->
+                        <div class="tabs-container" id="nav-sub-tabs">
+                            <div class="sub-tab-nav">
+                                <button class="tab-link active" data-tab="nav-sub-offroad">Off-Road</button>
+                                <button class="tab-link" data-tab="nav-sub-onroad">On-Road</button>
+                            </div>
+
+                            <!-- Nested Tab Content Wrapper (Level 2) -->
+                            <div class="tab-content-wrapper">
+                                <!-- Off-Road Content - RESTRUCTURED -->
+                                <div id="nav-sub-offroad" class="tab-content active">
+                                    <div class="showcase-layout">
+                                        <div class="showcase-left-column">
+                                            <div class="showcase-media glass-card">
+                                                <div class="showcase-media-overlay">Off-Road</div>
+                                                <video class="showcase-video" muted loop playsinline autoplay
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                    <source src="Assets/videos/offroad_service.mp4" type="video/mp4">
+                                                </video>
+                                            </div>
+                                            <div class="showcase-specs glass-card">
+                                                <div class="spec-item"><span class="spec-value">Terrain
+                                                        Classification</span></div>
+                                                <div class="spec-item"><span class="spec-value">Dynamic Path
+                                                        Planning</span></div>
+                                                <div class="spec-item"><span class="spec-value">Obstacle
+                                                        Detection</span></div>
+                                                <div class="spec-item"><span class="spec-value">Sensor-Fusion
+                                                        SLAM</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-content glass-card">
+                                            <h3>Off-Road Navigation</h3>
+                                            <p class="vehicle-tagline">Navigate Where There Are No Roads</p>
+                                            <p>Our flagship product. This stack is designed to process unstructured
+                                                environments, identifying traversable paths, classifying terrain, and
+                                                performing complex maneuvers in real-time. It excels in GPS-denied areas
+                                                by relying on multi-sensor fusion.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- On-Road Content - RESTRUCTURED -->
+                                <div id="nav-sub-onroad" class="tab-content">
+                                    <div class="showcase-layout">
+                                        <div class="showcase-left-column">
+                                            <div class="showcase-media glass-card">
+                                                <div class="showcase-media-overlay">On-Road</div>
+                                                <video class="showcase-video" muted loop playsinline autoplay
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                    <source src="Assets/videos/copernicus_p2p.mp4" type="video/mp4">
+                                                </video>
+                                            </div>
+                                            <div class="showcase-specs glass-card">
+                                                <div class="spec-item"><span class="spec-value">HD Map
+                                                        Integration</span></div>
+                                                <div class="spec-item"><span class="spec-value">Sign Recognition</span>
+                                                </div>
+                                                <div class="spec-item"><span class="spec-value">Pedestrian
+                                                        Tracking</span></div>
+                                                <div class="spec-item"><span class="spec-value">Predictive
+                                                        Pathing</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="showcase-content glass-card">
+                                            <h3>On-Road Navigation</h3>
+                                            <p class="vehicle-tagline">Highway and Urban Autonomy</p>
+                                            <p>This stack provides Level 4 autonomy for structured environments. It
+                                                handles complex traffic scenarios, lane-keeping, and interaction with
+                                                other vehicles and pedestrians, all while adhering to road laws and
+                                                ensuring passenger comfort.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Indoor Content - REMOVED (Tab removed from navigation) -->
+                            </div>
+                        </div>
+                    </div> <!-- End Navigation Stack Content -->
+
+                    <!-- 2. Mapping Stack Content - COMING SOON -->
+                    <div id="service-tab-map" class="tab-content">
+                        <!-- Coming Soon Placeholder -->
+                        <div class="coming-soon-container"
+                            style="display: flex; align-items: center; justify-content: center; min-height: 400px; text-align: center;">
+                            <div class="glass-card" style="padding: 4rem; max-width: 600px;">
+                                <h3 style="font-size: 2rem; margin-bottom: 1rem;">Mapping Stack</h3>
+                                <p class="vehicle-tagline" style="color: var(--accent-primary); margin-bottom: 1.5rem;">
+                                    Coming Soon</p>
+                                <p style="color: var(--text-secondary);">Our high-definition 3D mapping and localization
+                                    solution is currently in development. Stay tuned for our advanced SLAM and HD map
+                                    generation capabilities.</p>
+                            </div>
+                        </div>
+
+                        <!-- ORIGINAL MAPPING STACK CONTENT - UNCOMMENT WHEN READY
+                        <div class="showcase-layout">
+                            <div class="showcase-left-column">
+                                <div class="showcase-media glass-card">
+                                    <div class="showcase-media-overlay">Mapping</div>
+                                    <img src="https://placehold.co/600x400/1a1a1a/ffffff?text=Mapping+Stack"
+                                        alt="Mapping Stack" class="showcase-image">
+                                </div>
+                                <div class="showcase-specs glass-card">
+                                    <div class="spec-item"><span class="spec-value">Multi-Sensor SLAM</span></div>
+                                    <div class="spec-item"><span class="spec-value">HD Map Generation</span></div>
+                                    <div class="spec-item"><span class="spec-value">Real-time Localization</span></div>
+                                    <div class="spec-item"><span class="spec-value">Change Detection</span></div>
+                                </div>
+                            </div>
+                            <div class="showcase-content glass-card">
+                                <h3>Mapping Stack</h3>
+                                <p class="vehicle-tagline">High-Definition 3D Mapping & Localization</p>
+                                <p>Our Mapping Stack provides the foundational layer for high-performance autonomy. It
+                                    includes robust SLAM (Simultaneous Localization and Mapping) for building precise 3D
+                                    maps of any environment, and a lightweight localization module that allows vehicles
+                                    to know their exact position within that map, even in GPS-denied areas.</p>
+                            </div>
+                        </div>
+                        END MAPPING STACK CONTENT -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>AUTOMIND DYNAMICS Pvt Ltd</h4>
+                    <p>Pioneering autonomous vehicle technology for all-terrain environments worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Twitter</a>
+                        <a href="#">LinkedIn</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="Static/js/script.js"></script>
+    <!-- Init Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

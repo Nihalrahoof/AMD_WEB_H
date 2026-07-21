@@ -13,10 +13,10 @@
     font-display: swap;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ============================================
-    CSS Variables (Design Tokens) - B&W Theme
+    CSS Variables (Design Tokens) - Premium Tech Theme
    ============================================ */
 :root {
     --primary: #ffffff;
@@ -37,8 +37,9 @@
     --text-secondary: #a0aec0;
     --text-label: #ffffff;
 
-    --font-body: 'Outfit', sans-serif;
-    --font-heading: 'Syne', sans-serif;
+    --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Space Grotesk', 'Syne', sans-serif;
+    --font-tech: 'Space Grotesk', monospace;
 
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -68,6 +69,10 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     user-select: none;
+    /* Font Smoothing */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     /* Prevents text selection */
     -webkit-user-select: none;
 }
@@ -3442,4 +3447,124 @@ section {
         width: 22px;
         height: 22px;
     }
+}
+
+/* ============================================
+    Supported By / Partners Section
+   ============================================ */
+.partners-section {
+    padding: 6rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.partner-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.partner-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.partner-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--glass-border-hover);
+    box-shadow: 0 12px 40px rgba(255, 255, 255, 0.05);
+}
+
+.partner-card:hover::before {
+    opacity: 1;
+}
+
+.partner-logo-container {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 100%;
+}
+
+.partner-logo-img {
+    max-height: 55px;
+    max-width: 100%;
+    object-fit: contain;
+    filter: brightness(0.9) grayscale(0.2);
+    transition: var(--transition);
+}
+
+.partner-card:hover .partner-logo-img {
+    filter: brightness(1.1) grayscale(0);
+    transform: scale(1.05);
+}
+
+.partner-logo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.partner-logo-placeholder svg,
+.partner-logo-placeholder i {
+    width: 34px;
+    height: 34px;
+    stroke-width: 1.5;
+}
+
+.partner-logo-placeholder span {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+}
+
+.partner-card:hover .partner-logo-placeholder {
+    color: var(--text-primary);
+}
+
+.partner-info h4 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.partner-tag {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }

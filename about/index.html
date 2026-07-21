@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Automind Dynamics</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="Static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://unpkg.com/lucide-icons"></script>
+</head>
+
+<body>
+    <!-- 3D Starfield Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-link">
+                <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+            </a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero"
+        style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+        <div class="section-container">
+            <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics"
+                style="max-width: 400px; width: 80%; margin-bottom: 2rem; filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));">
+            
+        </div>
+    </section>
+
+    <!-- About Content Section -->
+    <section id="our-mission" class="capabilities-section" style="padding-top: 0; background: transparent;">
+        <div class="section-container">
+            <div class="showcase-stack">
+
+                <!-- To Enable Autonomy, Anywhere -->
+                <div class="showcase-layout">
+                    <!-- Left Column (Media) -->
+                    <div class="showcase-left-column">
+                        <div class="showcase-media glass-card">
+                            <div class="showcase-media-overlay">Our Vision</div>
+                            <img src="Assets/Images/logo_orange.png" alt="Automind Dynamics" class="showcase-image"
+                                style="object-fit: contain; padding: 3rem; background: #ffffff;">
+                        </div>
+                    </div>
+                    <!-- Right Column (Content) -->
+                    <div class="showcase-content glass-card">
+                        <span class="section-label"
+                            style="text-align: left; margin-bottom: 1rem; color: var(--accent-primary);">The Cognitive
+                            Core</span>
+                        <h2 style="font-size: 2rem; margin-bottom: 1.5rem; line-height: 1.2;">To Enable Autonomy,
+                            Anywhere.</h2>
+                        <p style="margin-bottom: 1.5rem;">We engineer the neural infrastructure for the machines of
+                            tomorrow. At Automind Dynamics, we don’t just build robots; we build the intelligence that
+                            guides them.</p>
+                        <p>In a world where GPS is denied and environments are unstructured, standard automation fails.
+                            Our proprietary <strong>TraX Autonomy Core</strong> thrives in chaos—perceiving, planning,
+                            and executing complex missions with military-grade reliability and human-like adaptability.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Our Story Showcase (COMMENTED OUT) -->
+                <!--
+                <div class="showcase-layout reverse">
+                    <div class="showcase-left-column">
+                        <div class="showcase-media glass-card">
+                            <div class="showcase-media-overlay">Our Story</div>
+                            <img src="https://placehold.co/600x450/111111/ffffff?text=Our+Team+in+Action" alt="Our Team"
+                                class="showcase-image">
+                        </div>
+                    </div>
+                    <div class="showcase-content glass-card">
+                        <span class="section-label" style="text-align: left; margin-bottom: 1rem;">Forged in the
+                            Field</span>
+                        <p>Automind Dynamics was founded by a team of roboticists and AI engineers with deep experience
+                            in defence and field robotics. Frustrated by the limitations of existing autonomous
+                            platforms, we set out to build a new stack from the ground up—one that prioritized
+                            reliability, sensor fusion, and real-world performance over simulated metrics.</p>
+                        <p>Today, our systems are deployed in some of the most challenging conditions on Earth, a
+                            testament to our engineering-first, field-tested approach.</p>
+                    </div>
+                </div>
+                -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Principles Section (COMMENTED OUT) -->
+    <!--
+    <section id="our-principles" class="mission-ready-section" style="padding-bottom: 6rem;">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Our Principles</span>
+                <h2>The Automind Ethos</h2>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-item glass-card">
+                    <i data-lucide="shield-check"></i>
+                    <h3>Reliability First</h3>
+                    <p>Our systems are built for mission-critical tasks. We prioritize robustness, redundancy, and
+                        safety above all else.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="compass"></i>
+                    <h3>Solve the Hard Problems</h3>
+                    <p>We thrive on challenges. We build solutions for the unstructured, the unpredictable, and the
+                        GPS-denied world.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="cpu"></i>
+                    <h3>Hardware-Agnostic</h3>
+                    <p>Our software is our strength. We provide an intelligent stack that can be deployed on any
+                        vehicle, in any fleet.</p>
+                </div>
+                <div class="feature-item glass-card">
+                    <i data-lucide="users"></i>
+                    <h3>Mission-Focused</h3>
+                    <p>We are partners, not just providers. We work directly with our clients to ensure our technology
+                        solves their specific mission.</p>
+                </div>
+            </div>
+    <!-- Supported By / Partners Section -->
+    <section id="partners" class="partners-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-label">Supported By</span>
+                <h2>Our Partners & Backers</h2>
+                <p class="section-subtitle">Pioneering autonomous innovation alongside leading research centers, incubators, and industry leaders.</p>
+            </div>
+
+            <div class="partners-grid">
+                <!-- PARTNER ITEM 1: Replace partner-logo-placeholder with <img src="/Assets/Images/partner1.png" alt="Partner Name" class="partner-logo-img"> -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="building-2"></i>
+                            <span>I-HUB Robotics</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>I-HUB Robotics</h4>
+                        <p class="partner-tag">R&D & Innovation Foundation</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 2 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="shield-check"></i>
+                            <span>Defense Tech Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Defense Technology</h4>
+                        <p class="partner-tag">Tactical Mobility</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 3 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="cpu"></i>
+                            <span>Hardware Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Compute Systems</h4>
+                        <p class="partner-tag">Autonomy Infrastructure</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 4 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="award"></i>
+                            <span>Incubator / Accelerator</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Innovation Hub</h4>
+                        <p class="partner-tag">Ecosystem Support</p>
+                    </div>
+                </div>
+
+                <!-- PARTNER ITEM 5 -->
+                <div class="partner-card glass-card">
+                    <div class="partner-logo-container">
+                        <div class="partner-logo-placeholder">
+                            <i data-lucide="globe"></i>
+                            <span>Industry Partner</span>
+                        </div>
+                    </div>
+                    <div class="partner-info">
+                        <h4>Global Mobility</h4>
+                        <p class="partner-tag">Strategic Deployment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>AUTOMIND DYNAMICS Pvt Ltd</h4>
+                    <p>Pioneering autonomous vehicle technology for all-terrain environments worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Twitter</a>
+                        <a href="#">LinkedIn</a>
+                        <a href="#">Instagram</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main Script -->
+    <script src="Static/js/script.js"></script>
+
+</body>
+
+</html>

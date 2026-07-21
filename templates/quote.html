@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Quote - AUTOMIND DYNAMICS</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/Assets/Images/apple-touch-icon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/Static/css/styles.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .quote-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 5rem;
+        }
+
+        .quote-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .quote-info-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .quote-info-card h1 {
+            font-family: var(--font-heading);
+            font-size: 2.4rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .quote-info-card p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .quote-feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .quote-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .quote-feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .quote-feature-text h4 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .quote-feature-text p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .quote-form-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+
+        .form-select option {
+            background: #111;
+            color: #fff;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        .alert-success {
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10b981;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 900px) {
+            .quote-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Full-page Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-link">
+                    <img src="/Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Quote Request Page Content -->
+    <div class="quote-container">
+        <div class="quote-grid">
+            
+            <!-- Left Info Column -->
+            <div class="quote-info-card glass-card">
+                <span class="section-label">Tailored Solutions</span>
+                <h1>Request a Formal Quote</h1>
+                <p>Engineered for research, defense, and high-impact industrial operations. Complete the form to receive a detailed technical quote and deployment roadmap from our robotics engineers.</p>
+
+                <ul class="quote-feature-list">
+                    <li class="quote-feature-item">
+                        <div class="quote-feature-icon">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <div class="quote-feature-text">
+                            <h4>24-Hour Response Guarantee</h4>
+                            <p>Our technical sales team will review your specifications and issue a proposal within 1 business day.</p>
+                        </div>
+                    </li>
+
+                    <li class="quote-feature-item">
+                        <div class="quote-feature-icon">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <div class="quote-feature-text">
+                            <h4>Custom Sensor & Payload Integration</h4>
+                            <p>We configure LiDARs, thermal arrays, RTK-GNSS, and custom ROS2 packages for your exact mission.</p>
+                        </div>
+                    </li>
+
+                    <li class="quote-feature-item">
+                        <div class="quote-feature-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="quote-feature-text">
+                            <h4>Global Fleet Support & Field Training</h4>
+                            <p>Complete warranty, teleoperation support, and operational training included with every unit.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Right Form Column -->
+            <div class="quote-form-card glass-card">
+                <div id="quote-success-banner" style="display: none;" class="alert-success">
+                    <i data-lucide="check-circle-2" style="width: 24px; height: 24px;"></i>
+                    <div>
+                        <strong>Quote Request Submitted!</strong><br>
+                        Thank you. Our engineering team has received your request and will contact you shortly.
+                    </div>
+                </div>
+
+                <form id="quote-form" action="/api/request-quote" method="POST" onsubmit="submitQuoteForm(event)">
+                    
+                    <div class="form-group">
+                        <label for="product">Select Target Product / Service *</label>
+                        <select id="product" name="product" class="form-select" required>
+                            <option value="GEFIER R1" {% if selected_product == 'GEFIER R1' or selected_product == 'GEFIER-R1' or selected_product == 'r1' %}selected{% endif %}>GEFIER R1 - Compact All-Terrain UGV</option>
+                            <option value="Nomad Explorer" {% if selected_product == 'Nomad Explorer' or selected_product == 'nomad' %}selected{% endif %}>Nomad Explorer - High-Payload Offroad UGV</option>
+                            <option value="Grizzly UGV" {% if selected_product == 'Grizzly UGV' or selected_product == 'grizzly' %}selected{% endif %}>Grizzly UGV - Heavy Duty Autonomous Platform</option>
+                            <option value="Sensor Suite" {% if selected_product == 'Sensor Suite' or selected_product == 'sensor' %}selected{% endif %}>Multi-Modal Sensor Suite & LiDAR Package</option>
+                            <option value="TRAx Controller" {% if selected_product == 'TRAx Controller' or selected_product == 'trax' %}selected{% endif %}>TRAx Controller - Vehicle Autonomy Extension Kit</option>
+                            <option value="HyperSim" {% if selected_product == 'HyperSim' or selected_product == 'hypersim' %}selected{% endif %}>HyperSim - Digital Twin & Simulation Platform</option>
+                            <option value="Autonomy Stack Integration" {% if selected_product == 'Autonomy Stack Integration' %}selected{% endif %}>Autonomy Stack Integration Service</option>
+                            <option value="Custom Hardware Engineering" {% if selected_product == 'Custom Hardware Engineering' %}selected{% endif %}>Custom Hardware & Robotics Engineering</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="full_name">Full Name *</label>
+                            <input type="text" id="full_name" name="full_name" class="form-control" placeholder="e.g. Dr. Alex Morgan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Work Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="alex@organization.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone / WhatsApp</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company / Institution</label>
+                            <input type="text" id="company" name="company" class="form-control" placeholder="Organization / Lab Name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="use_case">Primary Application</label>
+                            <select id="use_case" name="use_case" class="form-select">
+                                <option value="Defense & Tactical">Defense & Tactical Operations</option>
+                                <option value="Research & Academia">Research & Academia</option>
+                                <option value="Industrial Inspection">Industrial Inspection & Mining</option>
+                                <option value="Agriculture & Forestry">Agriculture & Forestry</option>
+                                <option value="Surveillance & Security">Surveillance & Security</option>
+                                <option value="Other Custom Application">Other Custom Application</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Estimated Units</label>
+                            <select id="quantity" name="quantity" class="form-select">
+                                <option value="1 Unit">1 Unit (Evaluation / Research)</option>
+                                <option value="2 - 5 Units">2 - 5 Units (Small Fleet)</option>
+                                <option value="6 - 15 Units">6 - 15 Units (Medium Deployment)</option>
+                                <option value="15+ Fleet Units">15+ Units (Large Operational Deployment)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeframe">Deployment Timeframe</label>
+                        <select id="timeframe" name="timeframe" class="form-select">
+                            <option value="Immediate (< 1 Month)">Immediate (< 1 Month)</option>
+                            <option value="1 - 3 Months">1 - 3 Months</option>
+                            <option value="3 - 6 Months">3 - 6 Months</option>
+                            <option value="Planning / Budget Phase">Planning / Budget Phase</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirements">Custom Requirements / Payload Notes</label>
+                        <textarea id="requirements" name="requirements" class="form-control" placeholder="Specify any custom sensors, ambient temperature conditions, or payload weight requirements..."></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="cta-button primary submit-btn">Submit Quote Request</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/Static/js/script.js"></script>
+    <script>
+        // Init Lucide icons safely
+        if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        // Check URL params for preselected product
+        const urlParams = new URLSearchParams(window.location.search);
+        const productParam = urlParams.get('product');
+        if (productParam) {
+            const selectElem = document.getElementById('product');
+            for (let i = 0; i < selectElem.options.length; i++) {
+                if (selectElem.options[i].value.toLowerCase().includes(productParam.toLowerCase()) || 
+                    productParam.toLowerCase().includes(selectElem.options[i].value.toLowerCase())) {
+                    selectElem.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        async function submitQuoteForm(event) {
+            event.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Submitting Request...";
+            btn.disabled = true;
+
+            const formElem = document.getElementById('quote-form');
+            const formData = new FormData(formElem);
+
+            try {
+                // Attempt Flask API post
+                const response = await fetch('/api/request-quote', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        console.log("Submitted to backend successfully.");
+                    }
+                }
+            } catch (err) {
+                console.log("Static server environment detected, saving request locally.");
+            }
+
+            // Always save to localStorage as backup
+            try {
+                const existing = JSON.parse(localStorage.getItem('amd_quote_requests') || '[]');
+                const quoteItem = {
+                    product: formData.get('product'),
+                    full_name: formData.get('full_name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    company: formData.get('company'),
+                    use_case: formData.get('use_case'),
+                    quantity: formData.get('quantity'),
+                    timeframe: formData.get('timeframe'),
+                    requirements: formData.get('requirements'),
+                    submitted_at: new Date().toLocaleString()
+                };
+                existing.push(quoteItem);
+                localStorage.setItem('amd_quote_requests', JSON.stringify(existing));
+            } catch(e) {}
+
+            // Display Success Banner to user
+            formElem.reset();
+            const banner = document.getElementById('quote-success-banner');
+            if (banner) {
+                banner.style.display = 'flex';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            btn.innerText = "Submit Quote Request";
+            btn.disabled = false;
+        }
+    </script>
+</body>
+
+</html>

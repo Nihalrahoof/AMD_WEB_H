@@ -53,6 +53,20 @@ class DocImage(db.Model):
     data = db.Column(db.LargeBinary, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class QuoteRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product = db.Column(db.String(150), nullable=False)
+    full_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    phone = db.Column(db.String(50), nullable=True)
+    company = db.Column(db.String(150), nullable=True)
+    use_case = db.Column(db.String(100), nullable=True)
+    quantity = db.Column(db.String(50), default="1 Unit")
+    timeframe = db.Column(db.String(100), nullable=True)
+    requirements = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(50), default="Pending") # Pending, Contacted, In Progress, Archived
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 # Ensure database tables are created
 with app.app_context():
     db.create_all()
@@ -103,7 +117,7 @@ def render_markdown(text):
     return md.convert(text)
 
 # ============================================
-#     MAIN WEBSITE ROUTING
+#     MAIN WEBSITE ROUTING & CLEAN URLS
 # ============================================
 
 @app.route('/')
@@ -112,29 +126,139 @@ def home():
         return render_docs_home()
     return render_template('index.html')
 
-# Serve existing static HTML files explicitly
 @app.route('/index.html')
 def index_html():
-    return render_template('index.html')
+    return redirect(url_for('home'), code=301)
+
+# Clean & Extensionless URL Routes
+@app.route('/products')
+def products_page():
+    return render_template('products/index.html')
+
+@app.route('/services')
+def services_page():
+    return render_template('services/index.html')
+
+@app.route('/news')
+def news_page():
+    return render_template('news/index.html')
+
+@app.route('/about')
+def about_page():
+    return render_template('about/index.html')
+
+@app.route('/quote')
+@app.route('/quote.html')
+@app.route('/request-quote')
+def quote_page():
+    product = request.args.get('product', '')
+    return render_template('templates/quote.html', selected_product=product)
+
+@app.route('/api/request-quote', methods=['POST'])
+def api_request_quote():
+    try:
+        if request.is_json:
+            data = request.get_json()
+        else:
+            data = request.form
+
+        product = data.get('product') or 'General Product Inquiry'
+        full_name = data.get('full_name')
+        email = data.get('email')
+        phone = data.get('phone', '')
+        company = data.get('company', '')
+        use_case = data.get('use_case', '')
+        quantity = data.get('quantity', '1 Unit')
+        timeframe = data.get('timeframe', '')
+        requirements = data.get('requirements', '')
+
+        if not full_name or not email or not product:
+            return jsonify({'status': 'error', 'message': 'Full name, email, and product selection are required.'}), 400
+
+        quote = QuoteRequest(
+            product=product,
+            full_name=full_name,
+            email=email,
+            phone=phone,
+            company=company,
+            use_case=use_case,
+            quantity=quantity,
+            timeframe=timeframe,
+            requirements=requirements
+        )
+        db.session.add(quote)
+        db.session.commit()
+
+        if request.is_json:
+            return jsonify({'status': 'success', 'message': 'Your quote request has been submitted successfully!'}), 200
+        else:
+            return render_template('templates/quote.html', success=True, quote=quote)
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# Redirect legacy .html endpoints to clean extensionless endpoints
+@app.route('/products.html')
+def redirect_products():
+    return redirect(url_for('products_page'), code=301)
+
+@app.route('/services.html')
+def redirect_services():
+    return redirect(url_for('services_page'), code=301)
+
+@app.route('/news.html')
+def redirect_news():
+    return redirect(url_for('news_page'), code=301)
+
+@app.route('/about.html')
+def redirect_about():
+    return redirect(url_for('about_page'), code=301)
+
+@app.route('/Templates/<path:filename>')
+@app.route('/templates/<path:filename>')
+def serve_templates(filename):
+    clean_name = filename.replace('.html', '').lower()
+    if clean_name in ['products', 'services', 'news', 'about']:
+        return redirect(f'/{clean_name}', code=301)
+    template_path = f'templates/{filename}'
+    if not os.path.exists(template_path):
+        if os.path.exists(filename):
+            return render_template(filename)
+        abort(404)
+    return render_template(template_path)
 
 @app.route('/mappingui.html')
+@app.route('/mappingui')
 def mapping_ui():
     return render_template('mappingui.html')
 
 @app.route('/sensorfusionui.html')
+@app.route('/sensorfusionui')
 def sensor_fusion_ui():
     return render_template('sensorfusionui.html')
 
 @app.route('/software_stack.html')
+@app.route('/software_stack')
 def software_stack():
     return render_template('software_stack.html')
 
-@app.route('/templates/<path:filename>')
-def serve_templates(filename):
-    template_path = f'templates/{filename}'
-    if not os.path.exists(template_path):
-        abort(404)
-    return render_template(template_path)
+# Favicon & SEO File Routers
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('Assets/Images', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+@app.route('/apple-touch-icon.png')
+def apple_touch_icon():
+    return send_from_directory('Assets/Images', 'apple-touch-icon.png', mimetype='image/png')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('.', 'sitemap.xml', mimetype='application/xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('.', 'robots.txt', mimetype='text/plain')
 
 # Static Asset Routers
 @app.route('/Static/<path:filename>')
@@ -188,6 +312,7 @@ def admin_logout():
 @app.route('/admin/')
 def admin_dashboard():
     rovers = Rover.query.order_by(Rover.created_at.desc()).all()
+    quotes = QuoteRequest.query.order_by(QuoteRequest.created_at.desc()).all()
     rover_data = []
     for r in rovers:
         page_count = DocPage.query.filter_by(rover_id=r.id).count()
@@ -195,7 +320,22 @@ def admin_dashboard():
             'rover': r,
             'page_count': page_count
         })
-    return render_template('templates/admin_dashboard.html', rovers=rover_data)
+    return render_template('templates/admin_dashboard.html', rovers=rover_data, quotes=quotes)
+
+@app.route('/admin/quote/<int:quote_id>/status', methods=['POST'])
+def admin_quote_status(quote_id):
+    quote = QuoteRequest.query.get_or_404(quote_id)
+    new_status = request.form.get('status', 'Pending')
+    quote.status = new_status
+    db.session.commit()
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/quote/<int:quote_id>/delete', methods=['POST'])
+def admin_quote_delete(quote_id):
+    quote = QuoteRequest.query.get_or_404(quote_id)
+    db.session.delete(quote)
+    db.session.commit()
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/rover/new', methods=['POST'])
 def admin_rover_new():

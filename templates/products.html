@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - AUTOMIND DYNAMICS</title>
-    <link rel="stylesheet" href="../Static/css/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="Static/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Icons (for new section) -->
     <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
 </head>
@@ -23,8 +27,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="../index.html" class="logo-link">
-                    <img src="../Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                <a href="/" class="logo-link">
+                    <img src="Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
                 </a>
             </div>
             <div class="hamburger" id="hamburger">
@@ -34,12 +38,12 @@
             </div>
             <!-- Updated nav links for this page -->
             <ul class="nav-menu" id="navMenu">
-                <li><a href="../index.html" class="nav-link">Home</a></li>
-                <li><a href="products.html" class="nav-link active">Products</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
-                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
-                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
             </ul>
         </div>
     </nav>
@@ -97,7 +101,7 @@
                                         <div class="showcase-left-column">
                                             <div class="showcase-media glass-card">
                                                 <div class="showcase-media-overlay">GEFIER R1</div>
-                                                <img src="../Assets/Images/R1b.png" alt="GEFIER R1"
+                                                <img src="Assets/Images/R1b.png" alt="GEFIER R1"
                                                     class="showcase-image"
                                                     style="object-fit: contain; padding: 1rem; background: #111;">
                                             </div>
@@ -126,7 +130,8 @@
                                                     and research hardware</li>
                                             </p>
                                             <div class="product-download-buttons">
-                                                <a href="../Assets/docs/spec_sheetr1.pdf" class="download-btn" download>
+                                                <a href="/quote?product=GEFIER+R1" class="cta-button primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Request Quote</a>
+                                                <a href="Assets/docs/spec_sheetr1.pdf" class="download-btn" download>
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2">
                                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -135,7 +140,7 @@
                                                     </svg>
                                                     Spec Sheet
                                                 </a>
-                                                <a href="../Assets/docs/R1_brochure_blue.pdf" class="download-btn"
+                                                <a href="Assets/docs/R1_brochure_blue.pdf" class="download-btn"
                                                     download>
                                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2">
@@ -155,7 +160,7 @@
                                         <div class="showcase-left-column">
                                             <div class="showcase-media glass-card">
                                                 <div class="showcase-media-overlay">Nomad</div>
-                                                <img src="../Assets/Images/nomad.jpeg" alt="Nomad Explorer"
+                                                <img src="Assets/Images/nomad.jpeg" alt="Nomad Explorer"
                                                     class="showcase-image">
                                             </div>
                                             <div class="showcase-specs glass-card">
@@ -279,7 +284,7 @@
                             <div class="showcase-left-column">
                                 <div class="showcase-media glass-card">
                                     <div class="showcase-media-overlay">Sensor Suite</div>
-                                    <img src="../Assets/Images/sensor_suit.png" alt="Sensor Suite"
+                                    <img src="Assets/Images/sensor_suit.png" alt="Sensor Suite"
                                         class="showcase-image">
                                 </div>
                                 <div class="showcase-specs glass-card">
@@ -327,7 +332,7 @@
                             <div class="showcase-left-column">
                                 <div class="showcase-media glass-card">
                                     <div class="showcase-media-overlay">TRAx</div>
-                                    <img src="../Assets/Images/TRAXB.png" alt="TRAx Controller" class="showcase-image"
+                                    <img src="Assets/Images/TRAXB.png" alt="TRAx Controller" class="showcase-image"
                                         style="object-fit: contain; padding: 1rem; background: #111;">
                                 </div>
                                 <div class="showcase-specs glass-card">
@@ -349,7 +354,8 @@
                                     plus the drive-by-wire actuation to control any vehicle. This allows for rapid
                                     retrofitting of existing fleets.</p>
                                 <div class="product-download-buttons">
-                                    <a href="..//Assets/docs/SPEC_SHEET_TRAX (5).pdf" class="download-btn" download>
+                                    <a href="/quote?product=TRAx+Controller" class="cta-button primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Request Quote</a>
+                                                <a href="/Assets/docs/SPEC_SHEET_TRAX (5).pdf" class="download-btn" download>
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2">
                                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -379,7 +385,7 @@
                             <div class="showcase-left-column">
                                 <div class="showcase-media glass-card">
                                     <div class="showcase-media-overlay">HyperSim</div>
-                                    <img src="../Assets/Images/hypersim.jpeg" alt="HyperSim" class="showcase-image">
+                                    <img src="Assets/Images/hypersim.jpeg" alt="HyperSim" class="showcase-image">
                                 </div>
                                 <div class="showcase-specs glass-card">
                                     <div class="spec-item"><span class="spec-value">Physics-Based</span></div>
@@ -440,7 +446,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/R1_1st.mp4" type="video/mp4">
+                                <source src="Assets/videos/R1_1st.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-left"></div>
@@ -468,7 +474,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped reverse">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/R1_2nd.mp4" type="video/mp4">
+                                <source src="Assets/videos/R1_2nd.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-right"></div>
@@ -526,7 +532,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/sensor_1st.mp4" type="video/mp4">
+                                <source src="Assets/videos/sensor_1st.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-left"></div>
@@ -553,7 +559,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped reverse">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/sensor_2nd.mp4" type="video/mp4">
+                                <source src="Assets/videos/sensor_2nd.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-right"></div>
@@ -585,7 +591,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/Trax1.mp4" type="video/mp4">
+                                <source src="Assets/videos/Trax1.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-left"></div>
@@ -613,7 +619,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped reverse">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/Trax2.mp4" type="video/mp4">
+                                <source src="Assets/videos/Trax2.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-right"></div>
@@ -645,7 +651,7 @@
                     <div class="fullwidth-video-wrapper" data-scroll-reveal>
                         <div class="video-container clipped">
                             <video class="fullwidth-video" muted loop playsinline autoplay>
-                                <source src="../Assets/videos/hypersim.mp4" type="video/mp4">
+                                <source src="Assets/videos/hypersim.mp4" type="video/mp4">
                             </video>
                             <div class="video-gradient-overlay"></div>
                             <div class="video-corner-accent top-left"></div>
@@ -689,11 +695,13 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="products.html">Products</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="index.html#core-tech">Technology</a></li>
-                        <li><a href="index.html#showcase">Showcase</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
                     </ul>
+                                            <div class="product-download-buttons" style="margin-top: 1.5rem;"><a href="/quote?product=Grizzly+UGV" class="cta-button primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Request Quote</a></div>
+                                            <div class="product-download-buttons" style="margin-top: 1.5rem;"><a href="/quote?product=Nomad+Explorer" class="cta-button primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.4rem; text-decoration: none;"><i data-lucide="file-text" style="width: 16px; height: 16px;"></i> Request Quote</a></div>
                 </div>
                 <div class="footer-section">
                     <h4>Legal</h4>
@@ -722,7 +730,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <script src="../Static/js/script.js"></script>
+    <script src="Static/js/script.js"></script>
     <!-- Init Lucide Icons -->
     <script>
         lucide.createIcons();
