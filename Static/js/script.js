@@ -901,3 +901,65 @@ function initSecurityDeterrents() {
         }
     });
 }
+
+/* ============================================
+   Contact Form & Location Copy Handlers
+   ============================================ */
+function handleContactSubmit(event) {
+    event.preventDefault();
+    const btn = document.getElementById('contact-submit-btn');
+    const responseMsg = document.getElementById('form-response-msg');
+    
+    if (!btn || !responseMsg) return;
+
+    // Show loading state
+    const originalBtnHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span>Sending...</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
+
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHTML;
+        responseMsg.className = 'form-response-msg success';
+        responseMsg.textContent = '✓ Thank you! Your message has been sent successfully. We will get back to you shortly.';
+        responseMsg.style.display = 'block';
+
+        // Reset form
+        document.getElementById('contact-form').reset();
+
+        setTimeout(() => {
+            responseMsg.style.display = 'none';
+        }, 6000);
+    }, 1200);
+}
+
+function copyAddress(label, textToCopy, buttonEl) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy);
+    } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+        } catch (err) {}
+        document.body.removeChild(textArea);
+    }
+
+    if (buttonEl) {
+        const span = buttonEl.querySelector('span');
+        if (span) {
+            const originalText = span.textContent;
+            span.textContent = 'Copied!';
+            buttonEl.style.borderColor = 'rgba(16, 185, 129, 0.6)';
+            buttonEl.style.background = 'rgba(16, 185, 129, 0.2)';
+            
+            setTimeout(() => {
+                span.textContent = originalText;
+                buttonEl.style.borderColor = '';
+                buttonEl.style.background = '';
+            }, 2000);
+        }
+    }
+}
