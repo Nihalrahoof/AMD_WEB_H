@@ -3923,20 +3923,27 @@ section {
     top: 50%;
     transform: translateY(-50%);
     z-index: 25;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: rgba(15, 15, 20, 0.85);
+    background: rgba(18, 18, 24, 0.88);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-nav-btn svg {
+    width: 22px;
+    height: 22px;
+    stroke: #ffffff;
+    transition: transform 0.2s ease, stroke 0.2s ease;
 }
 
 .carousel-nav-btn:hover {
@@ -3944,7 +3951,19 @@ section {
     color: #000000;
     border-color: #ffffff;
     transform: translateY(-50%) scale(1.12);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.35);
+}
+
+.carousel-nav-btn:hover svg {
+    stroke: #000000;
+}
+
+.carousel-nav-btn.prev:hover svg {
+    transform: translateX(-2px);
+}
+
+.carousel-nav-btn.next:hover svg {
+    transform: translateX(2px);
 }
 
 .carousel-nav-btn.prev {
