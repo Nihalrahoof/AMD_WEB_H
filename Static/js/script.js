@@ -854,6 +854,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Init security deterrents
     initSecurityDeterrents();
 
+    // Init Partners Carousel
+    initPartnersCarousel();
+
     // Init Lucide Icons if available
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
@@ -962,4 +965,75 @@ function copyAddress(label, textToCopy, buttonEl) {
             }, 2000);
         }
     }
+}
+
+/* ============================================
+   Partners Marquee Carousel Manual & Auto Scroll
+   ============================================ */
+function initPartnersCarousel() {
+    const carousels = document.querySelectorAll('.partners-carousel');
+    carousels.forEach(carousel => {
+        const track = carousel.querySelector('.partners-track');
+        if (!track) return;
+
+        let isDown = false;
+        let startX, scrollLeft;
+        let pauseTimer;
+
+        const pauseAuto = () => {
+            carousel.classList.add('user-scrolling');
+            clearTimeout(pauseTimer);
+            pauseTimer = setTimeout(() => {
+                carousel.classList.remove('user-scrolling');
+            }, 3500);
+        };
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            pauseAuto();
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            pauseAuto();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 1.8;
+            carousel.scrollLeft = scrollLeft - walk;
+        });
+
+        carousel.addEventListener('touchstart', () => pauseAuto(), { passive: true });
+        carousel.addEventListener('touchmove', () => pauseAuto(), { passive: true });
+        carousel.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaX) > 0 || e.shiftKey) {
+                pauseAuto();
+            }
+        }, { passive: true });
+    });
+}
+
+function scrollPartners(direction, btnEl) {
+    const wrapper = btnEl ? btnEl.closest('.partners-carousel-wrapper') : document.querySelector('.partners-carousel-wrapper');
+    const carousel = wrapper ? wrapper.querySelector('.partners-carousel') : document.querySelector('.partners-carousel');
+    if (!carousel) return;
+    
+    carousel.classList.add('user-scrolling');
+    carousel.scrollBy({
+        left: direction * 340,
+        behavior: 'smooth'
+    });
+    
+    setTimeout(() => {
+        carousel.classList.remove('user-scrolling');
+    }, 3500);
 }

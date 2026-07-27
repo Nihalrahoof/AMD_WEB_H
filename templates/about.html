@@ -160,76 +160,116 @@
                 <p class="section-subtitle">Pioneering autonomous innovation alongside leading research centers, incubators, and industry leaders.</p>
             </div>
 
-            <div class="partners-grid">
-                <!-- PARTNER ITEM 1: Replace partner-logo-placeholder with <img src="/Assets/Images/partner1.png" alt="Partner Name" class="partner-logo-img"> -->
-                <div class="partner-card glass-card">
-                    <div class="partner-logo-container">
-                        <div class="partner-logo-placeholder">
-                            <i data-lucide="building-2"></i>
-                            <span>I-HUB Robotics</span>
+            <div class="partners-carousel-wrapper">
+                <button class="carousel-nav-btn prev" aria-label="Previous partners" onclick="scrollPartners(-1, this)">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+
+                <div class="partners-carousel" id="partnersCarousel">
+                    <div class="partners-track">
+                        <!-- SET 1: 8 PARTNERS -->
+                        <div class="partner-card glass-card" title="Department of Science and Technology">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/dst.png" alt="Department of Science and Technology Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'building-2\'></i><span>DST</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
                         </div>
-                    </div>
-                    <div class="partner-info">
-                        <h4>I-HUB Robotics</h4>
-                        <p class="partner-tag">R&D & Innovation Foundation</p>
+
+                        <div class="partner-card glass-card" title="ARTPARK">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/artpark.png" alt="ARTPARK Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'cpu\'></i><span>ARTPARK</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="Indian Institute of Science (IISc)">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/iisc.png" alt="IISc Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'graduation-cap\'></i><span>IISc</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="Government of Karnataka">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/karnataka.png" alt="Government of Karnataka Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'landmark\'></i><span>Govt of Karnataka</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="NVIDIA">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/nvidia.svg" alt="NVIDIA Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'cpu\'></i><span>NVIDIA</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="IIT Jammu">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/iit_jammu.png" alt="IIT Jammu Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'school\'></i><span>IIT Jammu</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="MIT Manipal">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/mit_manipal.svg" alt="MIT Manipal Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'book-open\'></i><span>MIT Manipal</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="DRDO">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/drdo.png" alt="DRDO Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'shield\'></i><span>DRDO</span></div>'; if(window.lucide) lucide.createIcons();">
+                            </div>
+                        </div>
+
+                        <!-- SET 2: DUPLICATE FOR SEAMLESS INFINITE LOOP -->
+                        <div class="partner-card glass-card" title="Department of Science and Technology" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/dst.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="ARTPARK" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/artpark.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="Indian Institute of Science (IISc)" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/iisc.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="Government of Karnataka" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/karnataka.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="NVIDIA" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/nvidia.svg" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="IIT Jammu" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/iit_jammu.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="MIT Manipal" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/mit_manipal.svg" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
+
+                        <div class="partner-card glass-card" title="DRDO" aria-hidden="true">
+                            <div class="partner-logo-container">
+                                <img src="/Assets/Images/partners/drdo.png" alt="" class="partner-logo-img">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- PARTNER ITEM 2 -->
-                <div class="partner-card glass-card">
-                    <div class="partner-logo-container">
-                        <div class="partner-logo-placeholder">
-                            <i data-lucide="shield-check"></i>
-                            <span>Defense Tech Partner</span>
-                        </div>
-                    </div>
-                    <div class="partner-info">
-                        <h4>Defense Technology</h4>
-                        <p class="partner-tag">Tactical Mobility</p>
-                    </div>
-                </div>
-
-                <!-- PARTNER ITEM 3 -->
-                <div class="partner-card glass-card">
-                    <div class="partner-logo-container">
-                        <div class="partner-logo-placeholder">
-                            <i data-lucide="cpu"></i>
-                            <span>Hardware Partner</span>
-                        </div>
-                    </div>
-                    <div class="partner-info">
-                        <h4>Compute Systems</h4>
-                        <p class="partner-tag">Autonomy Infrastructure</p>
-                    </div>
-                </div>
-
-                <!-- PARTNER ITEM 4 -->
-                <div class="partner-card glass-card">
-                    <div class="partner-logo-container">
-                        <div class="partner-logo-placeholder">
-                            <i data-lucide="award"></i>
-                            <span>Incubator / Accelerator</span>
-                        </div>
-                    </div>
-                    <div class="partner-info">
-                        <h4>Innovation Hub</h4>
-                        <p class="partner-tag">Ecosystem Support</p>
-                    </div>
-                </div>
-
-                <!-- PARTNER ITEM 5 -->
-                <div class="partner-card glass-card">
-                    <div class="partner-logo-container">
-                        <div class="partner-logo-placeholder">
-                            <i data-lucide="globe"></i>
-                            <span>Industry Partner</span>
-                        </div>
-                    </div>
-                    <div class="partner-info">
-                        <h4>Global Mobility</h4>
-                        <p class="partner-tag">Strategic Deployment</p>
-                    </div>
-                </div>
+                <button class="carousel-nav-btn next" aria-label="Next partners" onclick="scrollPartners(1, this)">
+                    <i data-lucide="chevron-right"></i>
+                </button>
             </div>
         </div>
     </section>
