@@ -923,8 +923,9 @@ function handleContactSubmit(event) {
     setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML = originalBtnHTML;
+        if (window.lucide) lucide.createIcons();
         responseMsg.className = 'form-response-msg success';
-        responseMsg.textContent = '✓ Thank you! Your message has been sent successfully. We will get back to you shortly.';
+        responseMsg.textContent = '✓ Thank you! Your message has been sent successfully. Our engineering team will get back to you shortly.';
         responseMsg.style.display = 'block';
 
         // Reset form
@@ -977,26 +978,47 @@ function initPartnersCarousel() {
         if (!track) return;
 
         let isDown = false;
-        let startX, scrollLeft;
+        let startX, startScrollLeft;
+        let isHovered = false;
+        let isUserScrolling = false;
         let pauseTimer;
 
         const pauseAuto = () => {
+            isUserScrolling = true;
             carousel.classList.add('user-scrolling');
             clearTimeout(pauseTimer);
             pauseTimer = setTimeout(() => {
+                isUserScrolling = false;
                 carousel.classList.remove('user-scrolling');
-            }, 3500);
+            }, 3000);
         };
+
+        const getHalfWidth = () => track.scrollWidth / 2;
+
+        // Smooth Auto Marquee Ticker
+        const speed = 0.8; // px per frame
+        function marqueeStep() {
+            if (!isHovered && !isUserScrolling && !isDown) {
+                const halfWidth = getHalfWidth();
+                if (halfWidth > 0) {
+                    carousel.scrollLeft += speed;
+                    if (carousel.scrollLeft >= halfWidth) {
+                        carousel.scrollLeft -= halfWidth;
+                    }
+                }
+            }
+            requestAnimationFrame(marqueeStep);
+        }
+        requestAnimationFrame(marqueeStep);
+
+        carousel.addEventListener('mouseenter', () => { isHovered = true; });
+        carousel.addEventListener('mouseleave', () => { isHovered = false; isDown = false; });
 
         carousel.addEventListener('mousedown', (e) => {
             isDown = true;
             pauseAuto();
             startX = e.pageX - carousel.offsetLeft;
-            scrollLeft = carousel.scrollLeft;
-        });
-
-        carousel.addEventListener('mouseleave', () => {
-            isDown = false;
+            startScrollLeft = carousel.scrollLeft;
         });
 
         carousel.addEventListener('mouseup', () => {
@@ -1009,14 +1031,33 @@ function initPartnersCarousel() {
             pauseAuto();
             const x = e.pageX - carousel.offsetLeft;
             const walk = (x - startX) * 1.8;
-            carousel.scrollLeft = scrollLeft - walk;
+            const halfWidth = getHalfWidth();
+            let targetScroll = startScrollLeft - walk;
+            if (halfWidth > 0) {
+                while (targetScroll >= halfWidth) targetScroll -= halfWidth;
+                while (targetScroll < 0) targetScroll += halfWidth;
+            }
+            carousel.scrollLeft = targetScroll;
         });
 
         carousel.addEventListener('touchstart', () => pauseAuto(), { passive: true });
-        carousel.addEventListener('touchmove', () => pauseAuto(), { passive: true });
+        carousel.addEventListener('touchmove', () => {
+            pauseAuto();
+            const halfWidth = getHalfWidth();
+            if (halfWidth > 0) {
+                if (carousel.scrollLeft >= halfWidth) carousel.scrollLeft -= halfWidth;
+                if (carousel.scrollLeft <= 0) carousel.scrollLeft += halfWidth;
+            }
+        }, { passive: true });
+
         carousel.addEventListener('wheel', (e) => {
             if (Math.abs(e.deltaX) > 0 || e.shiftKey) {
                 pauseAuto();
+                const halfWidth = getHalfWidth();
+                if (halfWidth > 0) {
+                    if (carousel.scrollLeft >= halfWidth) carousel.scrollLeft -= halfWidth;
+                    if (carousel.scrollLeft <= 0) carousel.scrollLeft += halfWidth;
+                }
             }
         }, { passive: true });
     });
@@ -1026,14 +1067,25 @@ function scrollPartners(direction, btnEl) {
     const wrapper = btnEl ? btnEl.closest('.partners-carousel-wrapper') : document.querySelector('.partners-carousel-wrapper');
     const carousel = wrapper ? wrapper.querySelector('.partners-carousel') : document.querySelector('.partners-carousel');
     if (!carousel) return;
-    
+    const track = carousel.querySelector('.partners-track');
+
     carousel.classList.add('user-scrolling');
+
+    const halfWidth = track ? track.scrollWidth / 2 : 0;
+    if (halfWidth > 0) {
+        if (direction > 0 && carousel.scrollLeft >= halfWidth - 60) {
+            carousel.scrollLeft -= halfWidth;
+        } else if (direction < 0 && carousel.scrollLeft <= 60) {
+            carousel.scrollLeft += halfWidth;
+        }
+    }
+
     carousel.scrollBy({
         left: direction * 340,
         behavior: 'smooth'
     });
-    
+
     setTimeout(() => {
         carousel.classList.remove('user-scrolling');
-    }, 3500);
+    }, 3000);
 }
