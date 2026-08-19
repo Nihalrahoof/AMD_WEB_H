@@ -38,86 +38,41 @@
 
     <style>
         .quote-container {
-            max-width: 1200px;
+            max-width: 820px;
             margin: 0 auto;
-            padding: 8rem 2rem 5rem;
+            padding: 7.5rem 1.5rem 5rem;
         }
 
-        .quote-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 3rem;
-            align-items: start;
+        .quote-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
 
-        .quote-info-card {
-            padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--glass-blur));
-        }
-
-        .quote-info-card h1 {
+        .quote-header h1 {
             font-family: var(--font-heading);
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             line-height: 1.2;
-            margin-bottom: 1rem;
+            margin: 0.5rem 0 0.75rem;
             color: var(--text-primary);
         }
 
-        .quote-info-card p {
+        .quote-header p {
             color: var(--text-secondary);
-            font-size: 1.05rem;
+            font-size: 1rem;
             line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .quote-feature-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .quote-feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .quote-feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        .quote-feature-text h4 {
-            font-family: var(--font-heading);
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.2rem;
-        }
-
-        .quote-feature-text p {
-            font-size: 0.9rem;
-            margin-bottom: 0;
+            max-width: 580px;
+            margin: 0 auto;
         }
 
         .quote-form-card {
-            padding: 2.5rem;
-            border-radius: 20px;
+            padding: 2.75rem;
+            border-radius: 16px;
             border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
+            background: rgba(10, 12, 16, 0.75);
             backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
         }
 
         .form-row {
@@ -132,20 +87,20 @@
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 0.5rem;
         }
 
         .form-control, .form-select {
             width: 100%;
             padding: 0.85rem 1rem;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.55);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
+            border-radius: 8px;
             color: #fff;
             font-family: var(--font-body);
             font-size: 0.95rem;
@@ -155,11 +110,12 @@
         .form-control:focus, .form-select:focus {
             outline: none;
             border-color: #ffffff;
+            background: rgba(0, 0, 0, 0.75);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
         }
 
         .form-select option {
-            background: #111;
+            background: #0d1117;
             color: #fff;
         }
 
@@ -173,7 +129,6 @@
             padding: 1rem 2rem;
             font-size: 1rem;
             font-weight: 700;
-            text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-top: 1rem;
             cursor: pointer;
@@ -192,12 +147,18 @@
             font-size: 0.95rem;
         }
 
-        @media (max-width: 900px) {
-            .quote-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 640px) {
+            .quote-container {
+                padding: 6.5rem 1rem 4rem;
+            }
+            .quote-form-card {
+                padding: 1.75rem;
             }
             .form-row {
                 grid-template-columns: 1fr;
+            }
+            .quote-header h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -233,49 +194,14 @@
 
     <!-- Quote Request Page Content -->
     <div class="quote-container">
-        <div class="quote-grid">
-            
-            <!-- Left Info Column -->
-            <div class="quote-info-card glass-card">
-                <span class="section-label">Tailored Solutions</span>
-                <h1>Request a Formal Quote</h1>
-                <p>Engineered for research, defense, and high-impact industrial operations. Complete the form to receive a detailed technical quote and deployment roadmap from our robotics engineers.</p>
+        <div class="quote-header">
+            <span class="section-label">Get In Touch</span>
+            <h1>Request a Formal Quote</h1>
+            <p>Engineered for research, defense, and high-impact industrial operations. Complete the form to receive a detailed technical quote and deployment roadmap from our robotics engineers.</p>
+        </div>
 
-                <ul class="quote-feature-list">
-                    <li class="quote-feature-item">
-                        <div class="quote-feature-icon">
-                            <i data-lucide="zap"></i>
-                        </div>
-                        <div class="quote-feature-text">
-                            <h4>24-Hour Response Guarantee</h4>
-                            <p>Our technical sales team will review your specifications and issue a proposal within 1 business day.</p>
-                        </div>
-                    </li>
-
-                    <li class="quote-feature-item">
-                        <div class="quote-feature-icon">
-                            <i data-lucide="layers"></i>
-                        </div>
-                        <div class="quote-feature-text">
-                            <h4>Custom Sensor & Payload Integration</h4>
-                            <p>We configure LiDARs, thermal arrays, RTK-GNSS, and custom ROS2 packages for your exact mission.</p>
-                        </div>
-                    </li>
-
-                    <li class="quote-feature-item">
-                        <div class="quote-feature-icon">
-                            <i data-lucide="shield"></i>
-                        </div>
-                        <div class="quote-feature-text">
-                            <h4>Global Fleet Support & Field Training</h4>
-                            <p>Complete warranty, teleoperation support, and operational training included with every unit.</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Right Form Column -->
-            <div class="quote-form-card glass-card">
+        <!-- Form Card -->
+        <div class="quote-form-card glass-card">
                 <div id="quote-success-banner" style="display: none;" class="alert-success">
                     <i data-lucide="check-circle-2" style="width: 24px; height: 24px;"></i>
                     <div>
@@ -293,7 +219,7 @@
                             <option value="Nomad Explorer" {% if selected_product == 'Nomad Explorer' or selected_product == 'nomad' %}selected{% endif %}>Nomad Explorer - High-Payload Offroad UGV</option>
                             <option value="Grizzly UGV" {% if selected_product == 'Grizzly UGV' or selected_product == 'grizzly' %}selected{% endif %}>Grizzly UGV - Heavy Duty Autonomous Platform</option>
                             <option value="Sensor Suite" {% if selected_product == 'Sensor Suite' or selected_product == 'sensor' %}selected{% endif %}>Multi-Modal Sensor Suite & LiDAR Package</option>
-                            <option value="TRAx Controller" {% if selected_product == 'TRAx Controller' or selected_product == 'trax' %}selected{% endif %}>TRAx Controller - Vehicle Autonomy Extension Kit</option>
+                            <option value="TraX Controller" {% if selected_product == 'TraX Controller' or selected_product == 'TRAx Controller' or selected_product == 'trax' %}selected{% endif %}>TraX Controller - Vehicle Autonomy Extension Kit</option>
                             <option value="HyperSim" {% if selected_product == 'HyperSim' or selected_product == 'hypersim' %}selected{% endif %}>HyperSim - Digital Twin & Simulation Platform</option>
                             <option value="Autonomy Stack Integration" {% if selected_product == 'Autonomy Stack Integration' %}selected{% endif %}>Autonomy Stack Integration Service</option>
                             <option value="Custom Hardware Engineering" {% if selected_product == 'Custom Hardware Engineering' %}selected{% endif %}>Custom Hardware & Robotics Engineering</option>
@@ -363,9 +289,7 @@
                     <button type="submit" id="submit-btn" class="cta-button primary submit-btn">Submit Quote Request</button>
                 </form>
             </div>
-
         </div>
-    </div>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

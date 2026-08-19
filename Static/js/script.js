@@ -631,7 +631,7 @@ function initTabs() {
         'ugv-sub-nomad': 'Nomad Explorer In Action',
         'ugv-sub-grizzly': 'Grizzly UGV In Action',
         'product-tab-sensor': 'Sensor Suite In Action',
-        'product-tab-trax': 'TRAx Controller In Action',
+        'product-tab-trax': 'TraX Controller In Action',
         'product-tab-sim': 'HyperSim In Action'
     };
 
