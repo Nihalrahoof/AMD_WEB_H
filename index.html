@@ -87,8 +87,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <!-- Icons (for new section) -->
-    <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -347,7 +347,7 @@
                     </button>
                     <button class="video-select-btn" data-video-key="urban">
                         <span class="btn-title">On Road</span>
-                        <span class="btn-desc">Complex city environments.</span>
+                        <span class="btn-desc">Structured environments</span>
                     </button>
 
                 </div>
@@ -803,7 +803,7 @@
                                 <div class="channel-items">
                                     <div class="channel-item">
                                         <span class="channel-lbl">Phone:</span>
-                                        <a href="tel:+917006275705" class="channel-link">+91 70062 75705</a>
+                                        <a href="tel:+917259216861" class="channel-link">+91 72592 16861</a>
                                     </div>
                                     <div class="channel-item">
                                         <span class="channel-lbl">Email:</span>
@@ -870,7 +870,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+                <p>&copy; 2026 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
             </div>
         </div>
     </footer>
@@ -882,7 +882,9 @@
     <script src="Static/js/script.js"></script>
     <!-- Init Lucide Icons -->
     <script>
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
     </script>
 </body>
 

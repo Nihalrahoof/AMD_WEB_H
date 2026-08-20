@@ -33,8 +33,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <!-- Use the full Lucide script for createIcons() -->
-    <script src="https://unpkg.com/lucide-react@0.363.0/dist/umd/lucide.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Autonomy Anywhere. Anytime.</p>
+                <p>&copy; 2026 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Autonomy Anywhere. Anytime.</p>
             </div>
         </div>
     </footer>
@@ -127,8 +127,10 @@
     <!-- Main Script -->
     <script src="Static/js/script.js"></script>
     <script>
-        // Init Lucide Icons
-        lucide.createIcons();
+        // Init Lucide Icons safely
+        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
     </script>
 </body>
 

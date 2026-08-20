@@ -33,7 +33,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://unpkg.com/lucide-icons"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>document.addEventListener("DOMContentLoaded", () => { if (typeof lucide !== 'undefined') lucide.createIcons(); });</script>
 </head>
 
 <body>
@@ -131,175 +133,6 @@
         </div>
     </section>
 
-    <!-- Our Principles Section (COMMENTED OUT) -->
-    <!--
-    <section id="our-principles" class="mission-ready-section" style="padding-bottom: 6rem;">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-label">Our Principles</span>
-                <h2>The Automind Ethos</h2>
-            </div>
-            <div class="feature-grid">
-                <div class="feature-item glass-card">
-                    <i data-lucide="shield-check"></i>
-                    <h3>Reliability First</h3>
-                    <p>Our systems are built for mission-critical tasks. We prioritize robustness, redundancy, and
-                        safety above all else.</p>
-                </div>
-                <div class="feature-item glass-card">
-                    <i data-lucide="compass"></i>
-                    <h3>Solve the Hard Problems</h3>
-                    <p>We thrive on challenges. We build solutions for the unstructured, the unpredictable, and the
-                        GPS-denied world.</p>
-                </div>
-                <div class="feature-item glass-card">
-                    <i data-lucide="cpu"></i>
-                    <h3>Hardware-Agnostic</h3>
-                    <p>Our software is our strength. We provide an intelligent stack that can be deployed on any
-                        vehicle, in any fleet.</p>
-                </div>
-                <div class="feature-item glass-card">
-                    <i data-lucide="users"></i>
-                    <h3>Mission-Focused</h3>
-                    <p>We are partners, not just providers. We work directly with our clients to ensure our technology
-                        solves their specific mission.</p>
-                </div>
-            </div>
-    <!-- Supported By / Partners Section -->
-    <section id="partners" class="partners-section">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-label">Supported By</span>
-                <h2>Trusted By</h2>
-                <p class="section-subtitle">Pioneering autonomous innovation alongside leading research centers, incubators, and industry leaders.</p>
-            </div>
-
-            <div class="partners-carousel-wrapper">
-                <button class="carousel-nav-btn prev" aria-label="Previous partners" onclick="scrollPartners(-1, this)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
-
-                <div class="partners-carousel" id="partnersCarousel">
-                    <div class="partners-track">
-                        <!-- SET 1: 9 PARTNERS -->
-                        <div class="partner-card glass-card" title="Department of Science and Technology">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/dst.png" alt="Department of Science and Technology Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'building-2\'></i><span>DST</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="ARTPARK">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/artpark.png" alt="ARTPARK Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'cpu\'></i><span>ARTPARK</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Indian Institute of Science (IISc)">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/iisc.png" alt="IISc Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'graduation-cap\'></i><span>IISc</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Government of Karnataka">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/karnataka.png" alt="Government of Karnataka Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'landmark\'></i><span>Govt of Karnataka</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="NVIDIA Inception Program">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/nvidia_inception.png" alt="NVIDIA Inception Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'cpu\'></i><span>NVIDIA Inception</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Onshape">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/onshape.png" alt="Onshape Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'box\'></i><span>Onshape</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="IIT Jammu">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/iit_jammu.png" alt="IIT Jammu Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'school\'></i><span>IIT Jammu</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="MIT Manipal">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/mit_manipal.svg" alt="MIT Manipal Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'book-open\'></i><span>MIT Manipal</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="DRDO">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/drdo.png" alt="DRDO Logo" class="partner-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'partner-logo-placeholder\'><i data-lucide=\'shield\'></i><span>DRDO</span></div>'; if(window.lucide) lucide.createIcons();">
-                            </div>
-                        </div>
-
-                        <!-- SET 2: DUPLICATE FOR SEAMLESS INFINITE LOOP -->
-                        <div class="partner-card glass-card" title="Department of Science and Technology" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/dst.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="ARTPARK" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/artpark.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Indian Institute of Science (IISc)" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/iisc.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Government of Karnataka" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/karnataka.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="NVIDIA Inception Program" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/nvidia_inception.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="Onshape" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/onshape.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="IIT Jammu" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/iit_jammu.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="MIT Manipal" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/mit_manipal.svg" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-
-                        <div class="partner-card glass-card" title="DRDO" aria-hidden="true">
-                            <div class="partner-logo-container">
-                                <img src="/Assets/Images/partners/drdo.png" alt="" class="partner-logo-img">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="carousel-nav-btn next" aria-label="Next partners" onclick="scrollPartners(1, this)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
@@ -333,14 +166,18 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+                <p>&copy; 2026 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
             </div>
         </div>
     </footer>
 
     <!-- Main Script -->
     <script src="Static/js/script.js"></script>
-
+    <script>
+        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    </script>
 </body>
 
 </html>

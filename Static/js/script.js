@@ -522,24 +522,20 @@ function initVideoShowcase() {
 }
 
 /**
- * Scroll animations for fading in elements
+ * Scroll animations for fading in elements smoothly without oscillation jitter
  */
 function initScrollAnimations() {
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px',
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px',
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                // Animate IN
                 entry.target.style.opacity = "1";
                 entry.target.style.transform = "translateY(0)";
-            } else {
-                // Animate OUT (This is the code I am re-enabling)
-                entry.target.style.opacity = "0";
-                entry.target.style.transform = "translateY(30px)";
+                obs.unobserve(entry.target); // Unobserve once animated to prevent scroll jitter
             }
         });
     }, observerOptions);
@@ -547,16 +543,15 @@ function initScrollAnimations() {
     // Apply to all glass cards and feature items
     document.querySelectorAll(".glass-card, .feature-item").forEach((el) => {
         el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition = "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
-        el.style.willChange = "transform, opacity"; // Performance hint
+        el.style.transform = "translateY(24px)";
+        el.style.transition = "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
         observer.observe(el);
     });
 }
 
 /**
  * Architecture Diagram Scroll Animations
- * Animates rows with staggered delays on scroll (both directions)
+ * Animates rows once on scroll smoothly without jitter
  */
 function initArchitectureScrollAnimations() {
     const archDiagram = document.querySelector('.architecture-diagram.new-layout');
@@ -567,42 +562,32 @@ function initArchitectureScrollAnimations() {
     // Initialize rows in hidden state
     archRows.forEach((row, index) => {
         row.style.opacity = "0";
-        row.style.transform = "translateX(-40px)";
-        row.style.transition = `all 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.08}s`;
-        row.style.willChange = "transform, opacity";
+        row.style.transform = "translateX(-30px)";
+        row.style.transition = `opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.06}s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${index * 0.06}s`;
     });
 
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1,
+        rootMargin: '0px 0px -30px 0px',
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                // Animate IN - cascade from left
                 archRows.forEach((row, index) => {
                     setTimeout(() => {
                         row.style.opacity = "1";
                         row.style.transform = "translateX(0)";
-                    }, index * 80);
+                    }, index * 60);
                 });
-            } else {
-                // Animate OUT - cascade reverse
-                archRows.forEach((row, index) => {
-                    const reverseIndex = archRows.length - 1 - index;
-                    setTimeout(() => {
-                        row.style.opacity = "0";
-                        row.style.transform = "translateX(-40px)";
-                    }, reverseIndex * 50);
-                });
+                obs.unobserve(entry.target); // Prevent re-trigger jitter
             }
         });
     }, observerOptions);
 
     observer.observe(archDiagram);
 
-    // Also animate individual blocks within rows on hover for extra polish
+    // Animate individual blocks within rows on hover
     const blocks = archDiagram.querySelectorAll('.arch-block:not(.category-label):not(.invisible-block)');
     blocks.forEach((block) => {
         block.addEventListener('mouseenter', () => {
@@ -808,16 +793,11 @@ function initFullWidthVideoShowcase() {
             const video = entry.target.querySelector('.fullwidth-video');
 
             if (entry.isIntersecting) {
-                // Reveal animation
                 entry.target.classList.add('visible');
-                // Play video
                 if (video) {
                     video.play().catch(() => { });
                 }
             } else {
-                // Hide animation (for scroll up/down)
-                entry.target.classList.remove('visible');
-                // Pause video when out of view
                 if (video) {
                     video.pause();
                 }
@@ -858,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPartnersCarousel();
 
     // Init Lucide Icons if available
-    if (typeof lucide !== 'undefined') {
+    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
         lucide.createIcons();
     }
 });
@@ -923,7 +903,9 @@ function handleContactSubmit(event) {
     setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML = originalBtnHTML;
-        if (window.lucide) lucide.createIcons();
+        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
         responseMsg.className = 'form-response-msg success';
         responseMsg.textContent = '✓ Thank you! Your message has been sent successfully. Our engineering team will get back to you shortly.';
         responseMsg.style.display = 'block';
