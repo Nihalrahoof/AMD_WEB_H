@@ -1192,6 +1192,7 @@ def docs_search(rover_slug):
     return jsonify(out)
 
 # Fallback Docs URL mappings
+@app.route('/docs')
 @app.route('/docs/')
 def docs_home_sub():
     return render_docs_home()

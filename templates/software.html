@@ -31,7 +31,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -41,70 +41,78 @@
 
     <style>
         :root {
-            --dark-bg: #030304;
-            --card-bg: rgba(12, 12, 16, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-border-hover: rgba(255, 255, 255, 0.25);
-            --accent-glow: rgba(96, 165, 250, 0.15);
+            --dark-bg: #000000;
+            --darker-bg: #000000;
+            --card-bg: rgba(10, 10, 12, 0.65);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-border-hover: rgba(255, 255, 255, 0.35);
+            --accent-glow: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
+            --text-secondary: #a0aec0;
             --text-muted: #64748b;
-            --brand-blue: #3b82f6;
-            --brand-blue-hover: #2563eb;
+            --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Space Grotesk', 'Syne', sans-serif;
+            --font-tech: 'Space Grotesk', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
             background-color: var(--dark-bg);
-            background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--dark-bg) 60%);
+            background-image: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.04) 0%, var(--dark-bg) 70%);
             color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
         .software-hero {
-            padding: 7rem 1.5rem 3rem 1.5rem;
+            padding: 8rem 1.5rem 3rem 1.5rem;
             text-align: center;
             position: relative;
+            z-index: 2;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.35);
-            color: #60a5fa;
-            font-family: 'Chakra Petch', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            padding: 0.35rem 0.9rem;
+            padding: 0.4rem 1.1rem;
             border-radius: 99px;
             margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .software-hero h1 {
-            font-family: 'Chakra Petch', 'Space Grotesk', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            font-family: var(--font-heading);
+            font-size: clamp(2.3rem, 5vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
             text-transform: uppercase;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            line-height: 1.15;
+            margin-bottom: 1.25rem;
+            color: #ffffff;
+            background: linear-gradient(180deg, #ffffff 0%, #d4d4d8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .software-hero p {
-            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            font-size: clamp(1rem, 1.4vw, 1.15rem);
             color: var(--text-secondary);
             max-width: 680px;
             margin: 0 auto 2.5rem auto;
             line-height: 1.6;
+            font-family: var(--font-body);
         }
 
         /* Filter Controls */
@@ -125,22 +133,22 @@
         .search-input {
             width: 100%;
             padding: 1rem 1.25rem 1rem 3.25rem;
-            background: rgba(18, 18, 24, 0.7);
+            background: rgba(14, 14, 18, 0.7);
             border: 1px solid var(--card-border);
             border-radius: 12px;
             color: #fff;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-family: var(--font-body);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #60a5fa;
-            box-shadow: 0 0 20px var(--accent-glow);
-            background: rgba(22, 22, 30, 0.85);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.08);
+            background: rgba(20, 20, 25, 0.9);
         }
 
         .search-icon {
@@ -170,19 +178,20 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--card-border);
             color: var(--text-secondary);
-            padding: 0.5rem 1rem;
+            padding: 0.45rem 1rem;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 500;
+            font-family: var(--font-body);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             text-decoration: none;
         }
 
         .filter-btn:hover {
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .filter-btn.active {
@@ -190,6 +199,7 @@
             color: #000;
             border-color: #fff;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
         }
 
         /* Software Grid */
@@ -206,14 +216,14 @@
         .software-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 16px;
+            border-radius: 14px;
             padding: 1.75rem;
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -224,7 +234,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -232,7 +242,7 @@
         .software-card:hover {
             transform: translateY(-4px);
             border-color: var(--card-border-hover);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 255, 255, 0.05);
         }
 
         .software-card:hover::before {
@@ -247,15 +257,15 @@
         }
 
         .software-icon-box {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.25);
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #60a5fa;
+            color: #ffffff;
         }
 
         .card-badges {
@@ -266,28 +276,29 @@
         }
 
         .version-badge {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
             color: #fff;
-            font-family: monospace;
+            font-family: var(--font-tech);
             font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.2rem 0.5rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
             border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .category-tag {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #60a5fa;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            font-family: var(--font-heading);
         }
 
         .software-title {
-            font-family: 'Chakra Petch', 'Space Grotesk', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
             color: #fff;
             margin-bottom: 0.5rem;
             letter-spacing: -0.01em;
@@ -295,10 +306,11 @@
 
         .software-desc {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             line-height: 1.55;
             margin-bottom: 1.25rem;
             flex: 1;
+            font-family: var(--font-body);
         }
 
         .platform-info {
@@ -306,7 +318,7 @@
             align-items: center;
             gap: 0.4rem;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 0.35rem 0.65rem;
             border-radius: 6px;
             font-size: 0.8rem;
@@ -351,32 +363,33 @@
             gap: 0.4rem;
             background: #fff;
             color: #000;
-            padding: 0.55rem 1.1rem;
+            padding: 0.55rem 1.15rem;
             border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-weight: 600;
+            font-size: 0.82rem;
+            font-family: var(--font-body);
             text-transform: uppercase;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.04em;
             text-decoration: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.12);
         }
 
         .download-btn:hover {
             background: #e2e8f0;
-            transform: scale(1.02);
+            transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
         }
 
         .notes-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--card-border);
             color: var(--text-secondary);
             padding: 0.55rem 0.75rem;
             border-radius: 8px;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -384,8 +397,8 @@
 
         .notes-btn:hover {
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         /* Modal */
@@ -403,9 +416,9 @@
         }
 
         .modal-content {
-            background: #0d0d12;
+            background: #0a0a0d;
             border: 1px solid var(--card-border);
-            border-radius: 16px;
+            border-radius: 14px;
             width: 100%;
             max-width: 600px;
             padding: 2.25rem;
@@ -413,6 +426,12 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
             max-height: 85vh;
             overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
         }
 
         .modal-close {
@@ -455,7 +474,8 @@
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="/products" class="nav-link">Products</a></li>
                 <li><a href="/services" class="nav-link">Services</a></li>
-                <li><a href="/software" class="nav-link active" style="color: #60a5fa; font-weight: 600;">Software</a></li>
+                <li><a href="/software" class="nav-link active">Software</a></li>
+                <li><a href="/docs" class="nav-link">Documentation</a></li>
                 <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
                 <li><a href="/about" class="nav-link">About Us</a></li>
                 <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
@@ -500,13 +520,13 @@
     <!-- Software Grid -->
     <main class="software-grid" id="softwareGrid">
         {% if not softwares %}
-        <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;">
-            <i data-lucide="package" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
-            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff;">No Software Packages Published Yet</h3>
-            <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem auto;">
-                Please log in to the admin console to upload your first software build, or check our documentation portal.
+        <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; backdrop-filter: blur(15px);">
+            <i data-lucide="package" style="width: 44px; height: 44px; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+            <h3 style="font-family: var(--font-heading); font-size: 1.35rem; font-weight: 600; margin-bottom: 0.65rem; color: #fff;">No Software Packages Published Yet</h3>
+            <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.75rem auto; font-size: 0.95rem; line-height: 1.6;">
+                Official software packages, ground stations, and driver updates will be published here. You can also explore our technical documentation for integration guides and API specs.
             </p>
-            <a href="/docs/" class="download-btn" style="display: inline-flex;">
+            <a href="/docs" class="download-btn" style="display: inline-flex;">
                 Explore Technical Docs <i data-lucide="arrow-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
             </a>
         </div>
@@ -543,7 +563,7 @@
                     <p class="software-desc">{{ s.description or 'Official Automind Dynamics software package and runtime tools.' }}</p>
 
                     <div class="platform-info">
-                        <i data-lucide="monitor" style="width: 14px; height: 14px; color: #60a5fa;"></i>
+                        <i data-lucide="monitor" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
                         <span>{{ s.platform }}</span>
                     </div>
                 </div>
@@ -601,12 +621,12 @@
             </div>
 
             <div style="margin-bottom: 1.5rem;">
-                <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 0.5rem;">System Requirements</h4>
+                <h4 style="font-family: var(--font-heading); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff; margin-bottom: 0.5rem;">System Requirements</h4>
                 <p id="modal-req" style="font-size: 0.9rem; color: #cbd5e1; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--card-border);"></p>
             </div>
 
             <div>
-                <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 0.5rem;">Release Notes & Changelog</h4>
+                <h4 style="font-family: var(--font-heading); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff; margin-bottom: 0.5rem;">Release Notes & Changelog</h4>
                 <div id="modal-changelog" style="font-size: 0.9rem; color: #cbd5e1; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--card-border); white-space: pre-wrap; line-height: 1.6;"></div>
             </div>
         </div>

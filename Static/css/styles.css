@@ -342,7 +342,8 @@ section {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 2.5rem;
+    gap: clamp(1rem, 2vw, 2.25rem);
+    align-items: center;
 }
 
 .nav-link {
