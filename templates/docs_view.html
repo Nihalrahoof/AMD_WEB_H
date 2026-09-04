@@ -548,6 +548,64 @@
             color: var(--color-tip);
         }
 
+        /* Pymdownx Tabbed Content Sets (MkDocs Tabs) */
+        .tabbed-set {
+            display: flex;
+            position: relative;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            overflow: hidden;
+        }
+
+        .tabbed-set > input {
+            display: none;
+        }
+
+        .tabbed-set > label {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            background: var(--bg-sidebar);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .tabbed-set > input:checked + label {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .tabbed-set > .tabbed-content {
+            width: 100%;
+            display: none;
+            padding: 1.25rem;
+            order: 99;
+            background: var(--bg-card);
+        }
+
+        .tabbed-set > input:checked + label + .tabbed-content {
+            display: block;
+        }
+
+        /* Mermaid Container */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
         /* Dynamic image styling (fixes "no images coming" layout problems) */
         .markdown-body img {
             max-width: 100%;
@@ -1151,5 +1209,20 @@
     <!-- Prism Code Formatting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <!-- Mermaid.js Diagram Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof mermaid !== 'undefined') {
+                const isDark = document.body.classList.contains('dark-theme');
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: isDark ? 'dark' : 'neutral',
+                    securityLevel: 'loose'
+                });
+            }
+        });
+    </script>
 </body>
 </html>

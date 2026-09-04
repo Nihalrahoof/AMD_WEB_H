@@ -1,0 +1,49 @@
+:root {
+  --md-primary-fg-color: #0f172a;
+  --md-accent-fg-color: #4f46e5;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #0b0f19;
+  --md-default-bg-color: #0e131f;
+  --md-default-fg-color: #e2e8f0;
+}
+
+.screenshot-placeholder {
+  border: 2px dashed #4f46e5;
+  border-radius: 8px;
+  background: rgba(79, 70, 229, 0.05);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #6366f1;
+}
+
+.screenshot-placeholder .title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #4338ca;
+}
+
+[data-md-color-scheme="slate"] .screenshot-placeholder .title {
+  color: #818cf8;
+}
+
+.screenshot-placeholder .caption {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.metric-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.pill-green { background: #dcfce7; color: #15803d; }
+.pill-blue { background: #dbeafe; color: #1d4ed8; }
+.pill-amber { background: #fef3c7; color: #b45309; }
+.pill-red { background: #fee2e2; color: #b91c1c; }

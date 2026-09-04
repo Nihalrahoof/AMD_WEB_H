@@ -2,191 +2,726 @@
 
 {% block title %}Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Metric Strip */
+    .metric-strip {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1100px) {
+        .metric-strip {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .metric-strip {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .metric-pod {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-pod:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .metric-icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .metric-val {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #ffffff;
+    }
+
+    .metric-title {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+        font-weight: 600;
+        margin-top: 0.2rem;
+    }
+
+    /* Segmented Navigation Tab Bar */
+    .view-switcher-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        padding: 0.4rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .tab-pills {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: var(--font-main);
+    }
+
+    .tab-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+        background: var(--bg-surface-raised);
+        color: #ffffff;
+        border: 1px solid var(--border-hover);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .tab-counter {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        padding: 0.15rem 0.45rem;
+        border-radius: 99px;
+        font-weight: 700;
+    }
+
+    .tab-btn.active .tab-counter {
+        background: #3b82f6;
+        color: #ffffff;
+    }
+
+    /* Search & Filter Header */
+    .section-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        position: relative;
+        min-width: 280px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 0.55rem 0.85rem 0.55rem 2.25rem;
+        background: var(--bg-surface-raised);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-family: var(--font-main);
+        transition: var(--transition);
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--border-focus);
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+    }
+
+    /* Systems Grid Layout */
+    .systems-grid-layout {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .system-card-item {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .system-card-item:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .system-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .system-icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .system-title-text {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.3;
+        margin-bottom: 0.25rem;
+    }
+
+    .system-slug-tag {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: #94a3b8;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        border: 1px solid var(--border-subtle);
+        display: inline-block;
+    }
+
+    .system-desc-text {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+        flex: 1;
+    }
+
+    .system-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .action-button-group {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* Views */
+    .view-content-section {
+        display: none;
+    }
+
+    .view-content-section.active-view {
+        display: block;
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="glass-panel">
-    <div class="panel-header">
-        <div class="panel-title">
-            <i data-lucide="cpu"></i> Autonomous Systems (Rovers)
+<!-- 1. Executive Metric Summary Strip -->
+<div class="metric-strip">
+    <div class="metric-pod">
+        <div class="metric-icon-wrap" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); color: #60a5fa;">
+            <i data-lucide="cpu" style="width: 20px; height: 20px;"></i>
         </div>
-        <button class="btn btn-primary" onclick="openModal('new-rover-modal')">
-            <i data-lucide="plus"></i> Add Rover
+        <div>
+            <div class="metric-val">{{ stats.total_rovers }}</div>
+            <div class="metric-title">Robotic Systems</div>
+        </div>
+    </div>
+
+    <div class="metric-pod">
+        <div class="metric-icon-wrap" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #c084fc;">
+            <i data-lucide="book-open" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+            <div class="metric-val">{{ stats.total_pages }}</div>
+            <div class="metric-title">Doc Pages Published</div>
+        </div>
+    </div>
+
+    <div class="metric-pod">
+        <div class="metric-icon-wrap" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399;">
+            <i data-lucide="package" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+            <div class="metric-val">{{ stats.total_softwares }}</div>
+            <div class="metric-title">Software Releases</div>
+        </div>
+    </div>
+
+    <div class="metric-pod">
+        <div class="metric-icon-wrap" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); color: #fbbf24;">
+            <i data-lucide="download" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+            <div class="metric-val">{{ stats.total_downloads }}</div>
+            <div class="metric-title">Client Downloads</div>
+        </div>
+    </div>
+
+    <div class="metric-pod">
+        <div class="metric-icon-wrap" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #fb7185;">
+            <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+            <div class="metric-val">
+                {{ stats.total_quotes }}
+                {% if stats.pending_quotes > 0 %}
+                <span style="font-size: 0.75rem; color: #fbbf24; font-weight: 600; margin-left: 0.2rem;">({{ stats.pending_quotes }} new)</span>
+                {% endif %}
+            </div>
+            <div class="metric-title">Quote Inquiries</div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Segmented Navigation Tab Bar -->
+<div class="view-switcher-bar">
+    <div class="tab-pills">
+        <button class="tab-btn active" id="tab-btn-systems" onclick="switchView('systems')">
+            <i data-lucide="book-open" style="width: 16px; height: 16px;"></i>
+            <span>Systems & Documentation</span>
+            <span class="tab-counter">{{ rovers|length }}</span>
+        </button>
+
+        <button class="tab-btn" id="tab-btn-softwares" onclick="switchView('softwares')">
+            <i data-lucide="package" style="width: 16px; height: 16px;"></i>
+            <span>Software Releases</span>
+            <span class="tab-counter">{{ softwares|length }}</span>
+        </button>
+
+        <button class="tab-btn" id="tab-btn-quotes" onclick="switchView('quotes')">
+            <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+            <span>Quote Requests</span>
+            <span class="tab-counter">{{ quotes|length }}</span>
         </button>
     </div>
 
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{{ url_for('software_portal') }}" target="_blank" class="btn-action btn-action-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.8rem;">
+            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Software Portal
+        </a>
+    </div>
+</div>
+
+<!-- ============================================
+     VIEW 1: SYSTEMS & DOCUMENTATION SUITES
+     ============================================ -->
+<div id="view-systems" class="view-content-section active-view">
+    <div class="section-toolbar">
+        <div class="search-box">
+            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+            <input type="text" id="systemSearch" placeholder="Search systems by name or slug..." onkeyup="filterSystems()">
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+            <form action="{{ url_for('admin_rover_sync_local') }}" method="POST" style="display: inline;" onsubmit="return confirm('Sync existing workspace MKdocs folder into database?');">
+                <button type="submit" class="btn-action btn-action-secondary" title="Quick import from MKdocs/ folder in project workspace">
+                    <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+                    <span>Sync MKdocs Folder</span>
+                </button>
+            </form>
+            <button class="btn-action btn-action-secondary" onclick="openModal('import-mkdocs-modal')">
+                <i data-lucide="folder-up" style="width: 14px; height: 14px;"></i>
+                <span>Import ZIP / Folder</span>
+            </button>
+            <button class="btn-action btn-action-primary" onclick="openModal('new-rover-modal')">
+                <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                <span>Add System</span>
+            </button>
+        </div>
+    </div>
+
     {% if not rovers %}
-    <div style="text-align: center; padding: 3rem 0; color: var(--text-secondary);">
-        <i data-lucide="help-circle" style="width: 48px; height: 48px; stroke-width: 1; margin-bottom: 1rem; color: var(--text-muted);"></i>
-        <p>No rovers registered yet. Click "Add Rover" to start adding documentation.</p>
+    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
+        <i data-lucide="book-open" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Documentation Systems Created Yet</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9rem;">
+            You can create a system manually or upload a full MkDocs directory to instantly publish all documentation pages.
+        </p>
+        <button class="btn-action btn-action-primary" onclick="openModal('import-mkdocs-modal')">
+            <i data-lucide="upload-cloud" style="width: 15px; height: 15px;"></i> Import MkDocs Package
+        </button>
     </div>
     {% else %}
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>System Name</th>
-                <th>Subdomain Slug</th>
-                <th>Documentation Pages</th>
-                <th>Created At</th>
-                <th style="text-align: right;">Management Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r_data in rovers %}
-            <tr>
-                <td style="font-weight: 600; font-size: 1.05rem;">
-                    {{ r_data.rover.name }}
-                </td>
-                <td>
-                    <code style="background: rgba(255,255,255,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85rem;">
-                        {{ r_data.rover.slug }}
-                    </code>
-                </td>
-                <td>
-                    <span style="font-size: 0.95rem; font-weight: 500;">{{ r_data.page_count }} pages</span>
-                </td>
-                <td style="color: var(--text-secondary); font-size: 0.9rem;">
-                    {{ r_data.rover.created_at.strftime('%Y-%m-%d %H:%M') }}
-                </td>
-                <td class="actions-cell">
-                    <a href="{{ url_for('admin_rover_view', rover_id=r_data.rover.id) }}" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
-                        <i data-lucide="book-open"></i> Manage Pages
+    <div class="systems-grid-layout" id="systemsGrid">
+        {% for r_data in rovers %}
+        <div class="system-card-item" data-title="{{ r_data.rover.name|lower }}" data-slug="{{ r_data.rover.slug|lower }}">
+            <div>
+                <div class="system-card-header">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <div class="system-icon-box">
+                            {% if 'Radio' in r_data.rover.name or 'MIMO' in r_data.rover.name %}
+                                <i data-lucide="radio" style="width: 22px; height: 22px;"></i>
+                            {% elif 'Nomad' in r_data.rover.name or 'Rover' in r_data.rover.name %}
+                                <i data-lucide="bot" style="width: 22px; height: 22px;"></i>
+                            {% else %}
+                                <i data-lucide="cpu" style="width: 22px; height: 22px;"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h3 class="system-title-text">{{ r_data.rover.name }}</h3>
+                            <span class="system-slug-tag">/docs/{{ r_data.rover.slug }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="system-desc-text">
+                    {{ r_data.rover.description or 'Technical hardware manuals, operational stack guides, and telemetry specifications.' }}
+                </p>
+            </div>
+
+            <div class="system-card-footer">
+                <span class="pill-badge pill-blue">
+                    <i data-lucide="file-text" style="width: 12px; height: 12px;"></i>
+                    {{ r_data.page_count }} Pages Published
+                </span>
+
+                <div class="action-button-group">
+                    <a href="{{ url_for('docs_rover_sub', rover_slug=r_data.rover.slug) }}" class="btn-icon" target="_blank" title="View live documentation site">
+                        <i data-lucide="external-link" style="width: 15px; height: 15px;"></i>
                     </a>
-                    <button class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" 
-                            onclick="openEditModal('{{ r_data.rover.id }}', '{{ r_data.rover.name }}', '{{ r_data.rover.slug }}', '{{ r_data.rover.description or '' }}')">
-                        <i data-lucide="edit"></i> Edit
+                    <a href="{{ url_for('admin_rover_view', rover_id=r_data.rover.id) }}" class="btn-action btn-action-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+                        <i data-lucide="book-open" style="width: 13px; height: 13px;"></i> Manage Pages
+                    </a>
+                    <button class="btn-icon" title="Edit System Information" onclick="openEditModal('{{ r_data.rover.id }}', '{{ r_data.rover.name|escape }}', '{{ r_data.rover.slug|escape }}', '{{ (r_data.rover.description or '')|escape }}')">
+                        <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
                     </button>
-                    <form action="{{ url_for('admin_rover_delete', rover_id=r_data.rover.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this rover? This will delete ALL associated documentation pages!');">
-                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
-                            <i data-lucide="trash-2"></i> Delete
+                    <form action="{{ url_for('admin_rover_delete', rover_id=r_data.rover.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete {{ r_data.rover.name }} and ALL associated documentation pages?');">
+                        <button type="submit" class="btn-icon btn-icon-danger" title="Delete System">
+                            <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
                         </button>
                     </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
 
-<!-- Quote Requests Panel -->
-<div class="glass-panel" style="margin-top: 2rem;">
-    <div class="panel-header">
-        <div class="panel-title">
-            <i data-lucide="file-text"></i> Product Quote Requests ({% if quotes %}{{ quotes|length }}{% else %}0{% endif %})
+<!-- ============================================
+     VIEW 2: SOFTWARE DISTRIBUTION HUB
+     ============================================ -->
+<div id="view-softwares" class="view-content-section">
+    <div class="section-toolbar">
+        <div class="search-box">
+            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+            <input type="text" id="softwareAdminSearch" placeholder="Search software releases..." onkeyup="filterSoftwareAdmin()">
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; align-items: center;">
+            <a href="{{ url_for('software_portal') }}" target="_blank" class="btn-action btn-action-secondary">
+                <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Public Portal
+            </a>
+            <button class="btn-action btn-action-primary" onclick="openModal('new-software-modal')">
+                <i data-lucide="upload" style="width: 14px; height: 14px;"></i> Upload Software Release
+            </button>
+        </div>
+    </div>
+
+    {% if not softwares %}
+    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
+        <i data-lucide="package" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Software Packages Released</h3>
+        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9rem;">
+            Upload installers, ROS 2 packages, ground stations, or firmware binaries for clients to download directly from the main website.
+        </p>
+        <button class="btn-action btn-action-primary" onclick="openModal('new-software-modal')">
+            <i data-lucide="upload" style="width: 15px; height: 15px;"></i> Upload First Package
+        </button>
+    </div>
+    {% else %}
+    <div class="modern-table-wrapper">
+        <table class="modern-table" id="softwareAdminTable">
+            <thead>
+                <tr>
+                    <th>Package & Version</th>
+                    <th>Category</th>
+                    <th>Platform</th>
+                    <th>Binary File</th>
+                    <th>Downloads</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in softwares %}
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; font-size: 0.95rem; color: #ffffff; display: flex; align-items: center; gap: 0.45rem;">
+                            {{ s.name }}
+                            <span class="pill-badge pill-amber" style="font-family: var(--font-mono); font-size: 0.72rem;">
+                                {{ s.version }}
+                            </span>
+                        </div>
+                        {% if s.description %}
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.15rem;">
+                            {{ s.description }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="pill-badge pill-blue">{{ s.category }}</span>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.82rem; color: #e2e8f0; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            <i data-lucide="monitor" style="width: 13px; height: 13px; color: var(--text-secondary);"></i>
+                            {{ s.platform }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if s.file_filename %}
+                        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #ffffff;">{{ s.file_display_name }}</div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted);">{{ s.file_size_bytes | filesize }}</div>
+                        {% else %}
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">No binary file</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="pill-badge pill-green" style="font-weight: 700;">
+                            <i data-lucide="download" style="width: 11px; height: 11px;"></i>
+                            {{ s.download_count or 0 }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if s.is_published %}
+                        <span class="pill-badge pill-green">Live</span>
+                        {% else %}
+                        <span class="pill-badge pill-gray">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="action-button-group" style="justify-content: flex-end;">
+                            {% if s.file_filename %}
+                            <a href="{{ url_for('download_software', software_id=s.id) }}" class="btn-icon" title="Download Binary">
+                                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                            </a>
+                            {% endif %}
+                            <button class="btn-icon" title="Edit Release" 
+                                    onclick="openEditSoftwareModal({{ s.id }}, '{{ s.name|escape }}', '{{ s.version|escape }}', '{{ s.category|escape }}', '{{ s.platform|escape }}', '{{ (s.description or '')|escape }}', '{{ (s.system_requirements or '')|escape }}', '{{ (s.changelog or '')|escape }}', {{ 'true' if s.is_published else 'false' }})">
+                                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <form action="{{ url_for('admin_software_delete', software_id=s.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this software release?');">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="Delete Release">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<!-- ============================================
+     VIEW 3: QUOTE INQUIRIES
+     ============================================ -->
+<div id="view-quotes" class="view-content-section">
+    <div class="section-toolbar">
+        <div class="search-box">
+            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+            <input type="text" id="quoteSearch" placeholder="Search customer, email, or product..." onkeyup="filterQuotes()">
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Status:</span>
+            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;" onclick="filterQuoteStatus('All')">All</button>
+            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #fbbf24;" onclick="filterQuoteStatus('Pending')">Pending</button>
+            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #60a5fa;" onclick="filterQuoteStatus('Contacted')">Contacted</button>
+            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #34d399;" onclick="filterQuoteStatus('Completed')">Completed</button>
         </div>
     </div>
 
     {% if not quotes %}
-    <div style="text-align: center; padding: 3rem 0; color: var(--text-secondary);">
-        <i data-lucide="inbox" style="width: 48px; height: 48px; stroke-width: 1; margin-bottom: 1rem; color: var(--text-muted);"></i>
-        <p>No product quote requests submitted yet.</p>
+    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
+        <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Product Quote Requests</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            When clients request quotes on the website, they will appear here in real time.
+        </p>
     </div>
     {% else %}
-    <table class="admin-table">
-        <thead>
-            <tr>
-                <th>Customer Name</th>
-                <th>Product</th>
-                <th>Company / Industry</th>
-                <th>Qty / Timeframe</th>
-                <th>Status</th>
-                <th>Submitted On</th>
-                <th style="text-align: right;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for q in quotes %}
-            <tr>
-                <td>
-                    <div style="font-weight: 600; font-size: 0.95rem; color: #fff;">{{ q.full_name }}</div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ q.email }}</div>
-                    {% if q.phone %}<div style="font-size: 0.8rem; color: var(--text-muted);">{{ q.phone }}</div>{% endif %}
-                </td>
-                <td>
-                    <span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; padding: 0.3rem 0.6rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">
-                        {{ q.product }}
-                    </span>
-                </td>
-                <td>
-                    <div style="font-weight: 500; font-size: 0.9rem;">{{ q.company or 'Individual' }}</div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary);">{{ q.use_case or 'N/A' }}</div>
-                </td>
-                <td>
-                    <div style="font-size: 0.85rem;">Qty: <strong>{{ q.quantity }}</strong></div>
-                    <div style="font-size: 0.75rem; color: var(--text-secondary);">{{ q.timeframe or 'Flexible' }}</div>
-                </td>
-                <td>
-                    <form action="{{ url_for('admin_quote_status', quote_id=q.id) }}" method="POST" style="display:inline;">
-                        <select name="status" onchange="this.form.submit()" style="background: #111; color: {% if q.status == 'Pending' %}#f59e0b{% elif q.status == 'Contacted' %}#3b82f6{% else %}#10b981{% endif %}; border: 1px solid rgba(255,255,255,0.2); padding: 0.3rem 0.5rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer;">
-                            <option value="Pending" {% if q.status == 'Pending' %}selected{% endif %}>🟡 Pending</option>
-                            <option value="Contacted" {% if q.status == 'Contacted' %}selected{% endif %}>🔵 Contacted</option>
-                            <option value="Completed" {% if q.status == 'Completed' %}selected{% endif %}>🟢 Completed</option>
-                        </select>
-                    </form>
-                </td>
-                <td style="color: var(--text-secondary); font-size: 0.85rem;">
-                    {{ q.created_at.strftime('%Y-%m-%d %H:%M') }}
-                </td>
-                <td class="actions-cell">
-                    {% if q.requirements %}
-                    <button class="btn btn-secondary btn-sm" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="alert('Full Requirements for {{ q.full_name|e }}:\n\n{{ q.requirements|e }}')">
-                        <i data-lucide="eye"></i> Details
-                    </button>
-                    {% endif %}
-                    <form action="{{ url_for('admin_quote_delete', quote_id=q.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this quote request?');">
-                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">
-                            <i data-lucide="trash-2"></i> Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="modern-table-wrapper">
+        <table class="modern-table" id="quoteTable">
+            <thead>
+                <tr>
+                    <th>Customer Contact</th>
+                    <th>Requested Product</th>
+                    <th>Company / Use Case</th>
+                    <th>Volume / Timeline</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in quotes %}
+                <tr data-status="{{ q.status }}">
+                    <td>
+                        <div style="font-weight: 600; font-size: 0.92rem; color: #ffffff;">{{ q.full_name }}</div>
+                        <div style="font-size: 0.78rem; color: var(--text-secondary); font-family: var(--font-mono);">{{ q.email }}</div>
+                        {% if q.phone %}<div style="font-size: 0.75rem; color: var(--text-muted);">{{ q.phone }}</div>{% endif %}
+                    </td>
+                    <td>
+                        <span class="pill-badge pill-blue">{{ q.product }}</span>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500; font-size: 0.88rem; color: #ffffff;">{{ q.company or 'Individual' }}</div>
+                        <div style="font-size: 0.78rem; color: var(--text-secondary);">{{ q.use_case or 'N/A' }}</div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.85rem; color: #ffffff;">Qty: <strong>{{ q.quantity }}</strong></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">{{ q.timeframe or 'Flexible' }}</div>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('admin_quote_status', quote_id=q.id) }}" method="POST" style="display:inline;">
+                            <select name="status" onchange="this.form.submit()" style="background: #141722; color: {% if q.status == 'Pending' %}#fbbf24{% elif q.status == 'Contacted' %}#60a5fa{% else %}#34d399{% endif %}; border: 1px solid var(--border-subtle); padding: 0.3rem 0.55rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
+                                <option value="Pending" {% if q.status == 'Pending' %}selected{% endif %}>🟡 Pending</option>
+                                <option value="Contacted" {% if q.status == 'Contacted' %}selected{% endif %}>🔵 Contacted</option>
+                                <option value="Completed" {% if q.status == 'Completed' %}selected{% endif %}>🟢 Completed</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td style="color: var(--text-secondary); font-size: 0.8rem; font-family: var(--font-mono);">
+                        {{ q.created_at.strftime('%Y-%m-%d') }}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="action-button-group" style="justify-content: flex-end;">
+                            {% if q.requirements %}
+                            <button class="btn-icon" title="View Requirements" onclick="alert('Client Requirements for {{ q.full_name|e }}:\n\n{{ q.requirements|e }}')">
+                                <i data-lucide="eye" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            {% endif %}
+                            <form action="{{ url_for('admin_quote_delete', quote_id=q.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete quote request for {{ q.full_name }}?');">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="Delete Quote">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% endif %}
 </div>
 
-<!-- Add Rover Modal -->
+<!-- ============================================
+     MODALS
+     ============================================ -->
+
+<!-- 1. Add System Modal -->
 <div id="new-rover-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('new-rover-modal')">
-            <i data-lucide="x"></i>
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
         </button>
-        <h2 style="font-family: var(--font-heading); margin-bottom: 1.5rem; text-transform: uppercase;">Register New System</h2>
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.25rem; text-transform: uppercase;">Register Autonomous System</h2>
         
         <form action="{{ url_for('admin_rover_new') }}" method="POST">
             <div class="form-group">
                 <label for="name">System Name</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="e.g. R1 Rover, Nomad" required>
+                <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Nomad Heavy Rover, pMDDL MIMO Radio" required>
             </div>
             
             <div class="form-group">
-                <label for="slug">URL Slug</label>
-                <input type="text" id="slug" name="slug" class="form-control" placeholder="e.g. r1, nomad" required>
-                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; display: block;">
-                    Will map to: <code style="color: #fff;">docs.automindynamics.com/[slug]</code>
+                <label for="slug">URL Route Slug</label>
+                <input type="text" id="slug" name="slug" class="form-control" placeholder="e.g. nomad-rover, pmddl-radio" required>
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; display: block;">
+                    Public documentation path: <code style="color: #60a5fa;">/docs/[slug]</code>
                 </span>
             </div>
             
             <div class="form-group">
-                <label for="description">Brief Description</label>
-                <textarea id="description" name="description" class="form-control" placeholder="Describe this robotic system..."></textarea>
+                <label for="description">System Description</label>
+                <textarea id="description" name="description" class="form-control" placeholder="Brief technical summary of this platform..."></textarea>
             </div>
             
-            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('new-rover-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create Rover</button>
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('new-rover-modal')">Cancel</button>
+                <button type="submit" class="btn-action btn-action-primary">Create System</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Edit Rover Modal -->
+<!-- 2. Edit System Modal -->
 <div id="edit-rover-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('edit-rover-modal')">
-            <i data-lucide="x"></i>
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
         </button>
-        <h2 style="font-family: var(--font-heading); margin-bottom: 1.5rem; text-transform: uppercase;">Edit System Info</h2>
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.25rem; text-transform: uppercase;">Edit System Configuration</h2>
         
         <form id="edit-rover-form" method="POST">
             <div class="form-group">
@@ -195,7 +730,7 @@
             </div>
             
             <div class="form-group">
-                <label for="edit-slug">URL Slug</label>
+                <label for="edit-slug">URL Route Slug</label>
                 <input type="text" id="edit-slug" name="slug" class="form-control" required>
             </div>
             
@@ -204,9 +739,223 @@
                 <textarea id="edit-description" name="description" class="form-control"></textarea>
             </div>
             
-            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('edit-rover-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('edit-rover-modal')">Cancel</button>
+                <button type="submit" class="btn-action btn-action-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 3. Import MKDocs Package Modal -->
+<div id="import-mkdocs-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal('import-mkdocs-modal')">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.4rem; text-transform: uppercase;">
+            <i data-lucide="folder-up" style="width: 22px; height: 22px; vertical-align: middle; color: #60a5fa;"></i> Bulk Import MKdocs
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Upload your MkDocs folder or <code>.zip</code> archive. Navigation tree, sections, ordering, and images will be imported automatically.
+        </p>
+        
+        <form action="{{ url_for('admin_rover_import_mkdocs') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Target System</label>
+                <select name="rover_id" class="form-control" id="import-rover-target" onchange="toggleTargetFields(this.value)">
+                    <option value="">✨ Auto-create New System (from mkdocs.yml)</option>
+                    {% for r_data in rovers %}
+                    <option value="{{ r_data.rover.id }}">Existing: {{ r_data.rover.name }} ({{ r_data.rover.slug }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="custom-system-fields">
+                <div class="form-group">
+                    <label for="custom_name">System Name Override (Optional)</label>
+                    <input type="text" id="custom_name" name="custom_name" class="form-control" placeholder="Leave blank to use site_name from mkdocs.yml">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Option A: ZIP Archive (.zip)</label>
+                <input type="file" name="zip_file" class="form-control" accept=".zip">
+                <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem; display: block;">
+                    Recommended: Compress your MKdocs folder into a zip and upload here.
+                </span>
+            </div>
+
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin: 0.75rem 0;">— OR —</div>
+
+            <div class="form-group">
+                <label>Option B: Select Directory Directly</label>
+                <input type="file" name="folder_files" class="form-control" webkitdirectory directory multiple>
+            </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-transform: none; color: #ffffff; font-size: 0.85rem;">
+                    <input type="checkbox" name="overwrite" value="1" checked>
+                    <span>Overwrite existing pages if system exists</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('import-mkdocs-modal')">Cancel</button>
+                <button type="submit" class="btn-action btn-action-primary">
+                    <i data-lucide="upload-cloud" style="width: 14px; height: 14px;"></i> Start Bulk Import
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 4. Upload Software Modal -->
+<div id="new-software-modal" class="modal">
+    <div class="modal-content" style="max-width: 620px;">
+        <button class="modal-close" onclick="closeModal('new-software-modal')">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.25rem; text-transform: uppercase;">
+            <i data-lucide="package-plus" style="width: 22px; height: 22px; vertical-align: middle; color: #34d399;"></i> Publish Software Release
+        </h2>
+        
+        <form action="{{ url_for('admin_software_new') }}" method="POST" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="sw_name">Software Package Name</label>
+                    <input type="text" id="sw_name" name="name" class="form-control" placeholder="e.g. Automind MIMO Configurator" required>
+                </div>
+                <div class="form-group">
+                    <label for="sw_version">Version Tag</label>
+                    <input type="text" id="sw_version" name="version" class="form-control" placeholder="e.g. v2.4.1" value="v1.0.0" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="sw_category">Category</label>
+                    <select id="sw_category" name="category" class="form-control">
+                        <option value="Ground Station & UI">Ground Station & UI</option>
+                        <option value="Autonomous Navigation">Autonomous Navigation</option>
+                        <option value="Mesh Radio & Telemetry">Mesh Radio & Telemetry</option>
+                        <option value="ROS 2 & Drivers">ROS 2 & Drivers</option>
+                        <option value="Firmware & SDKs">Firmware & SDKs</option>
+                        <option value="Tools & Mapping">Tools & Mapping</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sw_platform">Operating System / Platform</label>
+                    <select id="sw_platform" name="platform" class="form-control">
+                        <option value="Windows 10/11 (64-bit)">Windows 10/11 (64-bit)</option>
+                        <option value="Ubuntu Linux (x86_64 / ARM64)">Ubuntu Linux (x86_64 / ARM64)</option>
+                        <option value="ROS 2 Humble / Iron">ROS 2 Humble / Iron</option>
+                        <option value="macOS Universal">macOS Universal</option>
+                        <option value="Cross-Platform (Python / Web)">Cross-Platform (Python / Web)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sw_file">Binary Package File (.exe, .deb, .zip, .tar.gz, .dmg, .AppImage)</label>
+                <input type="file" id="sw_file" name="software_file" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sw_desc">Brief Description</label>
+                <textarea id="sw_desc" name="description" class="form-control" style="min-height: 75px;" placeholder="What does this tool/software do?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="sw_requirements">System Requirements (Optional)</label>
+                <input type="text" id="sw_requirements" name="system_requirements" class="form-control" placeholder="e.g. Ubuntu 22.04 LTS, 8GB RAM, Ethernet Port">
+            </div>
+
+            <div class="form-group">
+                <label for="sw_changelog">Release Notes / Changelog (Optional)</label>
+                <textarea id="sw_changelog" name="changelog" class="form-control" style="min-height: 75px;" placeholder="- Initial production release&#10;- Added real-time RSSI signal graphs"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-transform: none; color: #ffffff; font-size: 0.85rem;">
+                    <input type="checkbox" name="is_published" value="1" checked>
+                    <span>Publish immediately on public website</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('new-software-modal')">Cancel</button>
+                <button type="submit" class="btn-action btn-action-primary">
+                    <i data-lucide="upload" style="width: 14px; height: 14px;"></i> Upload & Publish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 5. Edit Software Modal -->
+<div id="edit-software-modal" class="modal">
+    <div class="modal-content" style="max-width: 620px;">
+        <button class="modal-close" onclick="closeModal('edit-software-modal')">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+        <h2 style="font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.25rem; text-transform: uppercase;">
+            <i data-lucide="edit" style="width: 20px; height: 20px; vertical-align: middle;"></i> Edit Software Release
+        </h2>
+        
+        <form id="edit-software-form" method="POST" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="edit_sw_name">Software Package Name</label>
+                    <input type="text" id="edit_sw_name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit_sw_version">Version Tag</label>
+                    <input type="text" id="edit_sw_version" name="version" class="form-control" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="edit_sw_category">Category</label>
+                    <input type="text" id="edit_sw_category" name="category" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit_sw_platform">Operating System / Platform</label>
+                    <input type="text" id="edit_sw_platform" name="platform" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="edit_sw_file">Replace Binary File (Leave blank to keep existing file)</label>
+                <input type="file" id="edit_sw_file" name="software_file" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="edit_sw_desc">Description</label>
+                <textarea id="edit_sw_desc" name="description" class="form-control" style="min-height: 75px;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edit_sw_requirements">System Requirements</label>
+                <input type="text" id="edit_sw_requirements" name="system_requirements" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="edit_sw_changelog">Release Notes / Changelog</label>
+                <textarea id="edit_sw_changelog" name="changelog" class="form-control" style="min-height: 75px;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-transform: none; color: #ffffff; font-size: 0.85rem;">
+                    <input type="checkbox" id="edit_sw_published" name="is_published" value="1">
+                    <span>Published on public website</span>
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('edit-software-modal')">Cancel</button>
+                <button type="submit" class="btn-action btn-action-primary">Save Changes</button>
             </div>
         </form>
     </div>
@@ -215,6 +964,30 @@
 
 {% block extra_js %}
 <script>
+    // Tab switching
+    function switchView(viewName) {
+        document.querySelectorAll('.view-content-section').forEach(sec => sec.classList.remove('active-view'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+        const targetView = document.getElementById('view-' + viewName);
+        const targetBtn = document.getElementById('tab-btn-' + viewName);
+
+        if (targetView && targetBtn) {
+            targetView.classList.add('active-view');
+            targetBtn.classList.add('active');
+            window.location.hash = viewName;
+        }
+    }
+
+    // Check hash on load
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash && document.getElementById('view-' + hash)) {
+            switchView(hash);
+        }
+    });
+
+    // Modals
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
     }
@@ -228,14 +1001,81 @@
         document.getElementById('edit-slug').value = slug;
         document.getElementById('edit-description').value = description;
         
-        // Update form action URL dynamically
         const form = document.getElementById('edit-rover-form');
         form.action = `/admin/rover/${id}/edit`;
         
         openModal('edit-rover-modal');
     }
 
-    // Close modals if background clicked
+    function openEditSoftwareModal(id, name, version, category, platform, description, requirements, changelog, isPublished) {
+        document.getElementById('edit_sw_name').value = name;
+        document.getElementById('edit_sw_version').value = version;
+        document.getElementById('edit_sw_category').value = category;
+        document.getElementById('edit_sw_platform').value = platform;
+        document.getElementById('edit_sw_desc').value = description || '';
+        document.getElementById('edit_sw_requirements').value = requirements || '';
+        document.getElementById('edit_sw_changelog').value = changelog || '';
+        document.getElementById('edit_sw_published').checked = isPublished;
+        
+        const form = document.getElementById('edit-software-form');
+        form.action = `/admin/software/${id}/edit`;
+        
+        openModal('edit-software-modal');
+    }
+
+    function toggleTargetFields(val) {
+        const fields = document.getElementById('custom-system-fields');
+        if (val) {
+            fields.style.display = 'none';
+        } else {
+            fields.style.display = 'block';
+        }
+    }
+
+    // Live search filters
+    function filterSystems() {
+        const q = (document.getElementById('systemSearch').value || '').toLowerCase().trim();
+        document.querySelectorAll('.system-card-item').forEach(card => {
+            const title = card.getAttribute('data-title') || '';
+            const slug = card.getAttribute('data-slug') || '';
+            if (!q || title.includes(q) || slug.includes(q)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function filterSoftwareAdmin() {
+        const q = (document.getElementById('softwareAdminSearch').value || '').toLowerCase().trim();
+        const rows = document.querySelectorAll('#softwareAdminTable tbody tr');
+        rows.forEach(r => {
+            const text = r.innerText.toLowerCase();
+            r.style.display = (!q || text.includes(q)) ? '' : 'none';
+        });
+    }
+
+    function filterQuotes() {
+        const q = (document.getElementById('quoteSearch').value || '').toLowerCase().trim();
+        const rows = document.querySelectorAll('#quoteTable tbody tr');
+        rows.forEach(r => {
+            const text = r.innerText.toLowerCase();
+            r.style.display = (!q || text.includes(q)) ? '' : 'none';
+        });
+    }
+
+    function filterQuoteStatus(status) {
+        const rows = document.querySelectorAll('#quoteTable tbody tr');
+        rows.forEach(r => {
+            const rStatus = r.getAttribute('data-status');
+            if (status === 'All' || rStatus === status) {
+                r.style.display = '';
+            } else {
+                r.style.display = 'none';
+            }
+        });
+    }
+
     window.onclick = function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';

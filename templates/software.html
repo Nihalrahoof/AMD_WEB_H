@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download official software suites, ground control stations, mesh radio configurators, and ROS 2 autonomy packages from Automind Dynamics.">
+    <link rel="canonical" href="https://automindynamics.com/software">
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Software & Mission Control Hub - Automind Dynamics">
+    <meta property="og:description" content="Download official software suites, ground control stations, mesh radio configurators, and ROS 2 autonomy packages from Automind Dynamics.">
+    <meta property="og:url" content="https://automindynamics.com/software">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/Assets/Images/logo_orange.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Software & Mission Control Hub - Automind Dynamics">
+    <meta name="twitter:description" content="Download official software suites, ground control stations, mesh radio configurators, and ROS 2 autonomy packages from Automind Dynamics.">
+    <meta name="twitter:image" content="/Assets/Images/logo_orange.png">
+
+    <title>Software Hub & Downloads - Automind Dynamics</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/Assets/Images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/Assets/Images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/Assets/Images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/Assets/Images/apple-touch-icon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Base Stylesheet -->
+    <link rel="stylesheet" href="/Static/css/styles.css">
+
+    <style>
+        :root {
+            --dark-bg: #030304;
+            --card-bg: rgba(12, 12, 16, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-border-hover: rgba(255, 255, 255, 0.25);
+            --accent-glow: rgba(96, 165, 250, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --brand-blue: #3b82f6;
+            --brand-blue-hover: #2563eb;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 0%, #0f172a 0%, var(--dark-bg) 60%);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .software-hero {
+            padding: 7rem 1.5rem 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #60a5fa;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.9rem;
+            border-radius: 99px;
+            margin-bottom: 1.5rem;
+        }
+
+        .software-hero h1 {
+            font-family: 'Chakra Petch', 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .software-hero p {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 2.5rem auto;
+            line-height: 1.6;
+        }
+
+        /* Filter Controls */
+        .controls-container {
+            max-width: 1200px;
+            margin: 0 auto 2.5rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .search-bar-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.25rem 1rem 3.25rem;
+            background: rgba(18, 18, 24, 0.7);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px var(--accent-glow);
+            background: rgba(22, 22, 30, 0.85);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .category-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .filter-btn:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .filter-btn.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            font-weight: 600;
+        }
+
+        /* Software Grid */
+        .software-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem 6rem 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.75rem;
+            width: 100%;
+        }
+
+        .software-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .software-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .software-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(59, 130, 246, 0.08);
+        }
+
+        .software-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+        }
+
+        .software-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #60a5fa;
+        }
+
+        .card-badges {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.35rem;
+        }
+
+        .version-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .category-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #60a5fa;
+        }
+
+        .software-title {
+            font-family: 'Chakra Petch', 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .software-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            margin-bottom: 1.25rem;
+            flex: 1;
+        }
+
+        .platform-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .file-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-size-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .downloads-count-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #fff;
+            color: #000;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .download-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .notes-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 0.55rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notes-btn:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #0d0d12;
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            padding: 2.25rem;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem; right: 1.25rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-link">
+                    <img src="/Assets/Images/logo_horizontal.png" alt="Automind Dynamics" class="logo-img">
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/products" class="nav-link">Products</a></li>
+                <li><a href="/services" class="nav-link">Services</a></li>
+                <li><a href="/software" class="nav-link active" style="color: #60a5fa; font-weight: 600;">Software</a></li>
+                <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
+                <li><a href="/about" class="nav-link">About Us</a></li>
+                <li><a href="/quote" class="nav-link quote-nav-btn" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 0.4rem 0.95rem; border-radius: 8px; color: #fff; font-weight: 600; text-decoration: none;">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="software-hero">
+        <div class="hero-badge">
+            <i data-lucide="terminal" style="width: 14px; height: 14px;"></i> Official Releases & SDKs
+        </div>
+        <h1>Mission Control & Software Suites</h1>
+        <p>Download official ground control software, mesh radio configurators, ROS 2 autonomy packages, and developer drivers engineered for Automind autonomous systems.</p>
+    </section>
+
+    <!-- Filter & Search Controls -->
+    <div class="controls-container">
+        <div class="search-bar-wrapper">
+            <i data-lucide="search" class="search-icon" style="width: 20px; height: 20px;"></i>
+            <input type="text" id="softwareSearch" class="search-input" placeholder="Search by software name, category, or platform (e.g. MIMO, ROS 2, Ubuntu, Configurator)..." onkeyup="filterSoftwareCards()">
+        </div>
+
+        <div class="filter-row">
+            <div class="category-pills">
+                <button class="filter-btn active" onclick="setCategoryFilter('All', this)">All Categories</button>
+                {% for cat in categories %}
+                <button class="filter-btn" onclick="setCategoryFilter('{{ cat }}', this)">{{ cat }}</button>
+                {% endfor %}
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">OS:</span>
+                <button class="filter-btn" onclick="setPlatformFilter('All', this)" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">All</button>
+                <button class="filter-btn" onclick="setPlatformFilter('Windows', this)" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Windows</button>
+                <button class="filter-btn" onclick="setPlatformFilter('Ubuntu', this)" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Linux</button>
+                <button class="filter-btn" onclick="setPlatformFilter('ROS 2', this)" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">ROS 2</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Software Grid -->
+    <main class="software-grid" id="softwareGrid">
+        {% if not softwares %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;">
+            <i data-lucide="package" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff;">No Software Packages Published Yet</h3>
+            <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto 1.5rem auto;">
+                Please log in to the admin console to upload your first software build, or check our documentation portal.
+            </p>
+            <a href="/docs/" class="download-btn" style="display: inline-flex;">
+                Explore Technical Docs <i data-lucide="arrow-right" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+            </a>
+        </div>
+        {% else %}
+            {% for s in softwares %}
+            <div class="software-card" 
+                 data-title="{{ s.name|lower }}" 
+                 data-category="{{ s.category }}" 
+                 data-platform="{{ s.platform|lower }}" 
+                 data-desc="{{ (s.description or '')|lower }}">
+                
+                <div>
+                    <div class="card-top">
+                        <div class="software-icon-box">
+                            {% if 'Radio' in s.category or 'MIMO' in s.name %}
+                                <i data-lucide="radio" style="width: 24px; height: 24px;"></i>
+                            {% elif 'ROS' in s.category or 'Autonomy' in s.category %}
+                                <i data-lucide="bot" style="width: 24px; height: 24px;"></i>
+                            {% elif 'UI' in s.category or 'Station' in s.category %}
+                                <i data-lucide="layout" style="width: 24px; height: 24px;"></i>
+                            {% elif 'Firmware' in s.category %}
+                                <i data-lucide="cpu" style="width: 24px; height: 24px;"></i>
+                            {% else %}
+                                <i data-lucide="terminal" style="width: 24px; height: 24px;"></i>
+                            {% endif %}
+                        </div>
+                        <div class="card-badges">
+                            <span class="version-badge">{{ s.version }}</span>
+                            <span class="category-tag">{{ s.category }}</span>
+                        </div>
+                    </div>
+
+                    <h2 class="software-title">{{ s.name }}</h2>
+                    <p class="software-desc">{{ s.description or 'Official Automind Dynamics software package and runtime tools.' }}</p>
+
+                    <div class="platform-info">
+                        <i data-lucide="monitor" style="width: 14px; height: 14px; color: #60a5fa;"></i>
+                        <span>{{ s.platform }}</span>
+                    </div>
+                </div>
+
+                <div class="card-meta-row">
+                    <div class="file-stat">
+                        <span class="file-size-text">
+                            {% if s.file_filename %}
+                                {{ s.file_size_bytes | filesize }}
+                            {% else %}
+                                Binary SDK
+                            {% endif %}
+                        </span>
+                        <span class="downloads-count-text">
+                            <i data-lucide="download" style="width: 11px; height: 11px; vertical-align: middle;"></i>
+                            {{ s.download_count or 0 }} downloads
+                        </span>
+                    </div>
+
+                    <div class="card-actions">
+                        {% if s.changelog or s.system_requirements %}
+                        <button class="notes-btn" title="View Release Notes & Requirements"
+                                onclick="openNotesModal('{{ s.name|escape }}', '{{ s.version|escape }}', '{{ s.platform|escape }}', '{{ (s.system_requirements or 'Standard system prerequisites.')|escape }}', '{{ (s.changelog or 'Production release.')|escape }}')">
+                            <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                        </button>
+                        {% endif %}
+                        
+                        {% if s.file_filename %}
+                        <a href="{{ url_for('download_software', software_id=s.id) }}" class="download-btn">
+                            <i data-lucide="download" style="width: 15px; height: 15px;"></i> Download
+                        </a>
+                        {% else %}
+                        <a href="/quote?product={{ s.name|urlencode }}" class="download-btn">
+                            Request Access
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        {% endif %}
+    </main>
+
+    <!-- Release Notes & Requirements Modal -->
+    <div id="notes-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNotesModal()">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div style="margin-bottom: 1.5rem;">
+                <span id="modal-ver" class="version-badge" style="margin-bottom: 0.5rem; display: inline-block;"></span>
+                <h2 id="modal-title" style="font-family: 'Chakra Petch', sans-serif; font-size: 1.5rem; text-transform: uppercase;"></h2>
+                <div id="modal-platform" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;"></div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 0.5rem;">System Requirements</h4>
+                <p id="modal-req" style="font-size: 0.9rem; color: #cbd5e1; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--card-border);"></p>
+            </div>
+
+            <div>
+                <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #60a5fa; margin-bottom: 0.5rem;">Release Notes & Changelog</h4>
+                <div id="modal-changelog" style="font-size: 0.9rem; color: #cbd5e1; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--card-border); white-space: pre-wrap; line-height: 1.6;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>AUTOMIND DYNAMICS Pvt Ltd</h4>
+                    <p>Accelerating autonomous mobility through indigenous AI software, robotic platforms, vehicle automation, and modular autonomy solutions built for challenging environments.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/software">Software Hub</a></li>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/docs/">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/automindynamics/" target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="linkedin" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle;"></i>LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AUTOMIND DYNAMICS Pvt Ltd. All rights reserved. Intelligence in Motion.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/Static/js/script.js"></script>
+    <script>
+        if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        let currentCategory = 'All';
+        let currentPlatform = 'All';
+
+        function setCategoryFilter(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-pills .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterSoftwareCards();
+        }
+
+        function setPlatformFilter(plat, btn) {
+            currentPlatform = plat;
+            btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterSoftwareCards();
+        }
+
+        function filterSoftwareCards() {
+            const query = (document.getElementById('softwareSearch').value || '').toLowerCase().trim();
+            const cards = document.querySelectorAll('.software-card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || '';
+                const cat = card.getAttribute('data-category') || '';
+                const plat = card.getAttribute('data-platform') || '';
+                const desc = card.getAttribute('data-desc') || '';
+
+                const matchesSearch = !query || title.includes(query) || desc.includes(query) || cat.toLowerCase().includes(query) || plat.includes(query);
+                const matchesCat = currentCategory === 'All' || cat === currentCategory;
+                const matchesPlat = currentPlatform === 'All' || plat.includes(currentPlatform.toLowerCase());
+
+                if (matchesSearch && matchesCat && matchesPlat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openNotesModal(title, version, platform, requirements, changelog) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-ver').textContent = version;
+            document.getElementById('modal-platform').textContent = 'Platform: ' + platform;
+            document.getElementById('modal-req').textContent = requirements;
+            document.getElementById('modal-changelog').textContent = changelog;
+            document.getElementById('notes-modal').style.display = 'flex';
+        }
+
+        function closeNotesModal() {
+            document.getElementById('notes-modal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.id === 'notes-modal') {
+                closeNotesModal();
+            }
+        }
+    </script>
+</body>
+
+</html>
