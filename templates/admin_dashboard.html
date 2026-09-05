@@ -1,211 +1,793 @@
 {% extends "templates/admin_base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Tech Console Dashboard{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Metric Strip */
-    .metric-strip {
+    /* ==========================================================================
+       Tech Console Modern Design System
+       ========================================================================== */
+    
+    :root {
+        --dash-bg-card: rgba(14, 17, 24, 0.75);
+        --dash-bg-card-hover: rgba(22, 27, 40, 0.85);
+        --dash-border: rgba(255, 255, 255, 0.08);
+        --dash-border-hover: rgba(255, 255, 255, 0.18);
+        --dash-glow-blue: rgba(59, 130, 246, 0.15);
+        --dash-glow-purple: rgba(168, 85, 247, 0.15);
+        --dash-glow-green: rgba(16, 185, 129, 0.15);
+        --dash-glow-amber: rgba(245, 158, 11, 0.15);
+        --dash-glow-rose: rgba(244, 63, 94, 0.15);
+    }
+
+    /* 1. Executive Metric Grid */
+    .executive-metric-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1rem;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 1.1rem;
         margin-bottom: 2rem;
     }
 
-    @media (max-width: 1100px) {
-        .metric-strip {
-            grid-template-columns: repeat(3, 1fr);
+    @media (max-width: 1200px) {
+        .executive-metric-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
 
     @media (max-width: 768px) {
-        .metric-strip {
-            grid-template-columns: repeat(2, 1fr);
+        .executive-metric-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 
-    .metric-pod {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: 12px;
-        padding: 1.1rem 1.25rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: var(--transition);
+    @media (max-width: 520px) {
+        .executive-metric-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .kpi-card {
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 1.25rem 1.25rem 1.15rem 1.25rem;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         position: relative;
         overflow: hidden;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-    .metric-pod:hover {
-        border-color: var(--border-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    .kpi-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
     }
 
-    .metric-icon-wrap {
-        width: 42px;
-        height: 42px;
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--dash-border-hover);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .kpi-card.kpi-blue:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--dash-glow-blue); }
+    .kpi-card.kpi-purple:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--dash-glow-purple); }
+    .kpi-card.kpi-green:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--dash-glow-green); }
+    .kpi-card.kpi-amber:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--dash-glow-amber); }
+    .kpi-card.kpi-rose:hover { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--dash-glow-rose); }
+
+    .kpi-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.85rem;
+    }
+
+    .kpi-icon-bubble {
+        width: 38px;
+        height: 38px;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        transition: transform 0.2s ease;
     }
 
-    .metric-val {
+    .kpi-card:hover .kpi-icon-bubble {
+        transform: scale(1.08);
+    }
+
+    .kpi-pill-tag {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        border-radius: 99px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .kpi-stat-value {
         font-family: var(--font-display);
-        font-size: 1.5rem;
+        font-size: 1.85rem;
         font-weight: 700;
         line-height: 1.1;
         color: #ffffff;
-    }
-
-    .metric-title {
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-secondary);
-        font-weight: 600;
-        margin-top: 0.2rem;
-    }
-
-    /* Segmented Navigation Tab Bar */
-    .view-switcher-bar {
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
         display: flex;
-        align-items: center;
+        align-items: baseline;
+        gap: 0.45rem;
+    }
+
+    .kpi-stat-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-secondary);
+    }
+
+    /* 2. Sleek Segmented Switcher */
+    .console-nav-bar {
+        background: rgba(14, 17, 24, 0.8);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 0.45rem;
+        margin-bottom: 1.75rem;
+        display: flex;
         justify-content: space-between;
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        padding: 0.4rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
+        align-items: center;
+        backdrop-filter: blur(16px);
         flex-wrap: wrap;
         gap: 0.75rem;
     }
 
-    .tab-pills {
+    .nav-tab-pills {
         display: flex;
         align-items: center;
         gap: 0.35rem;
         flex-wrap: wrap;
     }
 
-    .tab-btn {
+    .nav-tab-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.6rem 1.1rem;
-        border-radius: 8px;
+        gap: 0.55rem;
+        padding: 0.65rem 1.15rem;
+        border-radius: 9px;
         font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: var(--font-main);
+    }
+
+    .nav-tab-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-tab-btn.active {
+        background: #151a26;
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.14);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-tab-counter {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        font-size: 0.72rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 99px;
+        font-weight: 700;
+    }
+
+    .nav-tab-btn.active .nav-tab-counter {
+        background: #3b82f6;
+        color: #ffffff;
+    }
+
+    .nav-tab-counter.counter-amber {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+    }
+
+    .nav-tab-counter.counter-rose {
+        background: rgba(244, 63, 94, 0.2);
+        color: #fb7185;
+    }
+
+    .nav-quick-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* 3. Modern Toolbar */
+    .modern-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .toolbar-search-wrapper {
+        position: relative;
+        min-width: 320px;
+        max-width: 420px;
+        flex: 1;
+    }
+
+    .toolbar-search-wrapper i.search-icon,
+    .toolbar-search-wrapper svg.search-icon {
+        position: absolute;
+        left: 0.95rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .toolbar-search-input {
+        width: 100%;
+        padding: 0.65rem 2.2rem 0.65rem 2.45rem;
+        background: #0f121a;
+        border: 1px solid var(--dash-border);
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 0.86rem;
+        font-family: var(--font-main);
+        transition: all 0.2s ease;
+    }
+
+    .toolbar-search-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: #141824;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .toolbar-search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .search-clear-btn {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0.2rem;
+        border-radius: 4px;
+        display: none;
+    }
+
+    .search-clear-btn:hover {
+        color: #ffffff;
+    }
+
+    .status-filter-pills {
+        display: inline-flex;
+        background: #0f121a;
+        border: 1px solid var(--dash-border);
+        border-radius: 10px;
+        padding: 0.3rem;
+        gap: 0.25rem;
+        align-items: center;
+    }
+
+    .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 7px;
+        font-size: 0.78rem;
         font-weight: 600;
         color: var(--text-secondary);
         background: transparent;
         border: none;
         cursor: pointer;
-        transition: var(--transition);
-        font-family: var(--font-main);
+        transition: all 0.15s ease;
     }
 
-    .tab-btn:hover {
+    .filter-chip:hover {
         color: #ffffff;
         background: rgba(255, 255, 255, 0.04);
     }
 
-    .tab-btn.active {
-        background: var(--bg-surface-raised);
+    .filter-chip.active {
+        background: #1a202e;
         color: #ffffff;
-        border: 1px solid var(--border-hover);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
 
-    .tab-counter {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--text-secondary);
-        font-size: 0.7rem;
-        padding: 0.15rem 0.45rem;
-        border-radius: 99px;
-        font-weight: 700;
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
     }
 
-    .tab-btn.active .tab-counter {
-        background: #3b82f6;
-        color: #ffffff;
-    }
+    .dot-all { background: #94a3b8; }
+    .dot-pending { background: #fbbf24; }
+    .dot-contacted { background: #60a5fa; }
+    .dot-completed { background: #34d399; }
 
-    /* Search & Filter Header */
-    .section-toolbar {
+    /* 4. Security & Spam Alert Banner */
+    .security-spam-banner {
+        background: linear-gradient(135deg, rgba(244, 63, 94, 0.12), rgba(225, 29, 72, 0.06));
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.35rem;
+        margin-bottom: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
         gap: 1rem;
+        box-shadow: 0 4px 20px rgba(244, 63, 94, 0.1);
+    }
+
+    .spam-banner-content {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+
+    .spam-icon-badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(244, 63, 94, 0.2);
+        color: #fb7185;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .spam-banner-text strong {
+        color: #ffffff;
+        font-size: 0.92rem;
+        display: block;
+        margin-bottom: 0.2rem;
+    }
+
+    .spam-banner-text p {
+        color: #fca5a5;
+        font-size: 0.82rem;
+        margin: 0;
+    }
+
+    .btn-purge-spam {
+        background: rgba(244, 63, 94, 0.2);
+        color: #fda4af;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-purge-spam:hover {
+        background: #e11d48;
+        color: #ffffff;
+        border-color: #f43f5e;
+        box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+    }
+
+    /* 5. Modern Data Table */
+    .console-table-container {
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        overflow: hidden;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .console-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        text-align: left;
+    }
+
+    .console-table thead th {
+        background: rgba(18, 22, 32, 0.95);
+        color: var(--text-secondary);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.95rem 1.25rem;
+        border-bottom: 1px solid var(--dash-border);
+        white-space: nowrap;
+    }
+
+    .console-table tbody td {
+        padding: 1.1rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 0.86rem;
+        vertical-align: middle;
+        transition: background 0.15s ease;
+    }
+
+    .console-table tbody tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .console-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .console-table tbody tr.row-spam-detected {
+        background: rgba(244, 63, 94, 0.03);
+    }
+
+    .console-table tbody tr.row-spam-detected:hover td {
+        background: rgba(244, 63, 94, 0.07);
+    }
+
+    /* Customer Avatar & Meta */
+    .customer-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+
+    .customer-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: #93c5fd;
+        flex-shrink: 0;
+    }
+
+    .customer-name {
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 0.92rem;
+        line-height: 1.25;
+        margin-bottom: 0.15rem;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
         flex-wrap: wrap;
     }
 
-    .search-box {
-        position: relative;
-        min-width: 280px;
+    .customer-email {
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+        font-family: var(--font-mono);
+        text-decoration: none;
+        transition: color 0.15s ease;
     }
 
-    .search-box input {
-        width: 100%;
-        padding: 0.55rem 0.85rem 0.55rem 2.25rem;
-        background: var(--bg-surface-raised);
-        border: 1px solid var(--border-subtle);
+    .customer-email:hover {
+        color: #60a5fa;
+        text-decoration: underline;
+    }
+
+    .customer-phone {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.15rem;
+    }
+
+    .spam-badge-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: rgba(244, 63, 94, 0.15);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        color: #fb7185;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        letter-spacing: 0.04em;
+    }
+
+    /* Product Tag */
+    .product-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        color: #93c5fd;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.3rem 0.65rem;
         border-radius: 8px;
-        color: #ffffff;
-        font-size: 0.85rem;
-        font-family: var(--font-main);
-        transition: var(--transition);
     }
 
-    .search-box input:focus {
-        outline: none;
-        border-color: var(--border-focus);
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    /* Status Selector Select */
+    .status-select-wrap {
+        position: relative;
+        display: inline-block;
     }
 
-    .search-box i {
+    .status-select-custom {
+        appearance: none;
+        -webkit-appearance: none;
+        padding: 0.35rem 1.65rem 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        background-color: #10141f;
+    }
+
+    .status-select-custom.status-pending {
+        color: #fbbf24;
+        border-color: rgba(245, 158, 11, 0.3);
+        background: rgba(245, 158, 11, 0.08);
+    }
+
+    .status-select-custom.status-contacted {
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, 0.3);
+        background: rgba(59, 130, 246, 0.08);
+    }
+
+    .status-select-custom.status-completed {
+        color: #34d399;
+        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    .status-select-wrap i.arrow-down {
         position: absolute;
-        left: 0.75rem;
+        right: 0.6rem;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--text-muted);
+        pointer-events: none;
+        width: 12px;
+        height: 12px;
+        opacity: 0.7;
+    }
+
+    /* Action Buttons */
+    .btn-row-action {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--dash-border);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-decoration: none;
+    }
+
+    .btn-row-action:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border-color: var(--dash-border-hover);
+        transform: translateY(-1px);
+    }
+
+    .btn-row-action.action-view:hover {
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, 0.4);
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .btn-row-action.action-email:hover {
+        color: #34d399;
+        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .btn-row-action.action-delete:hover {
+        color: #fb7185;
+        border-color: rgba(244, 63, 94, 0.4);
+        background: rgba(244, 63, 94, 0.1);
+    }
+
+    /* 6. Empty State Modernized */
+    .modern-empty-state {
+        padding: 4.5rem 2rem;
+        text-align: center;
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .empty-state-glow {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         pointer-events: none;
     }
 
-    /* Systems Grid Layout */
+    .empty-state-icon-box {
+        width: 68px;
+        height: 68px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .empty-state-title {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-sub {
+        color: var(--text-secondary);
+        font-size: 0.88rem;
+        max-width: 440px;
+        margin: 0 auto 1.5rem auto;
+        line-height: 1.5;
+    }
+
+    /* 7. Quote Detail Inspector Modal */
+    .quote-modal-card {
+        background: #0d1017;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 640px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quote-modal-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--dash-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #121620;
+    }
+
+    .quote-modal-body {
+        padding: 1.5rem;
+        max-height: 75vh;
+        overflow-y: auto;
+    }
+
+    .quote-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 580px) {
+        .quote-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .detail-item-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+    }
+
+    .detail-item-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-bottom: 0.35rem;
+    }
+
+    .detail-item-val {
+        font-size: 0.9rem;
+        color: #ffffff;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .requirements-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .requirements-content {
+        font-size: 0.88rem;
+        line-height: 1.6;
+        color: #e2e8f0;
+        white-space: pre-wrap;
+        font-family: var(--font-main);
+    }
+
+    /* Systems Grid Styling */
     .systems-grid-layout {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
         gap: 1.25rem;
     }
 
     .system-card-item {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: 12px;
-        padding: 1.5rem;
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 1.4rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: var(--transition);
-        position: relative;
+        transition: all 0.2s ease;
     }
 
     .system-card-item:hover {
-        border-color: var(--border-hover);
+        border-color: var(--dash-border-hover);
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .system-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
 
     .system-icon-box {
@@ -226,26 +808,20 @@
         font-size: 1.15rem;
         font-weight: 700;
         color: #ffffff;
-        line-height: 1.3;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
     }
 
     .system-slug-tag {
         font-family: var(--font-mono);
         font-size: 0.75rem;
-        color: #94a3b8;
-        background: rgba(255, 255, 255, 0.04);
-        padding: 0.15rem 0.4rem;
-        border-radius: 4px;
-        border: 1px solid var(--border-subtle);
-        display: inline-block;
+        color: var(--text-muted);
     }
 
     .system-desc-text {
         color: var(--text-secondary);
         font-size: 0.85rem;
         line-height: 1.5;
-        margin-bottom: 1.25rem;
+        margin: 1rem 0;
         flex: 1;
     }
 
@@ -253,130 +829,155 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-top: 1px solid var(--border-subtle);
+        border-top: 1px solid var(--dash-border);
         padding-top: 1rem;
         margin-top: 0.5rem;
     }
 
-    .action-button-group {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-
-    /* Views */
+    /* Views visibility */
     .view-content-section {
         display: none;
     }
 
     .view-content-section.active-view {
         display: block;
-        animation: fadeIn 0.2s ease;
+        animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(4px); }
+        from { opacity: 0; transform: translateY(6px); }
         to { opacity: 1; transform: translateY(0); }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- 1. Executive Metric Summary Strip -->
-<div class="metric-strip">
-    <div class="metric-pod">
-        <div class="metric-icon-wrap" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25); color: #60a5fa;">
-            <i data-lucide="cpu" style="width: 20px; height: 20px;"></i>
-        </div>
-        <div>
-            <div class="metric-val">{{ stats.total_rovers }}</div>
-            <div class="metric-title">Robotic Systems</div>
-        </div>
-    </div>
-
-    <div class="metric-pod">
-        <div class="metric-icon-wrap" style="background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.25); color: #c084fc;">
-            <i data-lucide="book-open" style="width: 20px; height: 20px;"></i>
-        </div>
-        <div>
-            <div class="metric-val">{{ stats.total_pages }}</div>
-            <div class="metric-title">Doc Pages Published</div>
-        </div>
-    </div>
-
-    <div class="metric-pod">
-        <div class="metric-icon-wrap" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399;">
-            <i data-lucide="package" style="width: 20px; height: 20px;"></i>
-        </div>
-        <div>
-            <div class="metric-val">{{ stats.total_softwares }}</div>
-            <div class="metric-title">Software Releases</div>
-        </div>
-    </div>
-
-    <div class="metric-pod">
-        <div class="metric-icon-wrap" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); color: #fbbf24;">
-            <i data-lucide="download" style="width: 20px; height: 20px;"></i>
-        </div>
-        <div>
-            <div class="metric-val">{{ stats.total_downloads }}</div>
-            <div class="metric-title">Client Downloads</div>
-        </div>
-    </div>
-
-    <div class="metric-pod">
-        <div class="metric-icon-wrap" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #fb7185;">
-            <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
-        </div>
-        <div>
-            <div class="metric-val">
-                {{ stats.total_quotes }}
-                {% if stats.pending_quotes > 0 %}
-                <span style="font-size: 0.75rem; color: #fbbf24; font-weight: 600; margin-left: 0.2rem;">({{ stats.pending_quotes }} new)</span>
-                {% endif %}
+<!-- ==========================================================================
+     1. Executive KPI Summary Strip (5-Column Grid with Click-to-Tab)
+     ========================================================================== -->
+<div class="executive-metric-grid">
+    <!-- Pod 1: Robotic Systems -->
+    <div class="kpi-card kpi-blue" onclick="switchView('systems')" title="Jump to Systems & Documentation">
+        <div class="kpi-top-row">
+            <div class="kpi-icon-bubble" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <i data-lucide="cpu" style="width: 20px; height: 20px;"></i>
             </div>
-            <div class="metric-title">Quote Inquiries</div>
+            <span class="kpi-pill-tag" style="background: rgba(59, 130, 246, 0.12); color: #93c5fd;">Active Tech</span>
+        </div>
+        <div>
+            <div class="kpi-stat-value">{{ stats.total_rovers }}</div>
+            <div class="kpi-stat-label">Robotic Systems</div>
+        </div>
+    </div>
+
+    <!-- Pod 2: Doc Pages -->
+    <div class="kpi-card kpi-purple" onclick="switchView('systems')" title="Jump to Documentation Pages">
+        <div class="kpi-top-row">
+            <div class="kpi-icon-bubble" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);">
+                <i data-lucide="book-open" style="width: 20px; height: 20px;"></i>
+            </div>
+            <span class="kpi-pill-tag" style="background: rgba(168, 85, 247, 0.12); color: #d8b4fe;">Knowledge</span>
+        </div>
+        <div>
+            <div class="kpi-stat-value">{{ stats.total_pages }}</div>
+            <div class="kpi-stat-label">Doc Pages Published</div>
+        </div>
+    </div>
+
+    <!-- Pod 3: Software Releases -->
+    <div class="kpi-card kpi-green" onclick="switchView('softwares')" title="Jump to Software Releases">
+        <div class="kpi-top-row">
+            <div class="kpi-icon-bubble" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+                <i data-lucide="package" style="width: 20px; height: 20px;"></i>
+            </div>
+            <span class="kpi-pill-tag" style="background: rgba(16, 185, 129, 0.12); color: #6ee7b7;">Production</span>
+        </div>
+        <div>
+            <div class="kpi-stat-value">{{ stats.total_softwares }}</div>
+            <div class="kpi-stat-label">Software Releases</div>
+        </div>
+    </div>
+
+    <!-- Pod 4: Client Downloads -->
+    <div class="kpi-card kpi-amber" onclick="switchView('softwares')" title="Jump to Software Releases">
+        <div class="kpi-top-row">
+            <div class="kpi-icon-bubble" style="background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">
+                <i data-lucide="download" style="width: 20px; height: 20px;"></i>
+            </div>
+            <span class="kpi-pill-tag" style="background: rgba(245, 158, 11, 0.12); color: #fde68a;">Telemetry</span>
+        </div>
+        <div>
+            <div class="kpi-stat-value">{{ stats.total_downloads }}</div>
+            <div class="kpi-stat-label">Client Downloads</div>
+        </div>
+    </div>
+
+    <!-- Pod 5: Quote Inquiries -->
+    <div class="kpi-card kpi-rose" onclick="switchView('quotes')" title="Jump to Quote Requests">
+        <div class="kpi-top-row">
+            <div class="kpi-icon-bubble" style="background: rgba(244, 63, 94, 0.12); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3);">
+                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+            </div>
+            {% if stats.pending_quotes > 0 %}
+            <span class="kpi-pill-tag" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);">
+                <span class="status-dot dot-pending"></span> {{ stats.pending_quotes }} Pending
+            </span>
+            {% elif stats.spam_quotes > 0 %}
+            <span class="kpi-pill-tag" style="background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35);">
+                ⚠️ {{ stats.spam_quotes }} Spam
+            </span>
+            {% else %}
+            <span class="kpi-pill-tag" style="background: rgba(244, 63, 94, 0.12); color: #fda4af;">Inbound</span>
+            {% endif %}
+        </div>
+        <div>
+            <div class="kpi-stat-value">
+                {{ stats.total_quotes }}
+            </div>
+            <div class="kpi-stat-label">Quote Inquiries</div>
         </div>
     </div>
 </div>
 
-<!-- 2. Segmented Navigation Tab Bar -->
-<div class="view-switcher-bar">
-    <div class="tab-pills">
-        <button class="tab-btn active" id="tab-btn-systems" onclick="switchView('systems')">
-            <i data-lucide="book-open" style="width: 16px; height: 16px;"></i>
+<!-- ==========================================================================
+     2. Refined Navigation Tab Bar & Quick Actions
+     ========================================================================== -->
+<div class="console-nav-bar">
+    <div class="nav-tab-pills">
+        <button class="nav-tab-btn active" id="tab-btn-systems" onclick="switchView('systems')">
+            <i data-lucide="layers" style="width: 16px; height: 16px;"></i>
             <span>Systems & Documentation</span>
-            <span class="tab-counter">{{ rovers|length }}</span>
+            <span class="nav-tab-counter">{{ rovers|length }}</span>
         </button>
 
-        <button class="tab-btn" id="tab-btn-softwares" onclick="switchView('softwares')">
+        <button class="nav-tab-btn" id="tab-btn-softwares" onclick="switchView('softwares')">
             <i data-lucide="package" style="width: 16px; height: 16px;"></i>
             <span>Software Releases</span>
-            <span class="tab-counter">{{ softwares|length }}</span>
+            <span class="nav-tab-counter">{{ softwares|length }}</span>
         </button>
 
-        <button class="tab-btn" id="tab-btn-quotes" onclick="switchView('quotes')">
-            <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+        <button class="nav-tab-btn" id="tab-btn-quotes" onclick="switchView('quotes')">
+            <i data-lucide="inbox" style="width: 16px; height: 16px;"></i>
             <span>Quote Requests</span>
-            <span class="tab-counter">{{ quotes|length }}</span>
+            <span class="nav-tab-counter {% if stats.pending_quotes > 0 %}counter-amber{% endif %}">{{ quotes|length }}</span>
         </button>
     </div>
 
-    <div style="display: flex; gap: 0.5rem;">
-        <a href="{{ url_for('software_portal') }}" target="_blank" class="btn-action btn-action-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.8rem;">
-            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Software Portal
+    <div class="nav-quick-actions">
+        <a href="{{ url_for('software_portal') }}" target="_blank" class="btn-action btn-action-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;">
+            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Client Portal
         </a>
     </div>
 </div>
 
-<!-- ============================================
+<!-- ==========================================================================
      VIEW 1: SYSTEMS & DOCUMENTATION SUITES
-     ============================================ -->
+     ========================================================================== -->
 <div id="view-systems" class="view-content-section active-view">
-    <div class="section-toolbar">
-        <div class="search-box">
-            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
-            <input type="text" id="systemSearch" placeholder="Search systems by name or slug..." onkeyup="filterSystems()">
+    <div class="modern-toolbar">
+        <div class="toolbar-search-wrapper">
+            <i data-lucide="search" class="search-icon" style="width: 15px; height: 15px;"></i>
+            <input type="text" id="systemSearch" class="toolbar-search-input" placeholder="Search systems by name or slug..." onkeyup="filterSystems()">
         </div>
 
         <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
@@ -398,11 +999,14 @@
     </div>
 
     {% if not rovers %}
-    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
-        <i data-lucide="book-open" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
-        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Documentation Systems Created Yet</h3>
-        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9rem;">
-            You can create a system manually or upload a full MkDocs directory to instantly publish all documentation pages.
+    <div class="modern-empty-state">
+        <div class="empty-state-glow"></div>
+        <div class="empty-state-icon-box">
+            <i data-lucide="book-open" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h3 class="empty-state-title">No Documentation Systems Created Yet</h3>
+        <p class="empty-state-sub">
+            You can create a robotic system manually or upload a full MkDocs directory package to publish all documentation pages immediately.
         </p>
         <button class="btn-action btn-action-primary" onclick="openModal('import-mkdocs-modal')">
             <i data-lucide="upload-cloud" style="width: 15px; height: 15px;"></i> Import MkDocs Package
@@ -413,21 +1017,19 @@
         {% for r_data in rovers %}
         <div class="system-card-item" data-title="{{ r_data.rover.name|lower }}" data-slug="{{ r_data.rover.slug|lower }}">
             <div>
-                <div class="system-card-header">
-                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
-                        <div class="system-icon-box">
-                            {% if 'Radio' in r_data.rover.name or 'MIMO' in r_data.rover.name %}
-                                <i data-lucide="radio" style="width: 22px; height: 22px;"></i>
-                            {% elif 'Nomad' in r_data.rover.name or 'Rover' in r_data.rover.name %}
-                                <i data-lucide="bot" style="width: 22px; height: 22px;"></i>
-                            {% else %}
-                                <i data-lucide="cpu" style="width: 22px; height: 22px;"></i>
-                            {% endif %}
-                        </div>
-                        <div>
-                            <h3 class="system-title-text">{{ r_data.rover.name }}</h3>
-                            <span class="system-slug-tag">/docs/{{ r_data.rover.slug }}</span>
-                        </div>
+                <div style="display: flex; gap: 0.85rem; align-items: flex-start; margin-bottom: 0.85rem;">
+                    <div class="system-icon-box">
+                        {% if 'Radio' in r_data.rover.name or 'MIMO' in r_data.rover.name %}
+                            <i data-lucide="radio" style="width: 22px; height: 22px;"></i>
+                        {% elif 'Nomad' in r_data.rover.name or 'Rover' in r_data.rover.name %}
+                            <i data-lucide="bot" style="width: 22px; height: 22px;"></i>
+                        {% else %}
+                            <i data-lucide="cpu" style="width: 22px; height: 22px;"></i>
+                        {% endif %}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <h3 class="system-title-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r_data.rover.name }}</h3>
+                        <span class="system-slug-tag">/docs/{{ r_data.rover.slug }}</span>
                     </div>
                 </div>
 
@@ -437,26 +1039,21 @@
             </div>
 
             <div class="system-card-footer">
-                <span class="pill-badge pill-blue">
+                <span class="pill-badge pill-blue" style="font-size: 0.74rem;">
                     <i data-lucide="file-text" style="width: 12px; height: 12px;"></i>
-                    {{ r_data.page_count }} Pages Published
+                    {{ r_data.page_count }} Pages
                 </span>
 
-                <div class="action-button-group">
-                    <a href="{{ url_for('docs_rover_sub', rover_slug=r_data.rover.slug) }}" class="btn-icon" target="_blank" title="View live documentation site">
-                        <i data-lucide="external-link" style="width: 15px; height: 15px;"></i>
+                <div style="display: flex; gap: 0.4rem; align-items: center;">
+                    <a href="{{ url_for('docs_rover_sub', rover_slug=r_data.rover.slug) }}" class="btn-row-action" target="_blank" title="View live documentation site">
+                        <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
                     </a>
-                    <a href="{{ url_for('admin_rover_view', rover_id=r_data.rover.id) }}" class="btn-action btn-action-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
-                        <i data-lucide="book-open" style="width: 13px; height: 13px;"></i> Manage Pages
-                    </a>
-                    <button class="btn-icon" title="Edit System Information" onclick="openEditModal('{{ r_data.rover.id }}', '{{ r_data.rover.name|escape }}', '{{ r_data.rover.slug|escape }}', '{{ (r_data.rover.description or '')|escape }}')">
-                        <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
+                    <button class="btn-row-action" title="Edit System Config" onclick="openEditModal({{ r_data.rover.id }}, '{{ r_data.rover.name|escape }}', '{{ r_data.rover.slug|escape }}', '{{ (r_data.rover.description or '')|escape }}')">
+                        <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
                     </button>
-                    <form action="{{ url_for('admin_rover_delete', rover_id=r_data.rover.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete {{ r_data.rover.name }} and ALL associated documentation pages?');">
-                        <button type="submit" class="btn-icon btn-icon-danger" title="Delete System">
-                            <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
-                        </button>
-                    </form>
+                    <a href="{{ url_for('admin_rover_view', rover_id=r_data.rover.id) }}" class="btn-action btn-action-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
+                        <i data-lucide="book-open" style="width: 13px; height: 13px;"></i> Manage
+                    </a>
                 </div>
             </div>
         </div>
@@ -465,48 +1062,48 @@
     {% endif %}
 </div>
 
-<!-- ============================================
-     VIEW 2: SOFTWARE DISTRIBUTION HUB
-     ============================================ -->
+<!-- ==========================================================================
+     VIEW 2: SOFTWARE RELEASES
+     ========================================================================== -->
 <div id="view-softwares" class="view-content-section">
-    <div class="section-toolbar">
-        <div class="search-box">
-            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
-            <input type="text" id="softwareAdminSearch" placeholder="Search software releases..." onkeyup="filterSoftwareAdmin()">
+    <div class="modern-toolbar">
+        <div class="toolbar-search-wrapper">
+            <i data-lucide="search" class="search-icon" style="width: 15px; height: 15px;"></i>
+            <input type="text" id="softwareAdminSearch" class="toolbar-search-input" placeholder="Search software packages, versions, categories..." onkeyup="filterSoftwareAdmin()">
         </div>
 
-        <div style="display: flex; gap: 0.6rem; align-items: center;">
-            <a href="{{ url_for('software_portal') }}" target="_blank" class="btn-action btn-action-secondary">
-                <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Public Portal
-            </a>
+        <div>
             <button class="btn-action btn-action-primary" onclick="openModal('new-software-modal')">
-                <i data-lucide="upload" style="width: 14px; height: 14px;"></i> Upload Software Release
+                <i data-lucide="package-plus" style="width: 14px; height: 14px;"></i>
+                <span>Publish Release</span>
             </button>
         </div>
     </div>
 
     {% if not softwares %}
-    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
-        <i data-lucide="package" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
-        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Software Packages Released</h3>
-        <p style="color: var(--text-secondary); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9rem;">
-            Upload installers, ROS 2 packages, ground stations, or firmware binaries for clients to download directly from the main website.
+    <div class="modern-empty-state">
+        <div class="empty-state-glow"></div>
+        <div class="empty-state-icon-box">
+            <i data-lucide="package" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h3 class="empty-state-title">No Software Releases Published</h3>
+        <p class="empty-state-sub">
+            Upload installers, drivers, firmware updates, or ground station binaries for client access.
         </p>
         <button class="btn-action btn-action-primary" onclick="openModal('new-software-modal')">
-            <i data-lucide="upload" style="width: 15px; height: 15px;"></i> Upload First Package
+            <i data-lucide="plus" style="width: 15px; height: 15px;"></i> Upload First Binary
         </button>
     </div>
     {% else %}
-    <div class="modern-table-wrapper">
-        <table class="modern-table" id="softwareAdminTable">
+    <div class="console-table-container">
+        <table class="console-table" id="softwareAdminTable">
             <thead>
                 <tr>
-                    <th>Package & Version</th>
+                    <th>Package Details</th>
                     <th>Category</th>
                     <th>Platform</th>
-                    <th>Binary File</th>
                     <th>Downloads</th>
-                    <th>Status</th>
+                    <th>Visibility</th>
                     <th style="text-align: right;">Actions</th>
                 </tr>
             </thead>
@@ -514,61 +1111,46 @@
                 {% for s in softwares %}
                 <tr>
                     <td>
-                        <div style="font-weight: 600; font-size: 0.95rem; color: #ffffff; display: flex; align-items: center; gap: 0.45rem;">
+                        <div style="font-weight: 600; color: #ffffff; font-size: 0.92rem;">
                             {{ s.name }}
-                            <span class="pill-badge pill-amber" style="font-family: var(--font-mono); font-size: 0.72rem;">
-                                {{ s.version }}
-                            </span>
+                            <span class="pill-badge pill-blue" style="font-size: 0.7rem; margin-left: 0.3rem;">{{ s.version }}</span>
                         </div>
-                        {% if s.description %}
-                        <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.15rem;">
-                            {{ s.description }}
+                        <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.2rem;">
+                            {{ s.file_filename or 'No file attached' }} 
+                            {% if s.file_size %} • {{ (s.file_size / (1024*1024))|round(1) }} MB{% endif %}
                         </div>
-                        {% endif %}
                     </td>
                     <td>
-                        <span class="pill-badge pill-blue">{{ s.category }}</span>
+                        <span class="pill-badge pill-purple" style="font-size: 0.74rem;">{{ s.category }}</span>
+                    </td>
+                    <td style="color: var(--text-secondary); font-size: 0.82rem;">
+                        {{ s.platform }}
                     </td>
                     <td>
-                        <span style="font-size: 0.82rem; color: #e2e8f0; display: inline-flex; align-items: center; gap: 0.35rem;">
-                            <i data-lucide="monitor" style="width: 13px; height: 13px; color: var(--text-secondary);"></i>
-                            {{ s.platform }}
-                        </span>
-                    </td>
-                    <td>
-                        {% if s.file_filename %}
-                        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #ffffff;">{{ s.file_display_name }}</div>
-                        <div style="font-size: 0.74rem; color: var(--text-muted);">{{ s.file_size_bytes | filesize }}</div>
-                        {% else %}
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">No binary file</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="pill-badge pill-green" style="font-weight: 700;">
-                            <i data-lucide="download" style="width: 11px; height: 11px;"></i>
-                            {{ s.download_count or 0 }}
+                        <span style="font-weight: 600; color: #fbbf24; font-family: var(--font-mono); font-size: 0.88rem;">
+                            <i data-lucide="download" style="width: 12px; height: 12px; vertical-align: middle;"></i> {{ s.download_count or 0 }}
                         </span>
                     </td>
                     <td>
                         {% if s.is_published %}
-                        <span class="pill-badge pill-green">Live</span>
+                        <span class="pill-badge pill-green" style="font-size: 0.72rem;">Live</span>
                         {% else %}
-                        <span class="pill-badge pill-gray">Draft</span>
+                        <span class="pill-badge pill-gray" style="font-size: 0.72rem;">Draft</span>
                         {% endif %}
                     </td>
                     <td style="text-align: right;">
-                        <div class="action-button-group" style="justify-content: flex-end;">
+                        <div style="display: flex; gap: 0.35rem; justify-content: flex-end;">
                             {% if s.file_filename %}
-                            <a href="{{ url_for('download_software', software_id=s.id) }}" class="btn-icon" title="Download Binary">
+                            <a href="{{ url_for('download_software', software_id=s.id) }}" class="btn-row-action" title="Download Binary">
                                 <i data-lucide="download" style="width: 14px; height: 14px;"></i>
                             </a>
                             {% endif %}
-                            <button class="btn-icon" title="Edit Release" 
+                            <button class="btn-row-action" title="Edit Release" 
                                     onclick="openEditSoftwareModal({{ s.id }}, '{{ s.name|escape }}', '{{ s.version|escape }}', '{{ s.category|escape }}', '{{ s.platform|escape }}', '{{ (s.description or '')|escape }}', '{{ (s.system_requirements or '')|escape }}', '{{ (s.changelog or '')|escape }}', {{ 'true' if s.is_published else 'false' }})">
                                 <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                             </button>
-                            <form action="{{ url_for('admin_software_delete', software_id=s.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this software release?');">
-                                <button type="submit" class="btn-icon btn-icon-danger" title="Delete Release">
+                            <form action="{{ url_for('admin_software_delete', software_id=s.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete release {{ s.name }}?');">
+                                <button type="submit" class="btn-row-action action-delete" title="Delete Release">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                                 </button>
                             </form>
@@ -582,87 +1164,164 @@
     {% endif %}
 </div>
 
-<!-- ============================================
-     VIEW 3: QUOTE INQUIRIES
-     ============================================ -->
+<!-- ==========================================================================
+     VIEW 3: QUOTE INQUIRIES (REDESIGNED)
+     ========================================================================== -->
 <div id="view-quotes" class="view-content-section">
-    <div class="section-toolbar">
-        <div class="search-box">
-            <i data-lucide="search" style="width: 14px; height: 14px;"></i>
-            <input type="text" id="quoteSearch" placeholder="Search customer, email, or product..." onkeyup="filterQuotes()">
+    
+    <!-- Security Spam Alert Banner (shows if spam is detected) -->
+    {% if stats.spam_quotes > 0 %}
+    <div class="security-spam-banner">
+        <div class="spam-banner-content">
+            <div class="spam-icon-badge">
+                <i data-lucide="shield-alert" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="spam-banner-text">
+                <strong>{{ stats.spam_quotes }} Suspicious Bot Spam Submissions Detected</strong>
+                <p>These entries contain crypto phishing URLs or bot link strings. Do NOT click any links inside them.</p>
+            </div>
+        </div>
+        <form action="{{ url_for('admin_quotes_purge_spam') }}" method="POST" onsubmit="return confirm('Permanently purge all {{ stats.spam_quotes }} detected spam quotes?');">
+            <button type="submit" class="btn-purge-spam">
+                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                <span>Purge All Spam Quotes</span>
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Modern Toolbar -->
+    <div class="modern-toolbar">
+        <div class="toolbar-search-wrapper">
+            <i data-lucide="search" class="search-icon" style="width: 15px; height: 15px;"></i>
+            <input type="text" id="quoteSearch" class="toolbar-search-input" placeholder="Search customer, email, company, product..." onkeyup="filterQuotes()">
+            <button id="quoteSearchClear" class="search-clear-btn" onclick="clearQuoteSearch()" title="Clear search">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
         </div>
 
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Status:</span>
-            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem;" onclick="filterQuoteStatus('All')">All</button>
-            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #fbbf24;" onclick="filterQuoteStatus('Pending')">Pending</button>
-            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #60a5fa;" onclick="filterQuoteStatus('Contacted')">Contacted</button>
-            <button class="btn-action btn-action-secondary" style="padding: 0.35rem 0.7rem; font-size: 0.78rem; color: #34d399;" onclick="filterQuoteStatus('Completed')">Completed</button>
+        <div class="status-filter-pills">
+            <button class="filter-chip active" id="filter-chip-all" onclick="filterQuoteStatus('All')">
+                <span class="status-dot dot-all"></span> All ({{ quotes|length }})
+            </button>
+            <button class="filter-chip" id="filter-chip-pending" onclick="filterQuoteStatus('Pending')">
+                <span class="status-dot dot-pending"></span> Pending ({{ stats.pending_quotes }})
+            </button>
+            <button class="filter-chip" id="filter-chip-contacted" onclick="filterQuoteStatus('Contacted')">
+                <span class="status-dot dot-contacted"></span> Contacted
+            </button>
+            <button class="filter-chip" id="filter-chip-completed" onclick="filterQuoteStatus('Completed')">
+                <span class="status-dot dot-completed"></span> Completed
+            </button>
+            {% if stats.spam_quotes > 0 %}
+            <button class="filter-chip" id="filter-chip-spam" style="color: #fb7185;" onclick="filterQuoteStatus('Spam')">
+                ⚠️ Spam Only ({{ stats.spam_quotes }})
+            </button>
+            {% endif %}
         </div>
     </div>
 
     {% if not quotes %}
-    <div class="console-panel" style="text-align: center; padding: 4rem 2rem;">
-        <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 1rem;"></i>
-        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">No Product Quote Requests</h3>
-        <p style="color: var(--text-secondary); font-size: 0.9rem;">
-            When clients request quotes on the website, they will appear here in real time.
+    <div class="modern-empty-state">
+        <div class="empty-state-glow"></div>
+        <div class="empty-state-icon-box">
+            <i data-lucide="inbox" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h3 class="empty-state-title">No Product Quote Requests Yet</h3>
+        <p class="empty-state-sub">
+            When prospective enterprise clients submit requests on the website, their requirements and contact info will appear here in real time.
         </p>
+        <a href="{{ url_for('quote_page') }}" target="_blank" class="btn-action btn-action-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem;">
+            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Public Quote Form
+        </a>
     </div>
     {% else %}
-    <div class="modern-table-wrapper">
-        <table class="modern-table" id="quoteTable">
+    <div class="console-table-container">
+        <table class="console-table" id="quoteTable">
             <thead>
                 <tr>
-                    <th>Customer Contact</th>
-                    <th>Requested Product</th>
-                    <th>Company / Use Case</th>
-                    <th>Volume / Timeline</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th style="text-align: right;">Actions</th>
+                    <th style="width: 28%;">Customer Contact</th>
+                    <th style="width: 18%;">Target Product</th>
+                    <th style="width: 20%;">Company / Use Case</th>
+                    <th style="width: 14%;">Volume & Timeline</th>
+                    <th style="width: 10%;">Status</th>
+                    <th style="text-align: right; width: 10%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for q in quotes %}
-                <tr data-status="{{ q.status }}">
+                <tr data-status="{{ q.status }}" data-is-spam="{{ 'true' if q.is_spam else 'false' }}" class="{% if q.is_spam %}row-spam-detected{% endif %}">
                     <td>
-                        <div style="font-weight: 600; font-size: 0.92rem; color: #ffffff;">{{ q.full_name }}</div>
-                        <div style="font-size: 0.78rem; color: var(--text-secondary); font-family: var(--font-mono);">{{ q.email }}</div>
-                        {% if q.phone %}<div style="font-size: 0.75rem; color: var(--text-muted);">{{ q.phone }}</div>{% endif %}
+                        <div class="customer-cell">
+                            <div class="customer-avatar">
+                                {{ (q.full_name[:2] if q.full_name else 'CU')|upper }}
+                            </div>
+                            <div style="min-width: 0; flex: 1;">
+                                <div class="customer-name">
+                                    <span style="word-break: break-word;">{{ q.full_name }}</span>
+                                    {% if q.is_spam %}
+                                    <span class="spam-badge-chip" title="Suspicious crypto spam or link string">
+                                        <i data-lucide="alert-triangle" style="width: 10px; height: 10px;"></i> Suspected Spam
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <a href="mailto:{{ q.email }}" class="customer-email" title="Click to email">{{ q.email }}</a>
+                                </div>
+                                {% if q.phone %}
+                                <div class="customer-phone">
+                                    <i data-lucide="phone" style="width: 11px; height: 11px;"></i> {{ q.phone }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        <span class="pill-badge pill-blue">{{ q.product }}</span>
+                        <span class="product-badge">
+                            <i data-lucide="box" style="width: 12px; height: 12px;"></i>
+                            <span>{{ q.product }}</span>
+                        </span>
                     </td>
                     <td>
-                        <div style="font-weight: 500; font-size: 0.88rem; color: #ffffff;">{{ q.company or 'Individual' }}</div>
-                        <div style="font-size: 0.78rem; color: var(--text-secondary);">{{ q.use_case or 'N/A' }}</div>
+                        <div style="font-weight: 600; color: #ffffff; font-size: 0.88rem; display: flex; align-items: center; gap: 0.35rem;">
+                            <i data-lucide="building" style="width: 12px; height: 12px; color: var(--text-muted);"></i>
+                            <span>{{ q.company or 'Individual Client' }}</span>
+                        </div>
+                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.2rem; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ q.use_case or '' }}">
+                            {{ q.use_case or 'General inquiry' }}
+                        </div>
                     </td>
                     <td>
-                        <div style="font-size: 0.85rem; color: #ffffff;">Qty: <strong>{{ q.quantity }}</strong></div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">{{ q.timeframe or 'Flexible' }}</div>
+                        <div style="font-size: 0.84rem; color: #ffffff; font-weight: 500;">
+                            Qty: <strong>{{ q.quantity }}</strong>
+                        </div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.15rem;">
+                            {{ q.timeframe or 'Flexible' }} • <span style="font-family: var(--font-mono);">{{ q.created_at.strftime('%b %d') if q.created_at else '' }}</span>
+                        </div>
                     </td>
                     <td>
                         <form action="{{ url_for('admin_quote_status', quote_id=q.id) }}" method="POST" style="display:inline;">
-                            <select name="status" onchange="this.form.submit()" style="background: #141722; color: {% if q.status == 'Pending' %}#fbbf24{% elif q.status == 'Contacted' %}#60a5fa{% else %}#34d399{% endif %}; border: 1px solid var(--border-subtle); padding: 0.3rem 0.55rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
-                                <option value="Pending" {% if q.status == 'Pending' %}selected{% endif %}>🟡 Pending</option>
-                                <option value="Contacted" {% if q.status == 'Contacted' %}selected{% endif %}>🔵 Contacted</option>
-                                <option value="Completed" {% if q.status == 'Completed' %}selected{% endif %}>🟢 Completed</option>
-                            </select>
+                            <div class="status-select-wrap">
+                                <select name="status" class="status-select-custom {% if q.status == 'Pending' %}status-pending{% elif q.status == 'Contacted' %}status-contacted{% else %}status-completed{% endif %}" onchange="this.form.submit()">
+                                    <option value="Pending" {% if q.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Contacted" {% if q.status == 'Contacted' %}selected{% endif %}>Contacted</option>
+                                    <option value="Completed" {% if q.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="arrow-down"></i>
+                            </div>
                         </form>
                     </td>
-                    <td style="color: var(--text-secondary); font-size: 0.8rem; font-family: var(--font-mono);">
-                        {{ q.created_at.strftime('%Y-%m-%d') }}
-                    </td>
                     <td style="text-align: right;">
-                        <div class="action-button-group" style="justify-content: flex-end;">
-                            {% if q.requirements %}
-                            <button class="btn-icon" title="View Requirements" onclick="alert('Client Requirements for {{ q.full_name|e }}:\n\n{{ q.requirements|e }}')">
+                        <div style="display: flex; gap: 0.35rem; justify-content: flex-end; align-items: center;">
+                            <button class="btn-row-action action-view" title="Inspect Full Quote Details"
+                                    onclick="openQuoteDetailModal({{ q.id }}, '{{ q.full_name|escape }}', '{{ q.email|escape }}', '{{ (q.phone or '')|escape }}', '{{ (q.company or '')|escape }}', '{{ (q.product or '')|escape }}', '{{ (q.quantity or '')|escape }}', '{{ (q.timeframe or '')|escape }}', '{{ (q.use_case or '')|escape }}', '{{ (q.requirements or '')|escape }}', '{{ q.status }}', '{{ q.created_at.strftime('%Y-%m-%d %H:%M') if q.created_at else '' }}')">
                                 <i data-lucide="eye" style="width: 14px; height: 14px;"></i>
                             </button>
-                            {% endif %}
-                            <form action="{{ url_for('admin_quote_delete', quote_id=q.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete quote request for {{ q.full_name }}?');">
-                                <button type="submit" class="btn-icon btn-icon-danger" title="Delete Quote">
+                            <a href="mailto:{{ q.email }}?subject=Automind%20Dynamics%20-%20Quote%20Inquiry%20regarding%20{{ q.product|urlencode }}" class="btn-row-action action-email" title="Reply via Email">
+                                <i data-lucide="mail" style="width: 14px; height: 14px;"></i>
+                            </a>
+                            <form action="{{ url_for('admin_quote_delete', quote_id=q.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete quote inquiry from {{ q.full_name }}?');">
+                                <button type="submit" class="btn-row-action action-delete" title="Delete Quote">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                                 </button>
                             </form>
@@ -676,11 +1335,100 @@
     {% endif %}
 </div>
 
-<!-- ============================================
+<!-- ==========================================================================
      MODALS
-     ============================================ -->
+     ========================================================================== -->
 
-<!-- 1. Add System Modal -->
+<!-- 1. Interactive Quote Inspector Modal (Replaces old browser alert) -->
+<div id="quote-inspect-modal" class="modal">
+    <div class="quote-modal-card">
+        <div class="quote-modal-header">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div>
+                    <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: #ffffff;">Quote Inquiry Record</h3>
+                    <span id="modal-quote-date" style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);"></span>
+                </div>
+            </div>
+            <button class="modal-close" onclick="closeModal('quote-inspect-modal')">
+                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+        </div>
+
+        <div class="quote-modal-body">
+            <!-- Customer Card -->
+            <div class="quote-detail-grid">
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Customer Name</div>
+                    <div class="detail-item-val" id="modal-quote-name" style="font-weight: 600;"></div>
+                </div>
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Company / Organization</div>
+                    <div class="detail-item-val" id="modal-quote-company"></div>
+                </div>
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Contact Email</div>
+                    <div class="detail-item-val">
+                        <a id="modal-quote-email-link" href="#" class="customer-email" style="font-size: 0.88rem;"></a>
+                    </div>
+                </div>
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Phone Number</div>
+                    <div class="detail-item-val" id="modal-quote-phone"></div>
+                </div>
+            </div>
+
+            <!-- Project Details -->
+            <div class="quote-detail-grid">
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Target Product / Service</div>
+                    <div class="detail-item-val" style="color: #93c5fd; font-weight: 600;" id="modal-quote-product"></div>
+                </div>
+                <div class="detail-item-box">
+                    <div class="detail-item-label">Volume & Timeframe</div>
+                    <div class="detail-item-val" id="modal-quote-volume"></div>
+                </div>
+            </div>
+
+            <!-- Use Case -->
+            <div class="detail-item-box" style="margin-bottom: 1.25rem;">
+                <div class="detail-item-label">Intended Use Case</div>
+                <div class="detail-item-val" id="modal-quote-usecase" style="font-size: 0.86rem; color: #cbd5e1;"></div>
+            </div>
+
+            <!-- Requirements Notes -->
+            <div class="requirements-box">
+                <div class="detail-item-label" style="display: flex; justify-content: space-between;">
+                    <span>Project Technical Requirements</span>
+                </div>
+                <div class="requirements-content" id="modal-quote-requirements"></div>
+            </div>
+
+            <!-- Modal Action Footer -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--dash-border); padding-top: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <form id="modal-status-form" method="POST">
+                        <input type="hidden" name="status" id="modal-toggle-status-val">
+                        <button type="submit" id="modal-status-btn" class="btn-action btn-action-secondary" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;">
+                            Toggle Status
+                        </button>
+                    </form>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('quote-inspect-modal')">Close</button>
+                    <a id="modal-reply-btn" href="#" class="btn-action btn-action-primary" style="text-decoration: none;">
+                        <i data-lucide="mail" style="width: 14px; height: 14px;"></i> Reply via Email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Add System Modal -->
 <div id="new-rover-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('new-rover-modal')">
@@ -715,7 +1463,7 @@
     </div>
 </div>
 
-<!-- 2. Edit System Modal -->
+<!-- 3. Edit System Modal -->
 <div id="edit-rover-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('edit-rover-modal')">
@@ -747,7 +1495,7 @@
     </div>
 </div>
 
-<!-- 3. Import MKDocs Package Modal -->
+<!-- 4. Import MKDocs Package Modal -->
 <div id="import-mkdocs-modal" class="modal">
     <div class="modal-content">
         <button class="modal-close" onclick="closeModal('import-mkdocs-modal')">
@@ -810,7 +1558,7 @@
     </div>
 </div>
 
-<!-- 4. Upload Software Modal -->
+<!-- 5. Upload Software Modal -->
 <div id="new-software-modal" class="modal">
     <div class="modal-content" style="max-width: 620px;">
         <button class="modal-close" onclick="closeModal('new-software-modal')">
@@ -893,7 +1641,7 @@
     </div>
 </div>
 
-<!-- 5. Edit Software Modal -->
+<!-- 6. Edit Software Modal -->
 <div id="edit-software-modal" class="modal">
     <div class="modal-content" style="max-width: 620px;">
         <button class="modal-close" onclick="closeModal('edit-software-modal')">
@@ -967,7 +1715,7 @@
     // Tab switching
     function switchView(viewName) {
         document.querySelectorAll('.view-content-section').forEach(sec => sec.classList.remove('active-view'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
 
         const targetView = document.getElementById('view-' + viewName);
         const targetBtn = document.getElementById('tab-btn-' + viewName);
@@ -976,6 +1724,11 @@
             targetView.classList.add('active-view');
             targetBtn.classList.add('active');
             window.location.hash = viewName;
+            
+            // Re-render lucide icons inside the activated tab
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
     }
 
@@ -984,16 +1737,29 @@
         const hash = window.location.hash.replace('#', '');
         if (hash && document.getElementById('view-' + hash)) {
             switchView(hash);
+        } else {
+            // Default to quotes tab if requested via url or if hash is quotes
+            if (window.location.href.includes('#quotes')) {
+                switchView('quotes');
+            }
+        }
+        if (window.lucide) {
+            lucide.createIcons();
         }
     });
 
     // Modals
     function openModal(id) {
-        document.getElementById(id).style.display = 'flex';
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.style.display = 'flex';
+            if (window.lucide) lucide.createIcons();
+        }
     }
 
     function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'none';
     }
 
     function openEditModal(id, name, slug, description) {
@@ -1023,12 +1789,40 @@
         openModal('edit-software-modal');
     }
 
+    // Interactive Quote Details Inspector Modal
+    function openQuoteDetailModal(id, name, email, phone, company, product, quantity, timeframe, useCase, requirements, status, dateStr) {
+        document.getElementById('modal-quote-name').textContent = name || 'N/A';
+        document.getElementById('modal-quote-company').textContent = company || 'Individual Client';
+        
+        const emailLink = document.getElementById('modal-quote-email-link');
+        emailLink.textContent = email || 'No email provided';
+        emailLink.href = 'mailto:' + email;
+        
+        document.getElementById('modal-quote-phone').textContent = phone || 'None provided';
+        document.getElementById('modal-quote-product').textContent = product || 'General Inquiry';
+        document.getElementById('modal-quote-volume').textContent = (quantity || '1 Unit') + ' • ' + (timeframe || 'Flexible');
+        document.getElementById('modal-quote-usecase').textContent = useCase || 'No specific use-case notes provided.';
+        document.getElementById('modal-quote-requirements').textContent = requirements || 'No detailed technical specifications submitted.';
+        document.getElementById('modal-quote-date').textContent = 'Submitted: ' + (dateStr || 'Recent');
+
+        // Status form toggle
+        const statusForm = document.getElementById('modal-status-form');
+        statusForm.action = `/admin/quote/${id}/status`;
+        const nextStatus = status === 'Pending' ? 'Contacted' : (status === 'Contacted' ? 'Completed' : 'Pending');
+        document.getElementById('modal-toggle-status-val').value = nextStatus;
+        document.getElementById('modal-status-btn').innerHTML = `Mark as ${nextStatus}`;
+
+        // Reply mailto button
+        const replyBtn = document.getElementById('modal-reply-btn');
+        replyBtn.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent('Automind Dynamics Quote Inquiry - ' + product)}`;
+
+        openModal('quote-inspect-modal');
+    }
+
     function toggleTargetFields(val) {
         const fields = document.getElementById('custom-system-fields');
-        if (val) {
-            fields.style.display = 'none';
-        } else {
-            fields.style.display = 'block';
+        if (fields) {
+            fields.style.display = val ? 'none' : 'block';
         }
     }
 
@@ -1038,48 +1832,76 @@
         document.querySelectorAll('.system-card-item').forEach(card => {
             const title = card.getAttribute('data-title') || '';
             const slug = card.getAttribute('data-slug') || '';
-            if (!q || title.includes(q) || slug.includes(q)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = (!q || title.includes(q) || slug.includes(q)) ? 'flex' : 'none';
         });
     }
 
     function filterSoftwareAdmin() {
         const q = (document.getElementById('softwareAdminSearch').value || '').toLowerCase().trim();
-        const rows = document.querySelectorAll('#softwareAdminTable tbody tr');
-        rows.forEach(r => {
+        document.querySelectorAll('#softwareAdminTable tbody tr').forEach(r => {
             const text = r.innerText.toLowerCase();
             r.style.display = (!q || text.includes(q)) ? '' : 'none';
         });
     }
 
     function filterQuotes() {
+        const searchInput = document.getElementById('quoteSearch');
+        const clearBtn = document.getElementById('quoteSearchClear');
+        const q = (searchInput.value || '').toLowerCase().trim();
+
+        if (clearBtn) {
+            clearBtn.style.display = q ? 'block' : 'none';
+        }
+
+        const activeChip = document.querySelector('.filter-chip.active');
+        const activeStatus = activeChip ? activeChip.id.replace('filter-chip-', '') : 'all';
+
+        applyQuoteFilters(q, activeStatus);
+    }
+
+    function clearQuoteSearch() {
+        const searchInput = document.getElementById('quoteSearch');
+        searchInput.value = '';
+        filterQuotes();
+        searchInput.focus();
+    }
+
+    function filterQuoteStatus(statusKey) {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        const targetChip = document.getElementById('filter-chip-' + statusKey.toLowerCase());
+        if (targetChip) targetChip.classList.add('active');
+
         const q = (document.getElementById('quoteSearch').value || '').toLowerCase().trim();
-        const rows = document.querySelectorAll('#quoteTable tbody tr');
-        rows.forEach(r => {
-            const text = r.innerText.toLowerCase();
-            r.style.display = (!q || text.includes(q)) ? '' : 'none';
-        });
+        applyQuoteFilters(q, statusKey.toLowerCase());
     }
 
-    function filterQuoteStatus(status) {
+    function applyQuoteFilters(q, statusKey) {
         const rows = document.querySelectorAll('#quoteTable tbody tr');
         rows.forEach(r => {
-            const rStatus = r.getAttribute('data-status');
-            if (status === 'All' || rStatus === status) {
-                r.style.display = '';
+            const rowStatus = (r.getAttribute('data-status') || '').toLowerCase();
+            const isSpam = r.getAttribute('data-is-spam') === 'true';
+            const rowText = r.innerText.toLowerCase();
+
+            let statusMatch = false;
+            if (statusKey === 'all') {
+                statusMatch = true;
+            } else if (statusKey === 'spam') {
+                statusMatch = isSpam;
             } else {
-                r.style.display = 'none';
+                statusMatch = (rowStatus === statusKey);
             }
+
+            const searchMatch = !q || rowText.includes(q);
+
+            r.style.display = (statusMatch && searchMatch) ? '' : 'none';
         });
     }
 
+    // Modal background close
     window.onclick = function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';
         }
-    }
+    };
 </script>
 {% endblock %}

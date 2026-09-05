@@ -213,6 +213,11 @@
                 </div>
 
                 <form id="quote-form" action="/api/request-quote" method="POST" onsubmit="submitQuoteForm(event)">
+                    <!-- Anti-Spam Bot Honeypot Trap (Invisible to humans) -->
+                    <div style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0;" aria-hidden="true">
+                        <label for="b_website">Leave this field empty</label>
+                        <input type="text" id="b_website" name="b_website" tabindex="-1" autocomplete="off">
+                    </div>
                     
                     <div class="form-group">
                         <label for="product">Select Target Product / Service *</label>

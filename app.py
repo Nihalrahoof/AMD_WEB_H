@@ -543,22 +543,32 @@ def download_software(software_id):
 def api_request_quote():
     try:
         if request.is_json:
-            data = request.get_json()
+            data = request.get_json() or {}
         else:
             data = request.form
 
+        # 1. Honeypot check: silently accept but discard if hidden bot field is filled
+        honeypot = data.get('b_website') or data.get('hp_company_field')
+        if honeypot:
+            return jsonify({'status': 'success', 'message': 'Your quote request has been submitted successfully!'}), 200
+
         product = data.get('product') or 'General Product Inquiry'
-        full_name = data.get('full_name')
-        email = data.get('email')
-        phone = data.get('phone', '')
-        company = data.get('company', '')
-        use_case = data.get('use_case', '')
+        full_name = (data.get('full_name') or '').strip()
+        email = (data.get('email') or '').strip()
+        phone = (data.get('phone') or '').strip()
+        company = (data.get('company') or '').strip()
+        use_case = (data.get('use_case') or '').strip()
         quantity = data.get('quantity', '1 Unit')
-        timeframe = data.get('timeframe', '')
-        requirements = data.get('requirements', '')
+        timeframe = (data.get('timeframe') or '').strip()
+        requirements = (data.get('requirements') or '').strip()
 
         if not full_name or not email or not product:
             return jsonify({'status': 'error', 'message': 'Full name, email, and product selection are required.'}), 400
+
+        # 2. Input validation: legitimate names do not contain URLs, links, or bot markers
+        spam_link_pattern = re.compile(r'https?://|www\.|\.org|\.net|\.com|graph\.org|linkspree|bitcoin|coinbase|>>|=>|№', re.IGNORECASE)
+        if spam_link_pattern.search(full_name):
+            return jsonify({'status': 'error', 'message': 'Invalid character sequence in name.'}), 400
 
         quote = QuoteRequest(
             product=product,
@@ -704,6 +714,18 @@ def admin_dashboard():
     total_downloads = sum((s.download_count or 0) for s in softwares)
     pending_quotes = QuoteRequest.query.filter_by(status='Pending').count()
     
+    # Analyze quotes for spam / phishing patterns
+    spam_pattern = re.compile(r'https?://|www\.|\.org|\.net|\.com|graph\.org|linkspree|bitcoin|cloud-mining|coinbase|>>|=>|№', re.IGNORECASE)
+    spam_quotes_count = 0
+    for q in quotes:
+        is_suspicious = False
+        if (q.full_name and spam_pattern.search(q.full_name)) or \
+           (q.company and spam_pattern.search(q.company)) or \
+           (q.email and ('@uberip.com' in q.email or '@enalvpe.com' in q.email or '@enalype.com' in q.email)):
+            is_suspicious = True
+            spam_quotes_count += 1
+        q.is_spam = is_suspicious
+        
     rover_data = []
     for r in rovers:
         page_count = DocPage.query.filter_by(rover_id=r.id).count()
@@ -718,7 +740,8 @@ def admin_dashboard():
         'total_softwares': len(softwares),
         'total_downloads': total_downloads,
         'total_quotes': len(quotes),
-        'pending_quotes': pending_quotes
+        'pending_quotes': pending_quotes,
+        'spam_quotes': spam_quotes_count
     }
     return render_template('templates/admin_dashboard.html', rovers=rover_data, quotes=quotes, softwares=softwares, stats=stats)
 
@@ -844,6 +867,20 @@ def admin_quote_status(quote_id):
 def admin_quote_delete(quote_id):
     quote = QuoteRequest.query.get_or_404(quote_id)
     db.session.delete(quote)
+    db.session.commit()
+    return redirect(url_for('admin_dashboard') + '#quotes')
+
+@app.route('/admin/quotes/purge-spam', methods=['POST'])
+def admin_quotes_purge_spam():
+    spam_pattern = re.compile(r'https?://|www\.|\.org|\.net|\.com|graph\.org|linkspree|bitcoin|cloud-mining|coinbase|>>|=>|№', re.IGNORECASE)
+    quotes = QuoteRequest.query.all()
+    deleted_count = 0
+    for q in quotes:
+        if (q.full_name and spam_pattern.search(q.full_name)) or \
+           (q.company and spam_pattern.search(q.company)) or \
+           (q.email and ('@uberip.com' in q.email or '@enalvpe.com' in q.email or '@enalype.com' in q.email)):
+            db.session.delete(q)
+            deleted_count += 1
     db.session.commit()
     return redirect(url_for('admin_dashboard') + '#quotes')
 
