@@ -52,6 +52,7 @@ class Rover(db.Model):
     name = db.Column(db.String(150), nullable=False)
     slug = db.Column(db.String(150), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
+    is_visible = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     pages = db.relationship('DocPage', backref='rover', lazy=True, cascade="all, delete-orphan")
@@ -112,6 +113,13 @@ class Software(db.Model):
 # Ensure database tables are created
 with app.app_context():
     db.create_all()
+    # Migration: Ensure is_visible column exists on rover table
+    try:
+        from sqlalchemy import text
+        db.session.execute(text("ALTER TABLE rover ADD COLUMN is_visible BOOLEAN DEFAULT 1"))
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
 
 # ============================================
 #     TEMPLATE FILTERS & HELPER FUNCTIONS
@@ -1354,6 +1362,8 @@ def admin_rover_new():
     name = request.form.get('name')
     slug = request.form.get('slug').strip().lower().replace(' ', '-')
     description = request.form.get('description')
+    is_visible_val = request.form.get('is_visible')
+    is_visible = (is_visible_val in ['1', 'true', 'True', 'on']) if is_visible_val is not None else True
     
     if not name or not slug:
         return "Name and slug are required", 400
@@ -1362,10 +1372,10 @@ def admin_rover_new():
     if existing:
         return "Rover with this slug already exists", 400
         
-    rover = Rover(name=name, slug=slug, description=description)
+    rover = Rover(name=name, slug=slug, description=description, is_visible=is_visible)
     db.session.add(rover)
     db.session.commit()
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard') + '#systems')
 
 @app.route('/admin/rover/<int:rover_id>/edit', methods=['POST'])
 def admin_rover_edit(rover_id):
@@ -1373,6 +1383,7 @@ def admin_rover_edit(rover_id):
     name = request.form.get('name')
     slug = request.form.get('slug').strip().lower().replace(' ', '-')
     description = request.form.get('description')
+    is_visible_val = request.form.get('is_visible')
     
     if not name or not slug:
         return "Name and slug are required", 400
@@ -1384,15 +1395,98 @@ def admin_rover_edit(rover_id):
     rover.name = name
     rover.slug = slug
     rover.description = description
+    rover.is_visible = (is_visible_val in ['1', 'true', 'True', 'on'])
     db.session.commit()
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard') + '#systems')
+
+@app.route('/admin/rover/<int:rover_id>/toggle-visibility', methods=['POST'])
+def admin_rover_toggle_visibility(rover_id):
+    rover = Rover.query.get_or_404(rover_id)
+    if request.is_json and 'is_visible' in request.json:
+        rover.is_visible = bool(request.json['is_visible'])
+    elif request.form.get('is_visible') is not None:
+        rover.is_visible = request.form.get('is_visible') in ['1', 'true', 'True', 'on']
+    else:
+        rover.is_visible = not (rover.is_visible is True)
+    db.session.commit()
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.is_json or request.args.get('format') == 'json':
+        return jsonify({'success': True, 'rover_id': rover.id, 'is_visible': rover.is_visible})
+    return redirect(url_for('admin_dashboard') + '#systems')
+
+@app.route('/admin/rover/<int:rover_id>/duplicate', methods=['POST'])
+def admin_rover_duplicate(rover_id):
+    original = Rover.query.get_or_404(rover_id)
+    
+    # Generate unique name
+    base_name = f"{original.name} (Copy)"
+    new_name = base_name
+    counter = 2
+    while Rover.query.filter_by(name=new_name).first():
+        new_name = f"{original.name} (Copy {counter})"
+        counter += 1
+        
+    # Generate unique slug
+    base_slug = f"{original.slug}-copy"
+    new_slug = base_slug
+    counter = 2
+    while Rover.query.filter_by(slug=new_slug).first():
+        new_slug = f"{original.slug}-copy-{counter}"
+        counter += 1
+        
+    # Create duplicated rover (defaults to private so it can be reviewed before making public)
+    new_rover = Rover(
+        name=new_name,
+        slug=new_slug,
+        description=original.description,
+        is_visible=False
+    )
+    db.session.add(new_rover)
+    db.session.flush()
+    
+    # Duplicate all DocPages preserving parent-child hierarchy
+    orig_pages = DocPage.query.filter_by(rover_id=original.id).order_by(DocPage.id).all()
+    old_to_new_id = {}
+    
+    # Pass 1: Clone DocPage records
+    for p in orig_pages:
+        new_page = DocPage(
+            rover_id=new_rover.id,
+            title=p.title,
+            slug=p.slug,
+            content=p.content,
+            parent_id=None,
+            order=p.order
+        )
+        db.session.add(new_page)
+        db.session.flush()
+        old_to_new_id[p.id] = new_page.id
+        
+    # Pass 2: Re-link parent_id hierarchy
+    for p in orig_pages:
+        if p.parent_id and p.parent_id in old_to_new_id:
+            new_child_id = old_to_new_id[p.id]
+            new_parent_id = old_to_new_id[p.parent_id]
+            db.session.query(DocPage).filter_by(id=new_child_id).update({'parent_id': new_parent_id})
+            
+    db.session.commit()
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.is_json:
+        return jsonify({
+            'success': True,
+            'new_rover_id': new_rover.id,
+            'new_name': new_rover.name,
+            'new_slug': new_rover.slug,
+            'message': f"Duplicated '{original.name}' successfully."
+        })
+    return redirect(url_for('admin_dashboard') + '#systems')
 
 @app.route('/admin/rover/<int:rover_id>/delete', methods=['POST'])
 def admin_rover_delete(rover_id):
     rover = Rover.query.get_or_404(rover_id)
     db.session.delete(rover)
     db.session.commit()
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard') + '#systems')
 
 @app.route('/admin/rover/<int:rover_id>')
 def admin_rover_view(rover_id):
@@ -1627,8 +1721,8 @@ def admin_upload_image():
 # ============================================
 
 def render_docs_home():
-    """Renders the landing page for all documentation."""
-    rovers = Rover.query.order_by(Rover.name).all()
+    """Renders the landing page for all documentation (only public/visible rovers)."""
+    rovers = Rover.query.filter(Rover.is_visible == True).order_by(Rover.name).all()
     return render_template('templates/docs_home.html', rovers=rovers)
 
 def render_docs_rover(rover_slug, page_path=None):

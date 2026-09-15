@@ -109,11 +109,30 @@
             </div>
             <div>
                 <h2>{{ rover.name }}</h2>
-                <p>Route: <code style="color: #60a5fa; font-family: var(--font-mono);">/docs/{{ rover.slug }}</code> | {{ rover.description or "No description provided." }}</p>
+                <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; margin-top: 0.35rem;">
+                    <p style="margin: 0;">Route: <code style="color: #60a5fa; font-family: var(--font-mono);">/docs/{{ rover.slug }}</code> | {{ rover.description or "No description provided." }}</p>
+                    <span class="pill-badge {{ 'pill-green' if rover.is_visible else 'pill-amber' }}" style="font-size: 0.74rem;">
+                        <i data-lucide="{{ 'globe' if rover.is_visible else 'lock' }}" style="width: 12px; height: 12px;"></i>
+                        {{ 'Public on Website' if rover.is_visible else 'Private Link Only' }}
+                    </span>
+                    <form action="{{ url_for('admin_rover_toggle_visibility', rover_id=rover.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-action btn-action-secondary" style="font-size: 0.72rem; padding: 0.2rem 0.65rem;">
+                            Switch to {{ 'Private Link Only' if rover.is_visible else 'Public on Website' }}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+            <form action="{{ url_for('admin_rover_duplicate', rover_id=rover.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Duplicate this entire documentation suite ({{ rover.name }})?');">
+                <button type="submit" class="btn-action btn-action-secondary" title="Duplicate this entire documentation suite">
+                    <i data-lucide="copy" style="width: 14px; height: 14px; color: #a78bfa;"></i> Duplicate Suite
+                </button>
+            </form>
+            <button type="button" class="btn-action btn-action-secondary" onclick="copyRoverLink('{{ rover.slug }}', this)" title="Copy direct/private share link">
+                <i data-lucide="share-2" style="width: 14px; height: 14px; color: #38bdf8;"></i> Copy Link
+            </button>
             <a href="{{ url_for('admin_rover_download_mkdocs', rover_id=rover.id) }}" class="btn-action btn-action-secondary" title="Download complete editable MkDocs package (.zip)">
                 <i data-lucide="folder-archive" style="width: 14px; height: 14px; color: #60a5fa;"></i> Download MkDocs (.zip)
             </a>
@@ -239,6 +258,22 @@
 
 {% block extra_js %}
 <script>
+    function copyRoverLink(slug, btn) {
+        const origin = window.location.origin;
+        const link = `${origin}/docs/${slug}`;
+        navigator.clipboard.writeText(link).then(() => {
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" style="width: 14px; height: 14px; color: #10b981;"></i> Copied!';
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = origHtml;
+                if (window.lucide) lucide.createIcons();
+            }, 2000);
+        }).catch(err => {
+            prompt('Copy this documentation direct link:', link);
+        });
+    }
+
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
     }

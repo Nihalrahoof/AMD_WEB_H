@@ -834,6 +834,48 @@
         margin-top: 0.5rem;
     }
 
+    /* Toggle Switch Component */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        transition: all 0.25s ease;
+        border-radius: 20px;
+    }
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 2px;
+        bottom: 2px;
+        background-color: #ffffff;
+        transition: all 0.25s ease;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #10b981;
+        border-color: #059669;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(16px);
+    }
+
     /* Views visibility */
     .view-content-section {
         display: none;
@@ -1036,6 +1078,23 @@
                 <p class="system-desc-text">
                     {{ r_data.rover.description or 'Technical hardware manuals, operational stack guides, and telemetry specifications.' }}
                 </p>
+
+                <!-- Visibility Toggle & Quick Share Strip -->
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.25); border: 1px solid var(--dash-border); border-radius: 8px; padding: 0.45rem 0.75rem; margin-top: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.55rem;">
+                        <label class="toggle-switch" title="Toggle visible on website vs unlisted private link">
+                            <input type="checkbox" id="vis-toggle-{{ r_data.rover.id }}" onchange="toggleRoverVisibility({{ r_data.rover.id }}, this)" {{ 'checked' if r_data.rover.is_visible else '' }}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span id="vis-badge-{{ r_data.rover.id }}" class="pill-badge {{ 'pill-green' if r_data.rover.is_visible else 'pill-amber' }}" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">
+                            <i data-lucide="{{ 'globe' if r_data.rover.is_visible else 'lock' }}" style="width: 11px; height: 11px;"></i>
+                            <span class="vis-label-text">{{ 'Public on Website' if r_data.rover.is_visible else 'Private Link Only' }}</span>
+                        </span>
+                    </div>
+                    <button type="button" class="btn-row-action" title="Copy Direct / Private Link to Clipboard" onclick="copyPrivateLink('{{ r_data.rover.slug }}', this)">
+                        <i data-lucide="share-2" style="width: 13px; height: 13px; color: #38bdf8;"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="system-card-footer">
@@ -1045,6 +1104,12 @@
                 </span>
 
                 <div style="display: flex; gap: 0.4rem; align-items: center;">
+                    <!-- DUPLICATE SUITE -->
+                    <form action="{{ url_for('admin_rover_duplicate', rover_id=r_data.rover.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Duplicate documentation suite for \'{{ r_data.rover.name|escape }}\'? This creates a new independent copy with all {{ r_data.page_count }} pages.');">
+                        <button type="submit" class="btn-row-action" title="Duplicate Documentation Suite (Clones all pages & structure)">
+                            <i data-lucide="copy" style="width: 14px; height: 14px; color: #a78bfa;"></i>
+                        </button>
+                    </form>
                     <a href="{{ url_for('admin_rover_download_mkdocs', rover_id=r_data.rover.id) }}" class="btn-row-action" title="Download full MkDocs project (.zip)">
                         <i data-lucide="folder-archive" style="width: 14px; height: 14px; color: #60a5fa;"></i>
                     </a>
@@ -1054,7 +1119,7 @@
                     <a href="{{ url_for('docs_rover_sub', rover_slug=r_data.rover.slug) }}" class="btn-row-action" target="_blank" title="View live documentation site">
                         <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
                     </a>
-                    <button class="btn-row-action" title="Edit System Config" onclick="openEditModal({{ r_data.rover.id }}, '{{ r_data.rover.name|escape }}', '{{ r_data.rover.slug|escape }}', '{{ (r_data.rover.description or '')|escape }}')">
+                    <button class="btn-row-action" title="Edit System Config" onclick="openEditModal({{ r_data.rover.id }}, '{{ r_data.rover.name|escape }}', '{{ r_data.rover.slug|escape }}', '{{ (r_data.rover.description or '')|escape }}', {{ 'true' if r_data.rover.is_visible else 'false' }})">
                         <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
                     </button>
                     <a href="{{ url_for('admin_rover_view', rover_id=r_data.rover.id) }}" class="btn-action btn-action-secondary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem;">
@@ -1461,6 +1526,17 @@
                 <textarea id="description" name="description" class="form-control" placeholder="Brief technical summary of this platform..."></textarea>
             </div>
             
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--dash-border);">
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_visible" value="1" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+                <div>
+                    <label style="font-weight: 600; font-size: 0.88rem; color: #ffffff; cursor: pointer; margin-bottom: 0.1rem; display: block;">Visible on Website</label>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary);">When unchecked, this manual is hidden from the public website directory and only accessible via direct link.</span>
+                </div>
+            </div>
+            
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
                 <button type="button" class="btn-action btn-action-secondary" onclick="closeModal('new-rover-modal')">Cancel</button>
                 <button type="submit" class="btn-action btn-action-primary">Create System</button>
@@ -1491,6 +1567,17 @@
             <div class="form-group">
                 <label for="edit-description">Description</label>
                 <textarea id="edit-description" name="description" class="form-control"></textarea>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.03); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--dash-border);">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="edit-visible" name="is_visible" value="1">
+                    <span class="toggle-slider"></span>
+                </label>
+                <div>
+                    <label for="edit-visible" style="font-weight: 600; font-size: 0.88rem; color: #ffffff; cursor: pointer; margin-bottom: 0.1rem; display: block;">Visible on Website</label>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary);">When unchecked, this manual is hidden from the public website directory and only accessible via direct link.</span>
+                </div>
             </div>
             
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
@@ -1768,10 +1855,70 @@
         if (modal) modal.style.display = 'none';
     }
 
-    function openEditModal(id, name, slug, description) {
+    // Toggle Rover Visibility
+    async function toggleRoverVisibility(roverId, checkbox) {
+        const isVisible = checkbox.checked;
+        const badge = document.getElementById(`vis-badge-${roverId}`);
+        
+        try {
+            const resp = await fetch(`/admin/rover/${roverId}/toggle-visibility`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ is_visible: isVisible })
+            });
+            const data = await resp.json();
+            if (data.success) {
+                if (badge) {
+                    if (data.is_visible) {
+                        badge.className = 'pill-badge pill-green';
+                        badge.innerHTML = '<i data-lucide="globe" style="width: 11px; height: 11px;"></i> <span class="vis-label-text">Public on Website</span>';
+                    } else {
+                        badge.className = 'pill-badge pill-amber';
+                        badge.innerHTML = '<i data-lucide="lock" style="width: 11px; height: 11px;"></i> <span class="vis-label-text">Private Link Only</span>';
+                    }
+                    if (window.lucide) lucide.createIcons();
+                }
+            } else {
+                checkbox.checked = !isVisible;
+                alert('Failed to update visibility');
+            }
+        } catch (err) {
+            console.error('Error updating visibility:', err);
+            checkbox.checked = !isVisible;
+            alert('Network error updating visibility');
+        }
+    }
+
+    // Copy Direct / Private Link to Clipboard
+    function copyPrivateLink(slug, btn) {
+        const origin = window.location.origin;
+        const link = `${origin}/docs/${slug}`;
+        navigator.clipboard.writeText(link).then(() => {
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" style="width: 13px; height: 13px; color: #10b981;"></i>';
+            btn.setAttribute('title', 'Copied to clipboard!');
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = origHtml;
+                btn.setAttribute('title', 'Copy Direct / Private Link to Clipboard');
+                if (window.lucide) lucide.createIcons();
+            }, 2000);
+        }).catch(err => {
+            prompt('Copy this documentation direct link:', link);
+        });
+    }
+
+    function openEditModal(id, name, slug, description, isVisible) {
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-slug').value = slug;
         document.getElementById('edit-description').value = description;
+        const visCheck = document.getElementById('edit-visible');
+        if (visCheck) {
+            visCheck.checked = (isVisible === true || isVisible === 'true');
+        }
         
         const form = document.getElementById('edit-rover-form');
         form.action = `/admin/rover/${id}/edit`;

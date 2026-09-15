@@ -964,6 +964,12 @@
                     <i data-lucide="bot" style="width: 12px; height: 12px;"></i>
                     {{ rover.name }}
                 </div>
+                {% if not rover.is_visible %}
+                <div class="rover-pill" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35); color: #fbbf24;" title="This documentation is unlisted and accessible only via direct link">
+                    <i data-lucide="lock" style="width: 12px; height: 12px;"></i>
+                    Unlisted Manual
+                </div>
+                {% endif %}
             </div>
             <div class="nav-links">
                 <div class="download-dropdown" id="downloadDropdown">
@@ -1032,6 +1038,13 @@
             </div>
         </div>
     </header>
+
+    {% if not rover.is_visible %}
+    <div style="background: rgba(245, 158, 11, 0.08); border-bottom: 1px solid rgba(245, 158, 11, 0.25); color: #fbbf24; padding: 0.5rem 1.5rem; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; z-index: 99; position: relative;">
+        <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i>
+        <span><strong>Unlisted Documentation:</strong> This manual is hidden from the public website directory and only accessible via this direct link.</span>
+    </div>
+    {% endif %}
 
     <!-- Main Page Layout Wrapper -->
     <div class="wrapper">
