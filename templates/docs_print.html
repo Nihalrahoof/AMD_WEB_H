@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ rover.name }} - Complete Documentation Manual | Automind Dynamics</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-title: 'Orbitron', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --color-primary: #2563eb;
+            --color-primary-dark: #1d4ed8;
+            --color-bg-app: #0f172a;
+            --color-paper: #ffffff;
+            --color-text-dark: #0f172a;
+            --color-text-muted: #64748b;
+            --color-border: #e2e8f0;
+            --color-code-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #0b1120;
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* =====================================================================
+           Floating Print / Export Control Bar (Hidden when printing)
+           ===================================================================== */
+        .print-control-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.75rem;
+            z-index: 10000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .bar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bar-back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.85rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .bar-back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .bar-title {
+            color: #f8fafc;
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar-badge {
+            background: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(37, 99, 235, 0.4);
+            font-size: 0.72rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 99px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .btn-print-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.48rem 0.95rem;
+            border-radius: 6px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-print-primary {
+            background: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-print-primary:hover {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-print-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-print-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        /* =====================================================================
+           Paper Document Canvas
+           ===================================================================== */
+        .paper-container {
+            max-width: 920px;
+            margin: 88px auto 60px auto;
+            background: var(--color-paper);
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+            padding: 70px 80px;
+        }
+
+        /* Cover Page */
+        .manual-cover {
+            text-align: center;
+            padding: 60px 0 80px 0;
+            border-bottom: 2px solid var(--color-border);
+            margin-bottom: 50px;
+        }
+
+        .brand-eyebrow {
+            font-family: var(--font-title);
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .manual-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .manual-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            max-width: 680px;
+            margin: 0 auto 2.5rem auto;
+            line-height: 1.5;
+        }
+
+        .cover-meta-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            background: #f8fafc;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1.25rem 2rem;
+            text-align: left;
+        }
+
+        .meta-item-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .meta-item-val {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Table of Contents */
+        .toc-section {
+            padding: 20px 0 50px 0;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 50px;
+        }
+
+        .toc-heading {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .toc-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.4rem 0.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #1e293b;
+            font-size: 0.95rem;
+            transition: background 0.15s ease;
+        }
+
+        .toc-list-item:hover {
+            background: #f1f5f9;
+            color: var(--color-primary);
+        }
+
+        .toc-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .toc-number-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            min-width: 28px;
+        }
+
+        .toc-page-slug {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Chapters */
+        .chapter-container {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px dashed var(--color-border);
+        }
+
+        .chapter-container:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .chapter-header {
+            margin-bottom: 1.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chapter-title-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+
+        .chapter-index {
+            font-family: var(--font-mono);
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--color-primary);
+        }
+
+        .chapter-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+        }
+
+        .chapter-slug-badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            background: #f1f5f9;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+        }
+
+        /* Markdown Typography inside chapters */
+        .markdown-body {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3,
+        .markdown-body h4 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-top: 1.6rem;
+            margin-bottom: 0.65rem;
+            line-height: 1.35;
+        }
+
+        .markdown-body h1 { font-size: 1.35rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem; }
+        .markdown-body h2 { font-size: 1.18rem; }
+        .markdown-body h3 { font-size: 1.05rem; }
+
+        .markdown-body p {
+            margin-bottom: 0.95rem;
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            margin-bottom: 1.1rem;
+            padding-left: 1.75rem;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.35rem;
+        }
+
+        .markdown-body pre {
+            background: var(--color-code-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin: 1.1rem 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #0f172a;
+        }
+
+        .markdown-body code {
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .markdown-body pre code {
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.88rem;
+        }
+
+        .markdown-body th,
+        .markdown-body td {
+            border: 1px solid var(--color-border);
+            padding: 0.55rem 0.85rem;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .markdown-body tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .markdown-body blockquote,
+        .markdown-body .admonition {
+            border-left: 4px solid var(--color-primary);
+            background: #eff6ff;
+            padding: 0.75rem 1rem;
+            border-radius: 0 6px 6px 0;
+            margin: 1.1rem 0;
+            color: #1e3a8a;
+            font-size: 0.92rem;
+        }
+
+        .markdown-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--color-border);
+            margin: 1rem 0;
+        }
+
+        .manual-footer {
+            text-align: center;
+            padding-top: 50px;
+            margin-top: 60px;
+            border-top: 2px solid var(--color-border);
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* =====================================================================
+           Print Rules (@media print)
+           ===================================================================== */
+        @media print {
+            @page {
+                size: a4 portrait;
+                margin: 16mm 14mm 16mm 14mm;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            .print-control-bar {
+                display: none !important;
+            }
+
+            .paper-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+
+            .chapter-container {
+                page-break-before: always !important;
+                break-before: page !important;
+                border-bottom: none !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+            .manual-cover {
+                page-break-after: always !important;
+                break-after: page !important;
+                padding: 100px 0 !important;
+            }
+
+            .toc-section {
+                page-break-after: always !important;
+                break-after: page !important;
+            }
+
+            .markdown-body pre,
+            .markdown-body table,
+            .markdown-body blockquote {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            a {
+                color: #000000 !important;
+                text-decoration: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Print / Export Control Bar -->
+    <header class="print-control-bar">
+        <div class="bar-left">
+            {% if is_subdomain %}
+            <a href="/{{ rover.slug }}" class="bar-back-btn">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back to Docs
+            </a>
+            {% else %}
+            <a href="/docs/{{ rover.slug }}" class="bar-back-btn">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back to Docs
+            </a>
+            {% endif %}
+
+            <div class="bar-title">
+                <span>{{ rover.name }}</span>
+                <span class="bar-badge">All Chapters View</span>
+            </div>
+        </div>
+
+        <div class="bar-actions">
+            {% if is_subdomain %}
+            <a href="/{{ rover.slug }}/download/mkdocs" class="btn-print-action btn-print-secondary" title="Download editable MkDocs ZIP source package">
+                <i data-lucide="folder-archive" style="width: 15px; height: 15px;"></i>
+                <span>Download MkDocs (.zip)</span>
+            </a>
+            <a href="/{{ rover.slug }}/download/pdf" class="btn-print-action btn-print-secondary" title="Download compiled PDF manual">
+                <i data-lucide="file-text" style="width: 15px; height: 15px;"></i>
+                <span>Download PDF (.pdf)</span>
+            </a>
+            {% else %}
+            <a href="/docs/{{ rover.slug }}/download/mkdocs" class="btn-print-action btn-print-secondary" title="Download editable MkDocs ZIP source package">
+                <i data-lucide="folder-archive" style="width: 15px; height: 15px;"></i>
+                <span>Download MkDocs (.zip)</span>
+            </a>
+            <a href="/docs/{{ rover.slug }}/download/pdf" class="btn-print-action btn-print-secondary" title="Download compiled PDF manual">
+                <i data-lucide="file-text" style="width: 15px; height: 15px;"></i>
+                <span>Download PDF (.pdf)</span>
+            </a>
+            {% endif %}
+
+            <button class="btn-print-action btn-print-primary" onclick="window.print()" title="Print or save as high-fidelity vector PDF">
+                <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
+                <span>Print / Save PDF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Paper Document Container -->
+    <main class="paper-container">
+
+        <!-- Cover Page -->
+        <div class="manual-cover">
+            <div class="brand-eyebrow">
+                <i data-lucide="cpu" style="width: 16px; height: 16px;"></i> Automind Dynamics
+            </div>
+            <h1 class="manual-title">{{ rover.name }}</h1>
+            <p class="manual-subtitle">
+                {{ rover.description or "Comprehensive Technical Hardware Manual, System Operation Guide, and Software Specifications." }}
+            </p>
+
+            <div class="cover-meta-grid">
+                <div>
+                    <div class="meta-item-label">System Slug</div>
+                    <div class="meta-item-val" style="font-family: var(--font-mono); font-size: 0.8rem;">/docs/{{ rover.slug }}</div>
+                </div>
+                <div>
+                    <div class="meta-item-label">Total Chapters</div>
+                    <div class="meta-item-val">{{ pages|length }} Published Pages</div>
+                </div>
+                <div>
+                    <div class="meta-item-label">Document Date</div>
+                    <div class="meta-item-val">{{ generated_date }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <section class="toc-section">
+            <h2 class="toc-heading">
+                <i data-lucide="list" style="width: 20px; height: 20px; color: var(--color-primary);"></i>
+                Table of Contents
+            </h2>
+            <ul class="toc-list">
+                {% for item in rendered_pages %}
+                <li>
+                    <a href="#chapter-{{ loop.index }}" class="toc-list-item">
+                        <div class="toc-left">
+                            <span class="toc-number-tag">{{ loop.index }}.</span>
+                            <strong>{{ item.page.title }}</strong>
+                        </div>
+                        <span class="toc-page-slug">/{{ item.page.slug }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- All Chapters Rendered Continuously -->
+        {% for item in rendered_pages %}
+        <article class="chapter-container" id="chapter-{{ loop.index }}">
+            <header class="chapter-header">
+                <div class="chapter-title-wrap">
+                    <span class="chapter-index">Chapter {{ loop.index }}</span>
+                    <h2 class="chapter-title">{{ item.page.title }}</h2>
+                </div>
+                <span class="chapter-slug-badge">/{{ item.page.slug }}</span>
+            </header>
+
+            <div class="markdown-body">
+                {{ item.html|safe }}
+            </div>
+        </article>
+        {% endfor %}
+
+        <!-- Manual Footer -->
+        <footer class="manual-footer">
+            <p><strong>Automind Dynamics</strong> &bull; Proprietary Technical Documentation</p>
+            <p style="margin-top: 4px; font-size: 0.78rem;">Generated on {{ generated_date }} &bull; All rights reserved.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
