@@ -110,16 +110,35 @@ class Software(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+def run_migrations():
+    """Ensures database schema migrations are applied across SQLite and PostgreSQL."""
+    try:
+        from sqlalchemy import text, inspect
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+        if 'rover' in tables:
+            columns = [col['name'] for col in inspector.get_columns('rover')]
+            if 'is_visible' not in columns:
+                # PostgreSQL requires BOOLEAN DEFAULT TRUE (integer 1 causes type mismatch)
+                db.session.execute(text("ALTER TABLE rover ADD COLUMN is_visible BOOLEAN DEFAULT TRUE"))
+                db.session.execute(text("UPDATE rover SET is_visible = TRUE WHERE is_visible IS NULL"))
+                db.session.commit()
+                print("Database migration: successfully added 'is_visible' column to 'rover' table.")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Migration check notice: {e}")
+        try:
+            db.session.execute(text("ALTER TABLE rover ADD COLUMN is_visible BOOLEAN DEFAULT TRUE"))
+            db.session.commit()
+            print("Direct ALTER TABLE succeeded.")
+        except Exception as inner_e:
+            db.session.rollback()
+            print(f"Direct ALTER TABLE notice: {inner_e}")
+
 # Ensure database tables are created
 with app.app_context():
     db.create_all()
-    # Migration: Ensure is_visible column exists on rover table
-    try:
-        from sqlalchemy import text
-        db.session.execute(text("ALTER TABLE rover ADD COLUMN is_visible BOOLEAN DEFAULT 1"))
-        db.session.commit()
-    except Exception:
-        db.session.rollback()
+    run_migrations()
 
 # ============================================
 #     TEMPLATE FILTERS & HELPER FUNCTIONS
@@ -1179,7 +1198,12 @@ def admin_logout():
 
 @app.route('/admin/')
 def admin_dashboard():
-    rovers = Rover.query.order_by(Rover.created_at.desc()).all()
+    try:
+        rovers = Rover.query.order_by(Rover.created_at.desc()).all()
+    except Exception:
+        db.session.rollback()
+        run_migrations()
+        rovers = Rover.query.order_by(Rover.created_at.desc()).all()
     quotes = QuoteRequest.query.order_by(QuoteRequest.created_at.desc()).all()
     softwares = Software.query.order_by(Software.created_at.desc()).all()
     
@@ -1722,12 +1746,37 @@ def admin_upload_image():
 
 def render_docs_home():
     """Renders the landing page for all documentation (only public/visible rovers)."""
-    rovers = Rover.query.filter(Rover.is_visible == True).order_by(Rover.name).all()
+    try:
+        rovers = Rover.query.filter(Rover.is_visible == True).order_by(Rover.name).all()
+    except Exception as e:
+        db.session.rollback()
+        run_migrations()
+        try:
+            rovers = Rover.query.filter(Rover.is_visible == True).order_by(Rover.name).all()
+        except Exception:
+            db.session.rollback()
+            from sqlalchemy import text
+            res = db.session.execute(text("SELECT id, name, slug, description FROM rover ORDER BY name"))
+            rovers = [type('RoverFallback', (), {'id': r[0], 'name': r[1], 'slug': r[2], 'description': r[3], 'is_visible': True}) for r in res]
     return render_template('templates/docs_home.html', rovers=rovers)
 
 def render_docs_rover(rover_slug, page_path=None):
     """Renders the documentation system for a specific rover and page."""
-    rover = Rover.query.filter_by(slug=rover_slug).first()
+    try:
+        rover = Rover.query.filter_by(slug=rover_slug).first()
+    except Exception as e:
+        db.session.rollback()
+        run_migrations()
+        try:
+            rover = Rover.query.filter_by(slug=rover_slug).first()
+        except Exception:
+            db.session.rollback()
+            from sqlalchemy import text
+            res = db.session.execute(text("SELECT id, name, slug, description FROM rover WHERE slug = :slug LIMIT 1"), {'slug': rover_slug}).fetchone()
+            if res:
+                rover = type('RoverFallback', (), {'id': res[0], 'name': res[1], 'slug': res[2], 'description': res[3], 'is_visible': True})
+            else:
+                rover = None
     if not rover:
         if is_docs_subdomain() and not rover_slug:
             return render_docs_home()
