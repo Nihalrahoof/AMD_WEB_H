@@ -186,6 +186,76 @@
             border-color: var(--text-muted);
         }
 
+        /* Download Dropdown */
+        .download-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .download-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 290px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            padding: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.3rem;
+            z-index: 500;
+        }
+
+        .download-dropdown.open .download-menu,
+        .download-dropdown:hover .download-menu {
+            display: flex;
+        }
+
+        .download-menu-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.65rem 0.8rem;
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .download-menu-item:hover {
+            background: var(--border-muted);
+            color: var(--accent);
+        }
+
+        .download-menu-item i {
+            margin-top: 2px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .download-menu-text strong {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .download-menu-text span {
+            display: block;
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+            margin-top: 1px;
+            line-height: 1.35;
+        }
+
         .theme-toggle-btn {
             background: transparent;
             border: none;
@@ -895,6 +965,61 @@
                 </div>
             </div>
             <div class="nav-links">
+                <div class="download-dropdown" id="downloadDropdown">
+                    <button class="nav-btn download-btn" onclick="toggleDownloadMenu(event)" title="Download or export this documentation suite">
+                        <i data-lucide="download" style="width: 13px; height: 13px;"></i>
+                        <span>Download</span>
+                        <i data-lucide="chevron-down" style="width: 12px; height: 12px;"></i>
+                    </button>
+                    <div class="download-menu" id="downloadMenu">
+                        {% if is_subdomain %}
+                        <a href="/{{ rover.slug }}/download/pdf" class="download-menu-item" title="Download compiled PDF manual">
+                            <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Download PDF</strong>
+                                <span>Complete multi-page manual (.pdf)</span>
+                            </div>
+                        </a>
+                        <a href="/{{ rover.slug }}/download/mkdocs" class="download-menu-item" title="Download editable MkDocs ZIP source package">
+                            <i data-lucide="folder-archive" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Download MkDocs Source</strong>
+                                <span>Editable MkDocs project package (.zip)</span>
+                            </div>
+                        </a>
+                        <a href="/{{ rover.slug }}/print" target="_blank" class="download-menu-item" title="Open complete printable book view">
+                            <i data-lucide="printer" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Printable Book View</strong>
+                                <span>Read all chapters & print vector PDF</span>
+                            </div>
+                        </a>
+                        {% else %}
+                        <a href="/docs/{{ rover.slug }}/download/pdf" class="download-menu-item" title="Download compiled PDF manual">
+                            <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Download PDF</strong>
+                                <span>Complete multi-page manual (.pdf)</span>
+                            </div>
+                        </a>
+                        <a href="/docs/{{ rover.slug }}/download/mkdocs" class="download-menu-item" title="Download editable MkDocs ZIP source package">
+                            <i data-lucide="folder-archive" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Download MkDocs Source</strong>
+                                <span>Editable MkDocs project package (.zip)</span>
+                            </div>
+                        </a>
+                        <a href="/docs/{{ rover.slug }}/print" target="_blank" class="download-menu-item" title="Open complete printable book view">
+                            <i data-lucide="printer" style="width: 18px; height: 18px;"></i>
+                            <div class="download-menu-text">
+                                <strong>Printable Book View</strong>
+                                <span>Read all chapters & print vector PDF</span>
+                            </div>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
                 {% if is_subdomain %}
                 <a href="/" class="nav-btn"><i data-lucide="grid" style="width: 13px; height: 13px;"></i> Systems</a>
                 {% else %}
@@ -950,6 +1075,34 @@
                     {{ render_sidebar_node(node) }}
                 {% endfor %}
             </nav>
+
+            <!-- Sidebar Download / Export Section -->
+            <div style="margin-top: auto; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 0.5rem;">
+                <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Download Documentation</div>
+                <div style="display: flex; gap: 0.4rem;">
+                    {% if is_subdomain %}
+                    <a href="/{{ rover.slug }}/download/pdf" class="nav-btn" style="flex: 1; justify-content: center; font-size: 0.76rem; padding: 0.4rem 0.5rem;" title="Download complete PDF manual">
+                        <i data-lucide="file-text" style="width: 13px; height: 13px; color: #38bdf8;"></i> PDF
+                    </a>
+                    <a href="/{{ rover.slug }}/download/mkdocs" class="nav-btn" style="flex: 1; justify-content: center; font-size: 0.76rem; padding: 0.4rem 0.5rem;" title="Download MkDocs source ZIP">
+                        <i data-lucide="folder-archive" style="width: 13px; height: 13px; color: #60a5fa;"></i> MkDocs
+                    </a>
+                    <a href="/{{ rover.slug }}/print" target="_blank" class="nav-btn" style="padding: 0.4rem 0.6rem;" title="Printable complete manual view">
+                        <i data-lucide="printer" style="width: 13px; height: 13px;"></i>
+                    </a>
+                    {% else %}
+                    <a href="/docs/{{ rover.slug }}/download/pdf" class="nav-btn" style="flex: 1; justify-content: center; font-size: 0.76rem; padding: 0.4rem 0.5rem;" title="Download complete PDF manual">
+                        <i data-lucide="file-text" style="width: 13px; height: 13px; color: #38bdf8;"></i> PDF
+                    </a>
+                    <a href="/docs/{{ rover.slug }}/download/mkdocs" class="nav-btn" style="flex: 1; justify-content: center; font-size: 0.76rem; padding: 0.4rem 0.5rem;" title="Download MkDocs source ZIP">
+                        <i data-lucide="folder-archive" style="width: 13px; height: 13px; color: #60a5fa;"></i> MkDocs
+                    </a>
+                    <a href="/docs/{{ rover.slug }}/print" target="_blank" class="nav-btn" style="padding: 0.4rem 0.6rem;" title="Printable complete manual view">
+                        <i data-lucide="printer" style="width: 13px; height: 13px;"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </aside>
 
         <!-- Center Column Content Viewport -->
@@ -1047,6 +1200,20 @@
         }
 
         initTheme();
+
+        // Download Dropdown Toggle
+        function toggleDownloadMenu(e) {
+            if (e) e.stopPropagation();
+            const dd = document.getElementById('downloadDropdown');
+            if (dd) dd.classList.toggle('open');
+        }
+
+        document.addEventListener('click', (e) => {
+            const dd = document.getElementById('downloadDropdown');
+            if (dd && !dd.contains(e.target)) {
+                dd.classList.remove('open');
+            }
+        });
 
         // 2. Mobile Sidebar Slide-In Toggle
         function toggleSidebar() {

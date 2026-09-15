@@ -9,7 +9,13 @@ import shutil
 import mimetypes
 import markdown
 import yaml
+import base64
 from datetime import datetime
+
+try:
+    from xhtml2pdf import pisa
+except ImportError:
+    pisa = None
 
 app = Flask(__name__, template_folder='.')
 app.secret_key = os.environ.get('SECRET_KEY', 'automind_secret_key_1298471298')
@@ -439,6 +445,465 @@ def import_mkdocs_dataset(files_dict, target_rover_id=None, custom_name=None, cu
 
     db.session.commit()
     return rover, len(created_pages)
+
+# ============================================
+#     DOCUMENTATION EXPORT & PDF GENERATION
+# ============================================
+
+def export_rover_mkdocs_zip(rover):
+    """
+    Exports a complete, production-ready MkDocs project (.zip) from a Rover and its DocPages.
+    Includes mkdocs.yml, structured docs/ markdown files matching the page tree hierarchy,
+    referenced images in docs/assets/images/, and a quickstart README.md.
+    """
+    pages = DocPage.query.filter_by(rover_id=rover.id).order_by(DocPage.order, DocPage.title).all()
+    
+    page_dict = {p.id: p for p in pages}
+    children_map = {}
+    top_pages = []
+    for p in pages:
+        if p.parent_id and p.parent_id in page_dict:
+            children_map.setdefault(p.parent_id, []).append(p)
+        else:
+            top_pages.append(p)
+
+    def get_page_rel_path(page):
+        clean_slug = page.slug.strip().strip('/')
+        if not clean_slug or clean_slug == 'index':
+            return 'index.md'
+        if not clean_slug.endswith('.md'):
+            return f"{clean_slug}.md"
+        return clean_slug
+
+    def build_nav_tree_yaml(nodes):
+        nav_list = []
+        for n in nodes:
+            rel_file = get_page_rel_path(n)
+            kids = children_map.get(n.id, [])
+            if kids:
+                sub_nav = [{n.title: rel_file}]
+                sub_nav.extend(build_nav_tree_yaml(kids))
+                nav_list.append({n.title: sub_nav})
+            else:
+                nav_list.append({n.title: rel_file})
+        return nav_list
+
+    nav_yaml = build_nav_tree_yaml(top_pages) if top_pages else [{'Home': 'index.md'}]
+
+    mkdocs_config = {
+        'site_name': rover.name,
+        'site_description': rover.description or f"Official technical documentation for {rover.name}",
+        'site_author': "Automind Dynamics",
+        'theme': {
+            'name': 'material',
+            'palette': [
+                {'scheme': 'slate', 'primary': 'blue', 'accent': 'cyan'},
+                {'scheme': 'default', 'primary': 'blue', 'accent': 'cyan'}
+            ],
+            'features': [
+                'navigation.instant',
+                'navigation.tracking',
+                'navigation.sections',
+                'navigation.top',
+                'content.code.copy',
+                'search.suggest',
+                'search.highlight'
+            ]
+        },
+        'markdown_extensions': [
+            'admonition',
+            'tables',
+            'attr_list',
+            'def_list',
+            'fenced_code',
+            'toc',
+            'pymdownx.superfences',
+            'pymdownx.details',
+            'pymdownx.tabbed',
+            'pymdownx.highlight',
+            'pymdownx.inlinehilite',
+            'pymdownx.tasklist'
+        ],
+        'nav': nav_yaml
+    }
+
+    all_db_images = DocImage.query.all()
+    img_by_id = {img.id: img for img in all_db_images}
+    img_by_name = {img.filename: img for img in all_db_images}
+
+    def resolve_doc_image(ref):
+        if not ref:
+            return None
+        if '/docs/image/' in ref:
+            m = re.search(r'/docs/image/(\d+)', ref)
+            if m and int(m.group(1)) in img_by_id:
+                return img_by_id[int(m.group(1))]
+        base = os.path.basename(ref.split('?')[0].split('#')[0])
+        if base and base in img_by_name:
+            return img_by_name[base]
+        return None
+
+    extracted_images = {}
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr('mkdocs.yml', yaml.dump(mkdocs_config, sort_keys=False, allow_unicode=True))
+        
+        readme_content = f"""# {rover.name} - Documentation Project
+Exported from Automind Dynamics Web Platform on {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}.
+
+## Quickstart: Previewing Locally with MkDocs
+1. Install MkDocs and Material theme:
+   ```bash
+   pip install mkdocs mkdocs-material pymdown-extensions
+   ```
+2. Run local live-reloading server:
+   ```bash
+   mkdocs serve
+   ```
+3. Open your browser at http://127.0.0.1:8000/
+
+## Re-importing into Automind Dynamics
+After editing markdown files in `docs/` or adding new sections in `mkdocs.yml`:
+1. Compress this directory into a `.zip` file.
+2. In Automind Admin Dashboard, click **Import MkDocs Package** (or **Bulk Import MKDocs** on the system view) to update the database.
+"""
+        zf.writestr('README.md', readme_content)
+
+        if not pages:
+            zf.writestr('docs/index.md', f"# {rover.name}\n\n*Welcome to the documentation for {rover.name}.*")
+        else:
+            for p in pages:
+                rel_file = get_page_rel_path(p)
+                content = p.content or f"# {p.title}\n\n*No content published yet.*"
+                
+                depth = len(rel_file.split('/')) - 1
+                asset_prefix = ('../' * depth) + 'assets/images/'
+                
+                def sub_md_img(m):
+                    alt, src = m.group(1), m.group(2)
+                    img = resolve_doc_image(src)
+                    if img:
+                        safe_name = secure_filename(img.filename) or f"image_{img.id}.png"
+                        extracted_images[safe_name] = img.data
+                        return f"![{alt}]({asset_prefix}{safe_name})"
+                    return m.group(0)
+
+                def sub_html_img(m):
+                    tag = m.group(0)
+                    src = m.group(1)
+                    img = resolve_doc_image(src)
+                    if img:
+                        safe_name = secure_filename(img.filename) or f"image_{img.id}.png"
+                        extracted_images[safe_name] = img.data
+                        return tag.replace(src, f"{asset_prefix}{safe_name}")
+                    return tag
+
+                content = re.sub(r'!\[(.*?)\]\((.*?)\)', sub_md_img, content)
+                content = re.sub(r'<img[^>]+src=[\"\']([^\"\']+)[\"\']', sub_html_img, content)
+                zf.writestr(f"docs/{rel_file}", content)
+
+        for fname, img_bytes in extracted_images.items():
+            zf.writestr(f"docs/assets/images/{fname}", img_bytes)
+
+    zip_buffer.seek(0)
+    return zip_buffer
+
+def generate_rover_pdf(rover):
+    """
+    Generates a high-quality multi-page PDF document combining all pages of the Rover.
+    Includes Automind Dynamics cover page, Table of Contents, syntax-highlighted code,
+    inlined images, and running headers/footers with page numbers.
+    """
+    if pisa is None:
+        raise RuntimeError("xhtml2pdf is not installed. Please install it using: pip install xhtml2pdf")
+
+    pages = DocPage.query.filter_by(rover_id=rover.id).order_by(DocPage.order, DocPage.title).all()
+
+    all_db_images = DocImage.query.all()
+    img_by_id = {img.id: img for img in all_db_images}
+    img_by_name = {img.filename: img for img in all_db_images}
+
+    def resolve_doc_image(ref):
+        if not ref:
+            return None
+        if '/docs/image/' in ref:
+            m = re.search(r'/docs/image/(\d+)', ref)
+            if m and int(m.group(1)) in img_by_id:
+                return img_by_id[int(m.group(1))]
+        base = os.path.basename(ref.split('?')[0].split('#')[0])
+        if base and base in img_by_name:
+            return img_by_name[base]
+        return None
+
+    html_parts = []
+    html_parts.append(f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    @page {{
+        size: a4 portrait;
+        margin-top: 2.2cm;
+        margin-bottom: 2.2cm;
+        margin-left: 1.8cm;
+        margin-right: 1.8cm;
+        @frame header {{
+            -pdf-frame-content: pdfHeader;
+            top: 0.7cm;
+            margin-left: 1.8cm;
+            margin-right: 1.8cm;
+            height: 1.3cm;
+        }}
+        @frame footer {{
+            -pdf-frame-content: pdfFooter;
+            bottom: 0.7cm;
+            margin-left: 1.8cm;
+            margin-right: 1.8cm;
+            height: 1.3cm;
+        }}
+    }}
+    body {{
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 9.5pt;
+        color: #1e293b;
+        line-height: 1.5;
+    }}
+    h1 {{
+        color: #0f172a;
+        font-size: 18pt;
+        margin-top: 14pt;
+        margin-bottom: 8pt;
+        font-weight: bold;
+    }}
+    h2 {{
+        color: #1e293b;
+        font-size: 13pt;
+        margin-top: 14pt;
+        margin-bottom: 6pt;
+        border-bottom: 0.5pt solid #cbd5e1;
+        padding-bottom: 2pt;
+    }}
+    h3 {{
+        color: #334155;
+        font-size: 11pt;
+        margin-top: 10pt;
+        margin-bottom: 4pt;
+    }}
+    p {{
+        margin-bottom: 6pt;
+    }}
+    ul, ol {{
+        margin-top: 4pt;
+        margin-bottom: 8pt;
+        padding-left: 16pt;
+    }}
+    li {{
+        margin-bottom: 2pt;
+    }}
+    pre, code {{
+        font-family: Courier, monospace;
+        background-color: #f1f5f9;
+        font-size: 8pt;
+    }}
+    pre {{
+        padding: 8pt;
+        border: 0.5pt solid #cbd5e1;
+        margin: 6pt 0;
+    }}
+    code {{
+        padding: 1pt 3pt;
+    }}
+    table {{
+        width: 100%;
+        margin: 8pt 0;
+        border: 0.5pt solid #94a3b8;
+    }}
+    th, td {{
+        border: 0.5pt solid #cbd5e1;
+        padding: 4pt 6pt;
+        text-align: left;
+        font-size: 8.5pt;
+    }}
+    th {{
+        background-color: #f1f5f9;
+        font-weight: bold;
+        color: #0f172a;
+    }}
+    blockquote, .admonition {{
+        border-left: 3pt solid #2563eb;
+        background-color: #eff6ff;
+        padding: 6pt 10pt;
+        margin: 6pt 0;
+        font-size: 9pt;
+    }}
+    img {{
+        max-width: 100%;
+        height: auto;
+        margin: 6pt 0;
+    }}
+    .page-break {{
+        page-break-before: always;
+    }}
+    .cover {{
+        text-align: center;
+        margin-top: 140pt;
+        margin-bottom: 120pt;
+    }}
+    .cover-brand {{
+        font-size: 13pt;
+        font-weight: bold;
+        color: #2563eb;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 15pt;
+    }}
+    .cover-title {{
+        font-size: 24pt;
+        font-weight: bold;
+        color: #0f172a;
+        margin-bottom: 12pt;
+        line-height: 1.2;
+    }}
+    .cover-subtitle {{
+        font-size: 11.5pt;
+        color: #475569;
+        margin-bottom: 28pt;
+    }}
+    .cover-meta {{
+        font-size: 9pt;
+        color: #94a3b8;
+        border-top: 0.5pt solid #e2e8f0;
+        padding-top: 12pt;
+        display: inline-block;
+        width: 70%;
+    }}
+    .toc-title {{
+        font-size: 16pt;
+        font-weight: bold;
+        color: #0f172a;
+        border-bottom: 1.5pt solid #2563eb;
+        padding-bottom: 4pt;
+        margin-bottom: 14pt;
+    }}
+    .toc-item {{
+        padding: 3.5pt 0;
+        border-bottom: 0.5pt dotted #e2e8f0;
+    }}
+    .toc-number {{
+        font-weight: bold;
+        color: #2563eb;
+        margin-right: 4pt;
+    }}
+    .toc-slug {{
+        color: #64748b;
+        font-size: 8.5pt;
+    }}
+</style>
+</head>
+<body>
+    <div id="pdfHeader" style="font-size: 8pt; color: #64748b; border-bottom: 0.5pt solid #cbd5e1; padding-bottom: 3pt;">
+        <span style="font-weight: bold; color: #0f172a;">AUTOMIND DYNAMICS</span> &bull; {rover.name}
+    </div>
+
+    <div id="pdfFooter" style="font-size: 8pt; color: #94a3b8; border-top: 0.5pt solid #e2e8f0; padding-top: 3pt;">
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="border: none; text-align: left; font-size: 8pt; color: #94a3b8;">Technical Documentation & Manual</td>
+                <td style="border: none; text-align: right; font-size: 8pt; color: #94a3b8;">Page <pdf:pagenumber/> of <pdf:pagecount/></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="cover">
+        <div class="cover-brand">Automind Dynamics</div>
+        <div class="cover-title">{rover.name}</div>
+        <div class="cover-subtitle">{rover.description or 'Official Technical Manual & Operational Documentation'}</div>
+        <div class="cover-meta">
+            <div><strong>Format:</strong> Complete Reference Manual &bull; <strong>Status:</strong> Released</div>
+            <div style="margin-top: 4pt;">Exported: {datetime.utcnow().strftime('%B %d, %Y')} &bull; Route: /docs/{rover.slug}</div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+    <div class="toc-title">Table of Contents</div>
+""")
+
+    if not pages:
+        html_parts.append("<p><em>No documentation pages have been published yet.</em></p>")
+    else:
+        for idx, p in enumerate(pages, 1):
+            html_parts.append(f"""
+            <div class="toc-item">
+                <span class="toc-number">{idx}.</span>
+                <strong>{p.title}</strong>
+                <span class="toc-slug">(/{p.slug})</span>
+            </div>
+            """)
+
+        for idx, p in enumerate(pages, 1):
+            raw_content = p.content or ""
+            def sub_md(m):
+                alt, src = m.group(1), m.group(2)
+                img = resolve_doc_image(src)
+                if img:
+                    b64 = base64.b64encode(img.data).decode('utf-8')
+                    return f'![{alt}](data:{img.mime_type};base64,{b64})'
+                return m.group(0)
+            raw_content = re.sub(r'!\[(.*?)\]\((.*?)\)', sub_md, raw_content)
+
+            def sub_html(m):
+                tag = m.group(0)
+                src = m.group(1)
+                img = resolve_doc_image(src)
+                if img:
+                    b64 = base64.b64encode(img.data).decode('utf-8')
+                    return tag.replace(src, f'data:{img.mime_type};base64,{b64}')
+                return tag
+            raw_content = re.sub(r'<img[^>]+src=[\"\']([^\"\']+)[\"\']', sub_html, raw_content)
+
+            rendered_page_html = render_markdown(raw_content)
+            rendered_page_html = re.sub(r'<input[^>]+type=[\"\']radio[\"\'][^>]*>', '', rendered_page_html)
+
+            html_parts.append(f"""
+            <div class="page-break">
+                <h1 style="border-bottom: 1.5pt solid #2563eb; padding-bottom: 4pt;">
+                    <span style="color: #64748b; font-size: 13pt; margin-right: 4pt;">{idx}.</span> {p.title}
+                </h1>
+                {rendered_page_html}
+            </div>
+            """)
+
+    html_parts.append("</body></html>")
+    full_html = "".join(html_parts)
+
+    pdf_buffer = io.BytesIO()
+    pisa_status = pisa.CreatePDF(full_html, dest=pdf_buffer)
+    if pisa_status.err:
+        raise RuntimeError(f"PDF generation failed with error code {pisa_status.err}")
+    pdf_buffer.seek(0)
+    return pdf_buffer
+
+def render_docs_print(rover_slug):
+    """Renders the comprehensive, printable continuous manual view for a rover."""
+    rover = Rover.query.filter_by(slug=rover_slug).first_or_404()
+    pages = DocPage.query.filter_by(rover_id=rover.id).order_by(DocPage.order, DocPage.title).all()
+    
+    rendered_pages = []
+    for p in pages:
+        rendered_pages.append({
+            'page': p,
+            'html': render_markdown(p.content or '')
+        })
+        
+    return render_template(
+        'templates/docs_print.html',
+        rover=rover,
+        pages=pages,
+        rendered_pages=rendered_pages,
+        generated_date=datetime.utcnow().strftime('%B %d, %Y'),
+        is_subdomain=is_docs_subdomain()
+    )
 
 # ============================================
 #     MAIN WEBSITE ROUTING & CLEAN URLS
@@ -1108,6 +1573,34 @@ def admin_rover_import_mkdocs():
     except Exception as e:
         return f"MKDocs bulk import failed: {str(e)}", 500
 
+@app.route('/admin/rover/<int:rover_id>/download/mkdocs')
+def admin_rover_download_mkdocs(rover_id):
+    """Downloads full MkDocs project package as a ZIP archive for admin."""
+    rover = Rover.query.get_or_404(rover_id)
+    zip_buf = export_rover_mkdocs_zip(rover)
+    return send_file(
+        zip_buf,
+        mimetype='application/zip',
+        as_attachment=True,
+        download_name=f"{rover.slug}-mkdocs.zip"
+    )
+
+@app.route('/admin/rover/<int:rover_id>/download/pdf')
+def admin_rover_download_pdf(rover_id):
+    """Downloads full documentation manual as a PDF for admin."""
+    rover = Rover.query.get_or_404(rover_id)
+    try:
+        pdf_buf = generate_rover_pdf(rover)
+        return send_file(
+            pdf_buf,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"{rover.slug}-documentation.pdf"
+        )
+    except Exception as e:
+        return f"PDF generation failed: {str(e)}", 500
+
+
 # Admin AJAX Image Upload Handler
 @app.route('/admin/upload-image', methods=['POST'])
 def admin_upload_image():
@@ -1239,6 +1732,38 @@ def docs_home_sub():
 def docs_rover_sub(rover_slug):
     return render_docs_rover(rover_slug, None)
 
+@app.route('/docs/<rover_slug>/download/mkdocs')
+def docs_download_mkdocs(rover_slug):
+    """Downloads full MkDocs project package as a ZIP archive for public visitors."""
+    rover = Rover.query.filter_by(slug=rover_slug).first_or_404()
+    zip_buf = export_rover_mkdocs_zip(rover)
+    return send_file(
+        zip_buf,
+        mimetype='application/zip',
+        as_attachment=True,
+        download_name=f"{rover.slug}-mkdocs.zip"
+    )
+
+@app.route('/docs/<rover_slug>/download/pdf')
+def docs_download_pdf(rover_slug):
+    """Downloads full documentation manual as a PDF for public visitors."""
+    rover = Rover.query.filter_by(slug=rover_slug).first_or_404()
+    try:
+        pdf_buf = generate_rover_pdf(rover)
+        return send_file(
+            pdf_buf,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"{rover.slug}-documentation.pdf"
+        )
+    except Exception as e:
+        return f"PDF generation failed: {str(e)}", 500
+
+@app.route('/docs/<rover_slug>/print')
+def docs_print_view(rover_slug):
+    """Renders comprehensive printable manual view for a rover."""
+    return render_docs_print(rover_slug)
+
 @app.route('/docs/<rover_slug>/<path:page_path>')
 def docs_page_sub(rover_slug, page_path):
     return render_docs_rover(rover_slug, page_path)
@@ -1250,6 +1775,12 @@ def catch_all(subpath):
         parts = subpath.strip('/').split('/', 1)
         rover_slug = parts[0]
         page_path = parts[1] if len(parts) > 1 else None
+        if page_path == 'download/mkdocs':
+            return docs_download_mkdocs(rover_slug)
+        elif page_path == 'download/pdf':
+            return docs_download_pdf(rover_slug)
+        elif page_path == 'print':
+            return docs_print_view(rover_slug)
         return render_docs_rover(rover_slug, page_path)
     
     if os.path.exists(subpath) and not subpath.startswith('.') and not subpath.endswith('.py') and not subpath.endswith('.db'):

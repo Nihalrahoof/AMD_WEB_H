@@ -1045,6 +1045,12 @@
                 </span>
 
                 <div style="display: flex; gap: 0.4rem; align-items: center;">
+                    <a href="{{ url_for('admin_rover_download_mkdocs', rover_id=r_data.rover.id) }}" class="btn-row-action" title="Download full MkDocs project (.zip)">
+                        <i data-lucide="folder-archive" style="width: 14px; height: 14px; color: #60a5fa;"></i>
+                    </a>
+                    <a href="{{ url_for('admin_rover_download_pdf', rover_id=r_data.rover.id) }}" class="btn-row-action" title="Download documentation manual (.pdf)">
+                        <i data-lucide="file-text" style="width: 14px; height: 14px; color: #38bdf8;"></i>
+                    </a>
                     <a href="{{ url_for('docs_rover_sub', rover_slug=r_data.rover.slug) }}" class="btn-row-action" target="_blank" title="View live documentation site">
                         <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
                     </a>

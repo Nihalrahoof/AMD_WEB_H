@@ -114,8 +114,17 @@
         </div>
 
         <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
-            <a href="{{ url_for('docs_rover_sub', rover_slug=rover.slug) }}" class="btn-action btn-action-secondary" target="_blank">
-                <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Live Site
+            <a href="{{ url_for('admin_rover_download_mkdocs', rover_id=rover.id) }}" class="btn-action btn-action-secondary" title="Download complete editable MkDocs package (.zip)">
+                <i data-lucide="folder-archive" style="width: 14px; height: 14px; color: #60a5fa;"></i> Download MkDocs (.zip)
+            </a>
+            <a href="{{ url_for('admin_rover_download_pdf', rover_id=rover.id) }}" class="btn-action btn-action-secondary" title="Download full documentation manual as PDF">
+                <i data-lucide="file-text" style="width: 14px; height: 14px; color: #38bdf8;"></i> Download PDF
+            </a>
+            <a href="{{ url_for('docs_print_view', rover_slug=rover.slug) }}" class="btn-action btn-action-secondary" target="_blank" title="View printable complete documentation book">
+                <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Book View
+            </a>
+            <a href="{{ url_for('docs_rover_sub', rover_slug=rover.slug) }}" class="btn-action btn-action-secondary" target="_blank" title="View live documentation site">
+                <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> Live Site
             </a>
             <button class="btn-action btn-action-secondary" onclick="openModal('import-mkdocs-rover-modal')">
                 <i data-lucide="folder-up" style="width: 14px; height: 14px;"></i> Bulk Import MKDocs

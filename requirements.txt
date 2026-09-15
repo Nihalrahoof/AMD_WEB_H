@@ -5,3 +5,4 @@ PyYAML>=6.0
 pymdown-extensions>=10.7
 gunicorn==22.0.0
 psycopg2-binary==2.9.9
+xhtml2pdf>=0.2.16
