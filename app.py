@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, abort, session, jsonify, make_response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import re
 import io
@@ -10,7 +11,10 @@ import mimetypes
 import markdown
 import yaml
 import base64
-from datetime import datetime
+import requests
+import threading
+import time
+from datetime import datetime, timedelta
 
 try:
     from xhtml2pdf import pisa
@@ -19,6 +23,9 @@ except ImportError:
 
 app = Flask(__name__, template_folder='.')
 app.secret_key = os.environ.get('SECRET_KEY', 'automind_secret_key_1298471298')
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
 # Database URI configuration (SQLite locally, PostgreSQL in production)
 database_url = os.environ.get('DATABASE_URL')
@@ -109,6 +116,239 @@ class Software(db.Model):
     is_published = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class AdminSetting(db.Model):
+    __tablename__ = 'admin_setting'
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(100), unique=True, nullable=False)
+    value = db.Column(db.Text, nullable=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+def get_admin_setting(key, default=None):
+    """Retrieve persistent admin or integration setting."""
+    try:
+        setting = AdminSetting.query.filter_by(key=key).first()
+        if setting and setting.value is not None:
+            return setting.value
+        return default
+    except Exception:
+        db.session.rollback()
+        return default
+
+def set_admin_setting(key, value):
+    """Save persistent admin or integration setting."""
+    try:
+        setting = AdminSetting.query.filter_by(key=key).first()
+        if not setting:
+            setting = AdminSetting(key=key, value=value)
+            db.session.add(setting)
+        else:
+            setting.value = value
+            setting.updated_at = datetime.utcnow()
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving admin setting '{key}': {e}")
+        return False
+
+def verify_admin_password(candidate_password):
+    """
+    Cryptographically verifies candidate password against stored secure salted hash.
+    Falls back to environment variable ADMIN_PASSWORD or 'admin123' if not yet customized.
+    """
+    if not candidate_password:
+        return False
+    stored_hash = get_admin_setting('admin_password_hash')
+    if stored_hash:
+        return check_password_hash(stored_hash, candidate_password)
+    
+    # Fallback to env variable or default if user hasn't changed it yet
+    env_pass = os.environ.get('ADMIN_PASSWORD', 'admin123')
+    return candidate_password == env_pass
+
+def is_using_default_password():
+    stored_hash = get_admin_setting('admin_password_hash')
+    return stored_hash is None
+
+def send_resend_quote_alert(quote_data, is_test=False):
+    """
+    Sends an immediate HTML email notification for quote inquiries via Resend API.
+    Handles sandbox onboarding@resend.dev and verified custom domains automatically.
+    """
+    with app.app_context():
+        # Check if email notifications are enabled
+        enabled = get_admin_setting('resend_enabled', 'true')
+        if enabled == 'false' and not is_test:
+            return False, "Email alerts are disabled in settings."
+
+        api_key = get_admin_setting('resend_api_key') or os.environ.get('RESEND_API_KEY')
+        if not api_key:
+            print("[Resend Notice] No RESEND_API_KEY configured. Quote saved to database without email alert.")
+            return False, "No Resend API Key configured. Please enter your API key in Tech Console."
+
+        api_key = api_key.strip()
+        alert_recipient = get_admin_setting('resend_alert_email') or os.environ.get('ADMIN_ALERT_EMAIL', 'info@autominddynamics.com')
+        alert_recipient = alert_recipient.strip()
+        
+        from_email = get_admin_setting('resend_from_email') or os.environ.get('RESEND_FROM_EMAIL', 'AutoMind Dynamics <onboarding@resend.dev>')
+        from_email = from_email.strip()
+        
+        # Clean fallback for Resend testing domain
+        if 'resend.dev' in from_email and '<' not in from_email:
+            from_email = f"AutoMind Alerts <{from_email}>"
+
+        subject_prefix = "[TEST ALERT] " if is_test else "🚀 New Quote Inquiry: "
+        product_name = quote_data.get('product') or 'Robotics System Inquiry'
+        customer_name = quote_data.get('full_name') or 'Prospective Client'
+        subject = f"{subject_prefix}{product_name} - {customer_name}"
+        
+        phone_val = quote_data.get('phone') or ''
+        phone_html = f"<a href='tel:{phone_val}' style='color:#60a5fa;'>{phone_val}</a>" if phone_val else "<span style='color:#64748b;'>Not provided</span>"
+        
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>{subject}</title>
+          <style>
+            body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #06070a; color: #e2e8f0; margin: 0; padding: 24px 12px; }}
+            .email-container {{ max-width: 600px; margin: 0 auto; background: #0e1017; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); }}
+            .header {{ background: linear-gradient(135deg, #111827 0%, #030712 100%); border-bottom: 2px solid #3b82f6; padding: 24px 28px; text-align: left; }}
+            .header h1 {{ margin: 0; font-size: 19px; color: #ffffff; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 800; }}
+            .header p {{ margin: 5px 0 0 0; color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }}
+            .content {{ padding: 28px; }}
+            .status-chip {{ display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: {'rgba(16, 185, 129, 0.15)' if is_test else 'rgba(59, 130, 246, 0.15)'}; color: {'#34d399' if is_test else '#60a5fa'}; border: 1px solid {'rgba(16, 185, 129, 0.35)' if is_test else 'rgba(59, 130, 246, 0.35)'}; margin-bottom: 16px; }}
+            .headline {{ font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 22px; line-height: 1.35; }}
+            .data-card {{ background: #141722; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 18px; margin-bottom: 22px; }}
+            .data-row {{ display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 13.5px; }}
+            .data-row:last-child {{ border-bottom: none; }}
+            .label {{ color: #94a3b8; font-weight: 500; min-width: 130px; }}
+            .value {{ color: #ffffff; font-weight: 600; text-align: right; word-break: break-word; }}
+            .value a {{ color: #60a5fa; text-decoration: none; }}
+            .req-title {{ font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; letter-spacing: 0.06em; }}
+            .req-box {{ background: #141722; border-left: 3px solid #3b82f6; border-radius: 0 8px 8px 0; padding: 14px 16px; font-size: 13.5px; line-height: 1.55; color: #cbd5e1; margin-bottom: 26px; }}
+            .btn-wrapper {{ text-align: center; margin: 30px 0 10px 0; }}
+            .btn-action {{ display: inline-block; background: #3b82f6; color: #ffffff !important; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 13.5px; letter-spacing: 0.02em; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); text-transform: uppercase; }}
+            .footer {{ background: #07080c; padding: 18px 24px; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center; font-size: 11.5px; color: #64748b; line-height: 1.6; }}
+          </style>
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="header">
+              <h1>AUTOMIND DYNAMICS</h1>
+              <p>Autonomous Ground Robotics & Defense Tele-Operations</p>
+            </div>
+            <div class="content">
+              <div class="status-chip">{'VERIFICATION TEST' if is_test else 'NEW INBOUND QUOTE'}</div>
+              <div class="headline">New Quote Request: {product_name}</div>
+              
+              <div class="data-card">
+                <div class="data-row">
+                  <span class="label">Customer Name:</span>
+                  <span class="value">{customer_name}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Email:</span>
+                  <span class="value"><a href="mailto:{quote_data.get('email')}">{quote_data.get('email')}</a></span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Phone:</span>
+                  <span class="value">{phone_html}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Company / Org:</span>
+                  <span class="value">{quote_data.get('company') or 'Individual Client'}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Target Product:</span>
+                  <span class="value" style="color: #60a5fa;">{product_name}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Volume / Units:</span>
+                  <span class="value">{quote_data.get('quantity', '1 Unit')}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Project Timeline:</span>
+                  <span class="value">{quote_data.get('timeframe') or 'Standard Timeline'}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Target Use Case:</span>
+                  <span class="value">{quote_data.get('use_case') or 'Industrial / Robotics Application'}</span>
+                </div>
+              </div>
+              
+              <div class="req-title">Client Requirements & Notes:</div>
+              <div class="req-box">
+                {quote_data.get('requirements') or 'No special technical notes specified.'}
+              </div>
+              
+              <div class="btn-wrapper">
+                <a href="https://autominddynamics.com/admin#quotes" class="btn-action">Open Tech Console Quotes</a>
+              </div>
+            </div>
+            <div class="footer">
+              AutoMind Dynamics Tech Console • Automated Real-time Alert System<br>
+              Delivered via Resend Transactional API • {datetime.utcnow().strftime('%B %d, %Y - %H:%M UTC')}
+            </div>
+          </div>
+        </body>
+        </html>
+        """
+
+        text_content = f"""
+AUTOMIND DYNAMICS - QUOTE REQUEST ALERT
+--------------------------------------------------
+Product: {product_name}
+Customer: {customer_name}
+Email: {quote_data.get('email')}
+Phone: {phone_val or 'Not provided'}
+Company: {quote_data.get('company') or 'Individual'}
+Volume: {quote_data.get('quantity', '1 Unit')}
+Timeline: {quote_data.get('timeframe') or 'Standard'}
+Use Case: {quote_data.get('use_case') or 'Robotics Application'}
+
+Requirements:
+{quote_data.get('requirements') or 'None'}
+
+Console: https://autominddynamics.com/admin#quotes
+"""
+
+        try:
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": from_email,
+                    "to": [alert_recipient],
+                    "subject": subject,
+                    "html": html_content,
+                    "text": text_content
+                },
+                timeout=10
+            )
+            if response.status_code in [200, 201]:
+                data = response.json()
+                email_id = data.get('id', 'sent')
+                print(f"[Resend Success] Email delivered. ID: {email_id}")
+                return True, f"Delivered (Resend ID: {email_id})"
+            else:
+                err_data = response.text
+                try:
+                    err_json = response.json()
+                    err_data = err_json.get('message', err_data)
+                except Exception:
+                    pass
+                print(f"[Resend Error] Status {response.status_code}: {err_data}")
+                return False, f"Resend API error ({response.status_code}): {err_data}"
+        except Exception as e:
+            print(f"[Resend Exception] {e}")
+            return False, str(e)
 
 def run_migrations():
     """Ensures database schema migrations are applied across SQLite and PostgreSQL."""
@@ -1076,6 +1316,24 @@ def api_request_quote():
         db.session.add(quote)
         db.session.commit()
 
+        # Trigger Resend email alert in background thread
+        quote_payload = {
+            'id': quote.id,
+            'product': quote.product,
+            'full_name': quote.full_name,
+            'email': quote.email,
+            'phone': quote.phone,
+            'company': quote.company,
+            'use_case': quote.use_case,
+            'quantity': quote.quantity,
+            'timeframe': quote.timeframe,
+            'requirements': quote.requirements
+        }
+        try:
+            threading.Thread(target=send_resend_quote_alert, args=(quote_payload,), daemon=True).start()
+        except Exception as alert_err:
+            print(f"[Alert Thread Notice] Failed to spawn alert thread: {alert_err}")
+
         if request.is_json:
             return jsonify({'status': 'success', 'message': 'Your quote request has been submitted successfully!'}), 200
         else:
@@ -1171,6 +1429,8 @@ def serve_doc_image(image_id):
 #     ADMIN PANEL SECURITY & VIEWS
 # ============================================
 
+LOGIN_ATTEMPTS = {}  # ip -> {'count': int, 'locked_until': datetime}
+
 @app.before_request
 def admin_auth_check():
     """Ensure routes under /admin require authentication (except login)."""
@@ -1181,19 +1441,55 @@ def admin_auth_check():
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     error = None
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if client_ip and ',' in client_ip:
+        client_ip = client_ip.split(',')[0].strip()
+    if not client_ip:
+        client_ip = 'unknown'
+
+    # Check if client IP is currently in security lockout
+    attempt_info = LOGIN_ATTEMPTS.get(client_ip)
+    now = datetime.utcnow()
+    if attempt_info and attempt_info.get('locked_until') and attempt_info['locked_until'] > now:
+        remaining_seconds = int((attempt_info['locked_until'] - now).total_seconds())
+        remaining_minutes = max(1, (remaining_seconds // 60) + 1)
+        error = f"Security Lockout: Too many failed passcode attempts. Console access locked for {remaining_minutes} more minute(s)."
+        return render_template('templates/admin_login.html', error=error)
+
     if request.method == 'POST':
-        password = request.form.get('password')
-        admin_pass = os.environ.get('ADMIN_PASSWORD', 'admin123')
-        if password == admin_pass:
+        password = (request.form.get('password') or '').strip()
+        
+        if verify_admin_password(password):
+            # Reset failed login tracking on success
+            LOGIN_ATTEMPTS.pop(client_ip, None)
+            
+            # Reset and re-create session to prevent session fixation attacks
+            session.clear()
             session['admin_logged_in'] = True
+            session.permanent = True
             return redirect(url_for('admin_dashboard'))
         else:
-            error = "Invalid passcode"
+            # Artificially delay response slightly to deter brute-force and dictionary bots
+            time.sleep(0.5)
+            
+            if client_ip not in LOGIN_ATTEMPTS:
+                LOGIN_ATTEMPTS[client_ip] = {'count': 1, 'locked_until': None}
+            else:
+                LOGIN_ATTEMPTS[client_ip]['count'] += 1
+                
+            failed_count = LOGIN_ATTEMPTS[client_ip]['count']
+            if failed_count >= 5:
+                LOGIN_ATTEMPTS[client_ip]['locked_until'] = now + timedelta(minutes=15)
+                error = "Security Lockout: 5 consecutive failed passcode attempts. Console access locked for 15 minutes."
+            else:
+                attempts_left = max(0, 5 - failed_count)
+                error = f"Invalid passcode. {attempts_left} attempt(s) remaining before security lockout."
+
     return render_template('templates/admin_login.html', error=error)
 
 @app.route('/admin/logout')
 def admin_logout():
-    session.pop('admin_logged_in', None)
+    session.clear()
     return redirect(url_for('home'))
 
 @app.route('/admin/')
@@ -1240,7 +1536,140 @@ def admin_dashboard():
         'pending_quotes': pending_quotes,
         'spam_quotes': spam_quotes_count
     }
-    return render_template('templates/admin_dashboard.html', rovers=rover_data, quotes=quotes, softwares=softwares, stats=stats)
+
+    # Security & Resend Notification State
+    has_custom_pass = not is_using_default_password()
+    resend_key = get_admin_setting('resend_api_key') or os.environ.get('RESEND_API_KEY', '')
+    resend_alert_email = get_admin_setting('resend_alert_email') or os.environ.get('ADMIN_ALERT_EMAIL', 'info@autominddynamics.com')
+    resend_from_email = get_admin_setting('resend_from_email') or os.environ.get('RESEND_FROM_EMAIL', 'AutoMind Dynamics <onboarding@resend.dev>')
+    resend_enabled = get_admin_setting('resend_enabled', 'true') == 'true'
+
+    masked_key = ""
+    if resend_key:
+        if len(resend_key) > 8:
+            masked_key = resend_key[:6] + "..." + resend_key[-4:]
+        else:
+            masked_key = "••••••••••••"
+
+    security = {
+        'is_default_password': not has_custom_pass,
+        'password_changed_at': get_admin_setting('admin_password_changed_at', 'Default / Unchanged'),
+        'resend_configured': bool(resend_key),
+        'resend_enabled': resend_enabled,
+        'resend_api_key_masked': masked_key,
+        'resend_alert_email': resend_alert_email,
+        'resend_from_email': resend_from_email,
+        'has_api_key': bool(resend_key)
+    }
+
+    return render_template('templates/admin_dashboard.html', rovers=rover_data, quotes=quotes, softwares=softwares, stats=stats, security=security)
+
+@app.route('/admin/change-password', methods=['POST'])
+def admin_change_password():
+    if not session.get('admin_logged_in'):
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
+    
+    current_password = (request.form.get('current_password') or '').strip()
+    new_password = (request.form.get('new_password') or '').strip()
+    confirm_password = (request.form.get('confirm_password') or '').strip()
+    
+    if not current_password or not new_password or not confirm_password:
+        return jsonify({'status': 'error', 'message': 'All password fields are required.'}), 400
+        
+    if not verify_admin_password(current_password):
+        return jsonify({'status': 'error', 'message': 'Current passcode is incorrect.'}), 400
+        
+    if len(new_password) < 8:
+        return jsonify({'status': 'error', 'message': 'New passcode must be at least 8 characters long.'}), 400
+        
+    if new_password == current_password:
+        return jsonify({'status': 'error', 'message': 'New passcode cannot be identical to current passcode.'}), 400
+        
+    if new_password != confirm_password:
+        return jsonify({'status': 'error', 'message': 'New passcode and confirmation do not match.'}), 400
+
+    # Disallow common weak passwords
+    weak_passwords = ['admin', 'admin123', 'admin1234', 'password', 'password123', '12345678', 'automind', 'automind123']
+    if new_password.lower() in weak_passwords:
+        return jsonify({'status': 'error', 'message': 'Passcode is too common or easily guessable. Please choose a strong, unique passcode.'}), 400
+
+    # Ensure minimum complexity: at least one letter and at least one digit
+    has_letter = any(c.isalpha() for c in new_password)
+    has_digit = any(c.isdigit() for c in new_password)
+    if not has_letter or not has_digit:
+        return jsonify({'status': 'error', 'message': 'Passcode must contain a mixture of letters and numbers for high security.'}), 400
+
+    # Hash using salted cryptographic algorithm (scrypt / pbkdf2)
+    new_hash = generate_password_hash(new_password)
+    set_admin_setting('admin_password_hash', new_hash)
+    set_admin_setting('admin_password_changed_at', datetime.utcnow().strftime('%B %d, %Y - %H:%M UTC'))
+    
+    # Clear any rate limit lockout for this IP
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if client_ip and ',' in client_ip:
+        client_ip = client_ip.split(',')[0].strip()
+    if client_ip:
+        LOGIN_ATTEMPTS.pop(client_ip, None)
+        
+    return jsonify({
+        'status': 'success',
+        'message': 'Passcode updated successfully! Encrypted with cryptographic salted hashing.'
+    }), 200
+
+@app.route('/admin/settings/email', methods=['POST'])
+def admin_settings_email():
+    if not session.get('admin_logged_in'):
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
+    
+    api_key = (request.form.get('resend_api_key') or '').strip()
+    alert_email = (request.form.get('resend_alert_email') or '').strip()
+    from_email = (request.form.get('resend_from_email') or '').strip()
+    enabled = request.form.get('resend_enabled') in ['1', 'true', 'on']
+    
+    if api_key and not api_key.startswith('•••'):
+        # Validate Resend API key format (usually starts with re_)
+        if not api_key.startswith('re_'):
+            return jsonify({'status': 'error', 'message': "Invalid Resend API Key format. Resend keys typically begin with 're_'."}), 400
+        set_admin_setting('resend_api_key', api_key)
+        
+    if alert_email:
+        if '@' not in alert_email or '.' not in alert_email:
+            return jsonify({'status': 'error', 'message': 'Please enter a valid recipient email address.'}), 400
+        set_admin_setting('resend_alert_email', alert_email)
+        
+    if from_email:
+        set_admin_setting('resend_from_email', from_email)
+        
+    set_admin_setting('resend_enabled', 'true' if enabled else 'false')
+    
+    return jsonify({
+        'status': 'success',
+        'message': 'Resend email alert configuration saved successfully!'
+    }), 200
+
+@app.route('/admin/settings/test-email', methods=['POST'])
+def admin_settings_test_email():
+    if not session.get('admin_logged_in'):
+        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 401
+    
+    test_quote = {
+        'id': 9999,
+        'full_name': 'Automind Security Bot',
+        'email': 'verification@autominddynamics.com',
+        'phone': '+1 (555) 019-2834',
+        'company': 'AutoMind Dynamics Internal Verification',
+        'product': 'GEFIER R1 - Autonomous Defense Platform',
+        'quantity': '2 Units',
+        'timeframe': 'Immediate Deployment',
+        'use_case': 'Security & Email Infrastructure Verification',
+        'requirements': 'This is an automated verification email triggered from the Tech Console to confirm that your Resend.com API integration is operational and receiving quote alerts in real-time.'
+    }
+    
+    success, msg = send_resend_quote_alert(test_quote, is_test=True)
+    if success:
+        return jsonify({'status': 'success', 'message': f'Test email delivered! {msg}'}), 200
+    else:
+        return jsonify({'status': 'error', 'message': f'Email delivery failed: {msg}'}), 400
 
 # ============================================
 #     ADMIN SOFTWARE CRUD HANDLERS

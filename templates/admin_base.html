@@ -197,6 +197,19 @@
             border-color: #60a5fa;
         }
 
+        .nav-btn.btn-security {
+            color: #a78bfa;
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+        }
+
+        .nav-btn.btn-security:hover {
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #a78bfa;
+        }
+
         .nav-btn.btn-logout {
             color: #f87171;
             border-color: rgba(239, 68, 68, 0.2);
@@ -514,6 +527,13 @@
                     <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
                     <span>Main Site</span>
                 </a>
+                <button type="button" onclick="if(typeof switchView==='function'){switchView('security');}else{window.location.href='{{ url_for('admin_dashboard') }}#security';}" class="nav-btn btn-security" title="Security & Email Settings">
+                    <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
+                    <span>Security & Alerts</span>
+                    {% if security and security.is_default_password %}
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 8px #f59e0b; display: inline-block;"></span>
+                    {% endif %}
+                </button>
                 <a href="{{ url_for('admin_logout') }}" class="nav-btn btn-logout" title="End Session">
                     <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
                     <span>Logout</span>

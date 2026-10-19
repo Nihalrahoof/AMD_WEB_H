@@ -877,18 +877,213 @@
     }
 
     /* Views visibility */
-    .view-content-section {
-        display: none;
+    /* Security & Alert Infrastructure Styles */
+    .security-banner-alert {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.04));
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08);
+    }
+    @media (max-width: 768px) {
+        .security-banner-alert {
+            flex-direction: column;
+            align-items: flex-start;
+        }
     }
 
-    .view-content-section.active-view {
-        display: block;
-        animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    .security-dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    @media (max-width: 980px) {
+        .security-dashboard-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(6px); }
-        to { opacity: 1; transform: translateY(0); }
+    .sec-card {
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 1.75rem;
+        backdrop-filter: blur(16px);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .sec-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--dash-border);
+    }
+
+    .sec-card-title {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 0.02em;
+    }
+
+    .sec-badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.65rem;
+        border-radius: 99px;
+    }
+    .sec-badge-status.badge-active {
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .sec-badge-status.badge-warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .sec-meta-row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.25rem;
+    }
+
+    .sec-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .pwd-meter-container {
+        margin-top: 0.5rem;
+        margin-bottom: 0.85rem;
+    }
+    .pwd-meter-track {
+        height: 5px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 0.35rem;
+    }
+    .pwd-meter-fill {
+        height: 100%;
+        width: 0%;
+        transition: all 0.3s ease;
+        border-radius: 99px;
+    }
+    .pwd-strength-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-muted);
+    }
+
+    .pwd-requirements-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        margin-top: 0.65rem;
+        margin-bottom: 1rem;
+    }
+    .pwd-req-item {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .pwd-req-item.met {
+        color: #34d399;
+    }
+
+    .sec-guide-card {
+        background: var(--dash-bg-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 1.5rem 1.75rem;
+        backdrop-filter: blur(16px);
+    }
+
+    .sec-steps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    @media (max-width: 900px) {
+        .sec-steps-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 500px) {
+        .sec-steps-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .sec-step-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 1.1rem;
+        position: relative;
+    }
+
+    .sec-step-number {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .sec-step-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.35rem;
+    }
+
+    .sec-step-desc {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.45;
     }
 </style>
 {% endblock %}
@@ -981,6 +1176,21 @@
     </div>
 </div>
 
+{% if security and security.is_default_password %}
+<div class="security-banner-alert">
+    <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <div style="width: 38px; height: 38px; border-radius: 9px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i data-lucide="shield-alert" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+            <div style="font-weight: 700; color: #fbbf24; font-size: 0.92rem; letter-spacing: 0.02em;">Security Action Recommended: Default Passcode Active</div>
+            <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 2px;">Your Tech Console is currently protected by the default password. Update to a strong, cryptographic salted passcode below to prevent unauthorized access.</div>
+        </div>
+    </div>
+    <button type="button" onclick="switchView('security')" class="btn-action" style="background: #f59e0b; color: #000000; font-weight: 700; padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);">Change Passcode Now</button>
+</div>
+{% endif %}
+
 <!-- ==========================================================================
      2. Refined Navigation Tab Bar & Quick Actions
      ========================================================================== -->
@@ -1002,6 +1212,16 @@
             <i data-lucide="inbox" style="width: 16px; height: 16px;"></i>
             <span>Quote Requests</span>
             <span class="nav-tab-counter {% if stats.pending_quotes > 0 %}counter-amber{% endif %}">{{ quotes|length }}</span>
+        </button>
+
+        <button class="nav-tab-btn" id="tab-btn-security" onclick="switchView('security')">
+            <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+            <span>Security & Email Alerts</span>
+            {% if security and security.is_default_password %}
+            <span class="nav-tab-counter counter-amber" title="Passcode action required">!</span>
+            {% elif security and not security.resend_configured %}
+            <span class="nav-tab-counter counter-amber" title="Email setup needed">!</span>
+            {% endif %}
         </button>
     </div>
 
@@ -1404,6 +1624,264 @@
         </table>
     </div>
     {% endif %}
+</div>
+
+<!-- ==========================================================================
+     VIEW 4: SYSTEM SECURITY & EMAIL ALERT INFRASTRUCTURE
+     ========================================================================== -->
+<div id="view-security" class="view-content-section">
+    <div style="margin-bottom: 1.75rem;">
+        <h2 style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #ffffff; letter-spacing: 0.02em; margin-bottom: 0.35rem;">
+            Security & Email Infrastructure
+        </h2>
+        <p style="font-size: 0.86rem; color: var(--text-secondary); max-width: 800px;">
+            Manage administrative authentication credentials, cryptographic hash security, and real-time Resend.com email alerts for inbound product quote requests.
+        </p>
+    </div>
+
+    <!-- 2-Column Dashboard Grid -->
+    <div class="security-dashboard-grid">
+        
+        <!-- CARD 1: Passcode & Console Protection -->
+        <div class="sec-card">
+            <div>
+                <div class="sec-card-header">
+                    <div class="sec-card-title">
+                        <i data-lucide="key-round" style="width: 20px; height: 20px; color: #60a5fa;"></i>
+                        <span>Admin Passcode Security</span>
+                    </div>
+                    {% if security.is_default_password %}
+                    <span class="sec-badge-status badge-warning">
+                        <i data-lucide="alert-triangle" style="width: 12px; height: 12px;"></i> Default Passcode
+                    </span>
+                    {% else %}
+                    <span class="sec-badge-status badge-active">
+                        <i data-lucide="shield-check" style="width: 12px; height: 12px;"></i> Secure Hash Active
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="sec-meta-row">
+                    <div class="sec-meta-pill" title="Cryptographic Salted Hash">
+                        <i data-lucide="lock" style="width: 13px; height: 13px; color: #10b981;"></i>
+                        <span>Scrypt / PBKDF2 Salted Hash</span>
+                    </div>
+                    <div class="sec-meta-pill" title="Protection against dictionary attacks">
+                        <i data-lucide="shield" style="width: 13px; height: 13px; color: #60a5fa;"></i>
+                        <span>Rate Limiting: 5 Attempts / 15m Lockout</span>
+                    </div>
+                    <div class="sec-meta-pill">
+                        <i data-lucide="clock" style="width: 13px; height: 13px; color: #a78bfa;"></i>
+                        <span>Updated: {{ security.password_changed_at }}</span>
+                    </div>
+                </div>
+
+                <div id="pwd-feedback" style="display: none; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.84rem;"></div>
+
+                <form id="form-change-password" onsubmit="submitChangePassword(event)">
+                    <div class="form-group">
+                        <label for="current_password">Current System Passcode</label>
+                        <div style="position: relative;">
+                            <input type="password" id="current_password" name="current_password" class="form-control" placeholder="Enter current passcode (default: admin123)" required style="padding-right: 2.75rem;">
+                            <button type="button" onclick="toggleInputType('current_password', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                                <i data-lucide="eye" style="width: 15px; height: 15px;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password">New Strong Passcode</label>
+                        <div style="position: relative;">
+                            <input type="password" id="new_password" name="new_password" class="form-control" placeholder="••••••••••••" required oninput="checkPasswordStrength(this.value)" style="padding-right: 2.75rem;">
+                            <button type="button" onclick="toggleInputType('new_password', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                                <i data-lucide="eye" style="width: 15px; height: 15px;"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Strength Meter -->
+                        <div class="pwd-meter-container">
+                            <div class="pwd-meter-track">
+                                <div id="pwd-meter-bar" class="pwd-meter-fill"></div>
+                            </div>
+                            <div class="pwd-strength-label">
+                                <span>Passcode Strength:</span>
+                                <span id="pwd-strength-text" style="font-weight: 700;">Enter password</span>
+                            </div>
+                        </div>
+
+                        <!-- Requirements Checklist -->
+                        <div class="pwd-requirements-list">
+                            <div class="pwd-req-item" id="req-length">
+                                <i data-lucide="circle" style="width: 11px; height: 11px;"></i>
+                                <span>8+ Characters (10+ recommended)</span>
+                            </div>
+                            <div class="pwd-req-item" id="req-case">
+                                <i data-lucide="circle" style="width: 11px; height: 11px;"></i>
+                                <span>Uppercase & Lowercase letters</span>
+                            </div>
+                            <div class="pwd-req-item" id="req-num">
+                                <i data-lucide="circle" style="width: 11px; height: 11px;"></i>
+                                <span>At least one number (0-9)</span>
+                            </div>
+                            <div class="pwd-req-item" id="req-special">
+                                <i data-lucide="circle" style="width: 11px; height: 11px;"></i>
+                                <span>Special symbol (!@#$%^&*)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm New Passcode</label>
+                        <div style="position: relative;">
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Re-enter new passcode" required oninput="checkPasswordMatch()" style="padding-right: 2.75rem;">
+                            <button type="button" onclick="toggleInputType('confirm_password', this)" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;">
+                                <i data-lucide="eye" style="width: 15px; height: 15px;"></i>
+                            </button>
+                        </div>
+                        <div id="pwd-match-text" style="font-size: 0.72rem; margin-top: 0.35rem; display: none;"></div>
+                    </div>
+
+                    <button type="submit" id="btn-submit-pwd" class="btn-action btn-action-primary" style="width: 100%; justify-content: center; padding: 0.75rem; font-weight: 700; margin-top: 0.5rem;">
+                        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                        <span>Update Security Passcode</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CARD 2: Resend Quote Notification Hub -->
+        <div class="sec-card">
+            <div>
+                <div class="sec-card-header">
+                    <div class="sec-card-title">
+                        <i data-lucide="mail-check" style="width: 20px; height: 20px; color: #10b981;"></i>
+                        <span>Resend Email Alert Dispatcher</span>
+                    </div>
+                    {% if security.resend_configured %}
+                    <span class="sec-badge-status badge-active">
+                        <i data-lucide="check" style="width: 12px; height: 12px;"></i> Connected & Ready
+                    </span>
+                    {% else %}
+                    <span class="sec-badge-status badge-warning">
+                        <i data-lucide="alert-circle" style="width: 12px; height: 12px;"></i> Setup Required
+                    </span>
+                    {% endif %}
+                </div>
+
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">
+                    When prospective enterprise customers submit a quote request, an alert email is dispatched instantly to your inbox via Resend. Resend provides <strong>100 free emails per day (3,000/month)</strong>.
+                </p>
+
+                <div id="email-feedback" style="display: none; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.84rem;"></div>
+
+                <form id="form-email-settings" onsubmit="submitEmailSettings(event)">
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                            <label for="resend_api_key" style="margin-bottom: 0;">Resend API Key</label>
+                            <a href="https://resend.com/api-keys" target="_blank" style="font-size: 0.74rem; color: #60a5fa; text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                Get Key on Resend.com <i data-lucide="external-link" style="width: 11px; height: 11px;"></i>
+                            </a>
+                        </div>
+                        <input type="password" id="resend_api_key" name="resend_api_key" class="form-control" placeholder="{% if security.resend_api_key_masked %}{{ security.resend_api_key_masked }} (Saved){% else %}re_123456789...{% endif %}" autocomplete="off">
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem;">
+                            Starts with <code style="color: #60a5fa;">re_</code>. Leave blank to keep existing configured key.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resend_alert_email">Notification Recipient Email</label>
+                        <input type="email" id="resend_alert_email" name="resend_alert_email" class="form-control" value="{{ security.resend_alert_email }}" placeholder="you@autominddynamics.com or your-email@gmail.com" required>
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem;">
+                            Where quote inquiries will be delivered in real-time.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resend_from_email">Sender "From" Address</label>
+                        <input type="text" id="resend_from_email" name="resend_from_email" class="form-control" value="{{ security.resend_from_email }}" placeholder="AutoMind Alerts <onboarding@resend.dev>">
+                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.35rem;">
+                            Use <code style="color: #60a5fa;">onboarding@resend.dev</code> for instant free testing, or your custom domain (e.g. <code style="color: #60a5fa;">quotes@autominddynamics.com</code>) once verified.
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--dash-border); border-radius: 8px;">
+                        <div>
+                            <div style="font-size: 0.82rem; font-weight: 600; color: #ffffff;">Real-Time Email Notifications</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">Send alert email immediately when a quote form is submitted</div>
+                        </div>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0;">
+                            <input type="checkbox" id="resend_enabled" name="resend_enabled" value="true" {% if security.resend_enabled %}checked{% endif %}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+                        <button type="submit" id="btn-save-email" class="btn-action btn-action-primary" style="flex: 1; justify-content: center; padding: 0.75rem; font-weight: 700;">
+                            <i data-lucide="save" style="width: 15px; height: 15px;"></i>
+                            <span>Save Email Settings</span>
+                        </button>
+                        <button type="button" onclick="sendTestEmail()" id="btn-test-email" class="btn-action btn-action-secondary" style="justify-content: center; padding: 0.75rem 1rem; font-weight: 600; white-space: nowrap;" title="Send an immediate test alert to your email">
+                            <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+                            <span>Send Test Alert</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- WIDE CARD: Step-by-Step Guide for Resend -->
+    <div class="sec-guide-card">
+        <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.45rem;">
+            <i data-lucide="book-open" style="width: 18px; height: 18px; color: #60a5fa;"></i>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: #ffffff;">Quick Resend Setup Guide (Zero-Cost / 100 Emails per Day)</h3>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Follow these 4 quick steps to connect Resend and start receiving email alerts in under 2 minutes:
+        </p>
+
+        <div class="sec-steps-grid">
+            <div class="sec-step-item">
+                <div class="sec-step-number">1</div>
+                <div class="sec-step-title">Sign up on Resend</div>
+                <div class="sec-step-desc">
+                    Go to <a href="https://resend.com" target="_blank" style="color: #60a5fa;">resend.com</a> and create a free account. Free tier includes 100 emails/day (3,000/mo).
+                </div>
+            </div>
+
+            <div class="sec-step-item">
+                <div class="sec-step-number">2</div>
+                <div class="sec-step-title">Create API Key</div>
+                <div class="sec-step-desc">
+                    In your Resend dashboard, click <strong>API Keys</strong> &rarr; <strong>Create API Key</strong>. Set Permission: <em>Full Access</em>. Copy the key starting with <code style="color: #60a5fa;">re_</code>.
+                </div>
+            </div>
+
+            <div class="sec-step-item">
+                <div class="sec-step-number">3</div>
+                <div class="sec-step-title">Paste & Save</div>
+                <div class="sec-step-desc">
+                    Paste your API Key in the form above, enter your email as the Notification Recipient, and click <strong>Save Email Settings</strong>.
+                </div>
+            </div>
+
+            <div class="sec-step-item">
+                <div class="sec-step-number">4</div>
+                <div class="sec-step-title">Send Test & Verify</div>
+                <div class="sec-step-desc">
+                    Click <strong>Send Test Alert</strong> above. Check your inbox to confirm instant delivery with styled quote telemetry!
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 1.25rem; padding: 0.85rem 1rem; border-radius: 8px; background: rgba(59, 130, 246, 0.06); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.8rem; color: #cbd5e1; display: flex; align-items: flex-start; gap: 0.6rem;">
+            <i data-lucide="info" style="width: 16px; height: 16px; color: #60a5fa; flex-shrink: 0; margin-top: 2px;"></i>
+            <div>
+                <strong>Sending Domain Tip:</strong> Resend allows sending from <code style="color: #60a5fa;">onboarding@resend.dev</code> directly to your registered Resend email address with zero DNS configuration. Once ready, you can add <code style="color: #60a5fa;">autominddynamics.com</code> under <strong>Domains</strong> in Resend to send alerts from <code style="color: #60a5fa;">quotes@autominddynamics.com</code> to any team inbox!
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ==========================================================================
@@ -2048,6 +2526,266 @@
 
             r.style.display = (statusMatch && searchMatch) ? '' : 'none';
         });
+    }
+
+    // ==========================================
+    // SECURITY & PASSWORD MANAGEMENT HANDLERS
+    // ==========================================
+
+    function toggleInputType(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            if (icon) icon.setAttribute('data-lucide', 'eye-off');
+        } else {
+            input.type = 'password';
+            if (icon) icon.setAttribute('data-lucide', 'eye');
+        }
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function checkPasswordStrength(val) {
+        const lengthMet = val.length >= 8;
+        const caseMet = /[a-z]/.test(val) && /[A-Z]/.test(val);
+        const numMet = /[0-9]/.test(val);
+        const specialMet = /[^a-zA-Z0-9]/.test(val);
+
+        updateReqItem('req-length', lengthMet);
+        updateReqItem('req-case', caseMet);
+        updateReqItem('req-num', numMet);
+        updateReqItem('req-special', specialMet);
+
+        let score = 0;
+        if (lengthMet) score++;
+        if (val.length >= 12) score++;
+        if (caseMet) score++;
+        if (numMet) score++;
+        if (specialMet) score++;
+
+        const bar = document.getElementById('pwd-meter-bar');
+        const text = document.getElementById('pwd-strength-text');
+
+        if (!val) {
+            bar.style.width = '0%';
+            bar.style.backgroundColor = 'transparent';
+            text.innerText = 'Enter password';
+            text.style.color = 'var(--text-muted)';
+        } else if (score <= 2) {
+            bar.style.width = '25%';
+            bar.style.backgroundColor = '#f87171';
+            text.innerText = 'Weak (Needs letters & numbers)';
+            text.style.color = '#f87171';
+        } else if (score === 3) {
+            bar.style.width = '55%';
+            bar.style.backgroundColor = '#fbbf24';
+            text.innerText = 'Moderate (Add symbols or length)';
+            text.style.color = '#fbbf24';
+        } else if (score === 4) {
+            bar.style.width = '80%';
+            bar.style.backgroundColor = '#60a5fa';
+            text.innerText = 'Strong';
+            text.style.color = '#60a5fa';
+        } else {
+            bar.style.width = '100%';
+            bar.style.backgroundColor = '#34d399';
+            text.innerText = 'Ultra-Secure / Hacker-Proof';
+            text.style.color = '#34d399';
+        }
+
+        checkPasswordMatch();
+    }
+
+    function updateReqItem(id, isMet) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const icon = el.querySelector('i');
+        if (isMet) {
+            el.classList.add('met');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'check-circle-2');
+                icon.style.color = '#34d399';
+            }
+        } else {
+            el.classList.remove('met');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'circle');
+                icon.style.color = '';
+            }
+        }
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function checkPasswordMatch() {
+        const newPwd = document.getElementById('new_password').value;
+        const confirmPwd = document.getElementById('confirm_password').value;
+        const matchEl = document.getElementById('pwd-match-text');
+
+        if (!confirmPwd) {
+            matchEl.style.display = 'none';
+            return;
+        }
+
+        matchEl.style.display = 'block';
+        if (newPwd === confirmPwd) {
+            matchEl.innerText = '✓ Passcodes match perfectly';
+            matchEl.style.color = '#34d399';
+        } else {
+            matchEl.innerText = '✗ Passcodes do not match yet';
+            matchEl.style.color = '#f87171';
+        }
+    }
+
+    async function submitChangePassword(e) {
+        e.preventDefault();
+        const form = document.getElementById('form-change-password');
+        const feedback = document.getElementById('pwd-feedback');
+        const btn = document.getElementById('btn-submit-pwd');
+        const origBtnHtml = btn.innerHTML;
+
+        const newPwd = document.getElementById('new_password').value;
+        const confirmPwd = document.getElementById('confirm_password').value;
+
+        if (newPwd !== confirmPwd) {
+            feedback.style.display = 'block';
+            feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+            feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+            feedback.style.color = '#f87171';
+            feedback.innerHTML = '<strong>Error:</strong> New passcode and confirmation do not match.';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 16px; height: 16px;"></i> Encrypting & Updating...';
+        if (window.lucide) lucide.createIcons();
+
+        try {
+            const formData = new FormData(form);
+            const res = await fetch('/admin/change-password', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            feedback.style.display = 'block';
+            if (res.ok && data.status === 'success') {
+                feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+                feedback.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+                feedback.style.color = '#34d399';
+                feedback.innerHTML = '<strong>Success:</strong> ' + data.message;
+                form.reset();
+                checkPasswordStrength('');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+                feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+                feedback.style.color = '#f87171';
+                feedback.innerHTML = '<strong>Error:</strong> ' + (data.message || 'Failed to update passcode.');
+            }
+        } catch (err) {
+            feedback.style.display = 'block';
+            feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+            feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+            feedback.style.color = '#f87171';
+            feedback.innerHTML = '<strong>Network Error:</strong> ' + err.message;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = origBtnHtml;
+            if (window.lucide) lucide.createIcons();
+        }
+    }
+
+    // ==========================================
+    // RESEND EMAIL SETTINGS & TEST HANDLERS
+    // ==========================================
+
+    async function submitEmailSettings(e) {
+        e.preventDefault();
+        const form = document.getElementById('form-email-settings');
+        const feedback = document.getElementById('email-feedback');
+        const btn = document.getElementById('btn-save-email');
+        const origBtnHtml = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 15px; height: 15px;"></i> Saving...';
+        if (window.lucide) lucide.createIcons();
+
+        try {
+            const formData = new FormData(form);
+            const res = await fetch('/admin/settings/email', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            feedback.style.display = 'block';
+            if (res.ok && data.status === 'success') {
+                feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+                feedback.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+                feedback.style.color = '#34d399';
+                feedback.innerHTML = '<strong>Saved:</strong> ' + data.message;
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 4000);
+            } else {
+                feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+                feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+                feedback.style.color = '#f87171';
+                feedback.innerHTML = '<strong>Configuration Notice:</strong> ' + (data.message || 'Failed to save settings.');
+            }
+        } catch (err) {
+            feedback.style.display = 'block';
+            feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+            feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+            feedback.style.color = '#f87171';
+            feedback.innerHTML = '<strong>Network Error:</strong> ' + err.message;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = origBtnHtml;
+            if (window.lucide) lucide.createIcons();
+        }
+    }
+
+    async function sendTestEmail() {
+        const feedback = document.getElementById('email-feedback');
+        const btn = document.getElementById('btn-test-email');
+        const origBtnHtml = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 15px; height: 15px;"></i> Sending via Resend...';
+        if (window.lucide) lucide.createIcons();
+
+        try {
+            const res = await fetch('/admin/settings/test-email', {
+                method: 'POST'
+            });
+            const data = await res.json();
+
+            feedback.style.display = 'block';
+            if (res.ok && data.status === 'success') {
+                feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+                feedback.style.border = '1px solid rgba(16, 185, 129, 0.35)';
+                feedback.style.color = '#34d399';
+                feedback.innerHTML = '<strong>✓ ' + data.message + '</strong> Check your inbox now!';
+            } else {
+                feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+                feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+                feedback.style.color = '#f87171';
+                feedback.innerHTML = '<strong>Delivery Failed:</strong> ' + (data.message || 'Make sure your API key and recipient email are configured.');
+            }
+        } catch (err) {
+            feedback.style.display = 'block';
+            feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+            feedback.style.border = '1px solid rgba(239, 68, 68, 0.35)';
+            feedback.style.color = '#f87171';
+            feedback.innerHTML = '<strong>Network Error:</strong> ' + err.message;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = origBtnHtml;
+            if (window.lucide) lucide.createIcons();
+        }
     }
 
     // Modal background close
